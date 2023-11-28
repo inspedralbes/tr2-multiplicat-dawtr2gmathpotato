@@ -1,0 +1,16 @@
+{
+    "arrSalas": [
+        {
+            "sala": {
+                "nom": "",
+                "nUsuaris": "",
+                "temps": "45",
+                "users": {
+                    "nombre": "",
+                    "bomba": "false",
+                    "vidas": "3"
+                }
+            }
+        }
+    ]
+}
