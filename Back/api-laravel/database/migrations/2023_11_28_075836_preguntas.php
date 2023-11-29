@@ -14,21 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('preguntas', function (Blueprint $table) {
-            $table->integer('id_pregunta')->unique();
+            $table->id('id_pregunta');
             $table->string('pregunta', 100);
             $table->string('user', 50)->foreign('user')->references('username')->on('users');
-            $table->boolean('activo')->default(false);
+            $table->boolean('activo')->default(true);
             }    
         ); 
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 };

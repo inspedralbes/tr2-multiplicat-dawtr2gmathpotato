@@ -16,10 +16,10 @@ return new class extends Migration
         // Crear tabla users
         Schema::create('usuaris', function (Blueprint $table) {
             $table->string('username', 50);
-            $table->string('email', 50)->unique();
-            $table->string('password', 15);
-            $table->integer('num_victorias');
-            $table->integer('num_derrotas');
+            $table->string('email', 255)->unique();
+            $table->string('password', 255);
+            $table->integer('num_victorias')->default(0);
+            $table->integer('num_derrotas')->default(0);
             $table->enum ('foto_perfil', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
             }    
         ); 
