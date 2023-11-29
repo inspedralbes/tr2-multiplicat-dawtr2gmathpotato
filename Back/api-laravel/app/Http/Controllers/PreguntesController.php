@@ -26,9 +26,21 @@ class PreguntesController extends Controller
             'message' => 'Pregunta afegida correctament'
         ]);
     }
-    public function mostrar( $id)
+    public function mostrar($id)
     {
-        return Preguntas::find($id);
+        $pregunta = Preguntas::find($id);
+        if($pregunta){
+            return response()->json([
+                'status' => 1,
+                'message' => 'Pregunta trobada',
+                'data' => $pregunta
+            ]);
+        }else{
+            return response()->json([
+                'status' => 0,
+                'message' => 'Pregunta no trobada',
+            ]);
+        }
     }
 
    
