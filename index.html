@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crear y Eliminar Usuario</title>
+</head>
+<body>
+    <h1>Crear y Eliminar Usuario</h1>
+    
+        <input type="text" id="username" placeholder="Nombre de usuario" required>
+        <button id="add_user">Agregar Usuario</button>
+
+
+    <ul id="usuarios">
+        <li></li>
+    </ul>
+
+    <script>
+        let username;
+        const socket = io();
+
+        document.getElementById("add_user").addEventListener("click", () => {
+            if (document.getElementById("username").value) {
+                username = document.getElementById("username").value;
+                socket.emit('Nuevo usuario', username);
+            }
+        });
+    </script>
+</body>
+</html>
