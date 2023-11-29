@@ -1,16 +1,17 @@
 {
     "arrSalas": [
         {
-            "sala": {
+            "sales":[ {
                 "nom": "",
                 "nUsuaris": "",
                 "temps": "45",
-                "users": {
+                "users": [{
                     "nombre": "",
                     "bomba": "false",
                     "vidas": "3"
-                }
-            }
+                }, {"nombre": "Jose", "bomba":"true", "vidas":"3"}]
+            } ],
+            "waiting":[{"nombre": "Laia", "bomba":"false", "vidas":"0"}]
         }
     ]
 }
