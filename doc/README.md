@@ -1,5 +1,5 @@
 # Documentació bàsica del projecte
-És una aplicació que utilizarem diferents tecnologies com podem veure en l'aparatat seguent de l'entorn.
+És una aplicació que utilizarem diferents tecnologies com podem veure en l'aparatat seguent de l'entorn. 
 ## Instruccions per crear un entorn de desenvolupament
   - Eines:
     -Programes web: Penpot, Taiga,Github i Chat GPT.
