@@ -26,22 +26,20 @@ class PreguntesController extends Controller
             'message' => 'Pregunta afegida correctament'
         ]);
     }
-    public function mostrar($id)
-    {
-        $pregunta = Preguntas::find($id);
-        if($pregunta){
-            return response()->json([
-                'status' => 1,
-                'message' => 'Pregunta trobada',
-                'data' => $pregunta
-            ]);
-        }else{
-            return response()->json([
-                'status' => 0,
-                'message' => 'Pregunta no trobada',
-            ]);
-        }
-    }
+    public function getPreguntasRandom()
+{
+    $preguntasIds = Preguntas::inRandomOrder()->take(50)->distinct()->pluck('id_pregunta');
+
+    
+    $preguntas = Preguntas::whereIn('id_pregunta', $preguntasIds)->get();
+
+    return response()->json([
+        'status' => 1,
+        'preguntas' => $preguntas
+    ]);
+}
+
+
 
    
 }
