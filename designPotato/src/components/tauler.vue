@@ -4,8 +4,10 @@
             <div class="user">
                 <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background}};">
                 <p>{{ user.name }}</p>
+                <img src="../assets/LePotata.png" alt="" class="bomb" v-if="user.bomba">
             </div>
         </div>
+        <button id="middle" @click="changeBomb()">Change bomb</button>
     </div>
 </template>
 <style>
@@ -54,13 +56,23 @@ body {
     background-position: center;
     background-size: cover;
     display: grid;
-    grid-template-areas: ". topleft topmid topright ." "leftmid . . . rightmid" ". bottomleft bottommid bottomright .";
+    grid-template-areas: ". topleft topmid topright ." "leftmid . middle . rightmid" ". bottomleft bottommid bottomright .";
     width: 87vw;
     height: 100vh;
     margin-left: auto;
     margin-right: auto;
 }
+#middle{
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
 
+    font-weight: bold;
+
+}
 #topleft {
     grid-area: topleft;
     display: flex;
@@ -148,6 +160,10 @@ body {
     font-weight: bold;
     color: white;
 }
+.bomb{
+    width: 10vw;
+}
+
 </style>
 <script>
 export default {
@@ -157,40 +173,45 @@ export default {
                 {
                     id: 1,
                     name: "Pepito",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
+                    image: "./src/assets/Icon_2.jfif",
+                    background: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    bomba: false
 
                 },
                 {
                     id: 2,
                     name: "Pepita",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
-
+                    image: "./src/assets/Icon_2.jfif",
+                    background: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    bomba: false
                 },
                 {
                     id: 3,
                     name: "Pepinho",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
+                    image: "./src/assets/Icon_2.jfif",
+                    background: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    bomba: true
                 },
                 {
                     id: 4,
                     name: "Papote",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
+                    image: "./src/assets/Icon_2.jfif",
+                    background: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    bomba: false
                 },
                 {
                     id: 5,
                     name: "Papilla",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
+                    image: "./src/assets/Icon_2.jfif",
+                    background: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    bomba: false
                 },
                 {
                     id: 6,
                     name: "Juan",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
+                    image: "./src/assets/Icon_2.jfif",
+                    background: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    bomba: false
                 }
                 
             ],
@@ -257,7 +278,18 @@ export default {
                     }
 
             };
-        }
+        },
+        changeBomb(){
+            let size = this.users.length;
+            let usersWithBomb = this.findUsersWithBomb();
+            usersWithBomb.forEach(user => user.bomba = false);
+            let random = Math.floor(Math.random() * size);
+            this.users[random].bomba = true;
+            console.log(this.users[random].bomba);
+        },
+        findUsersWithBomb() {
+            return this.users.filter(user => user.bomba === true);
+         },
     }
 }
 </script>
