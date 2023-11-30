@@ -4,7 +4,7 @@ const server = require("http").Server(app);
 const io = require('socket.io')(server);
 const fs = require('fs');
 const { Socket } = require('socket.io');
-var users = [];
+var usersConectados = [];
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -12,21 +12,28 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('Nuevo usuario', (nuevoUsuario) => {
+        console.log("User connected.");
+        console.log(socket.id);
+        
         try {
-            users.push(nuevoUsuario);
+            usersConectados.push(nuevoUsuario);
             
-            socket.broadcast.emit('usuarioConectado', users);   
-            for (let i = 0; i < users.length; i++) {
-                console.log("hola", users[i]);
+            socket.broadcast.emit('usuarioConectado', usersConectados);   
+            for (let i = 0; i < usersConectados.length; i++) {
+                console.log("hola", usersConectados[i]);
             }
 
             socket.on('disconnect', () => {
-                const usuarioDesconectadoIndex = users.findIndex(user => user.id === socket.id);
+                const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
 
-                if (usuarioDesconectadoIndex !== -1) {
-                    const usuarioDesconectado = users.splice(usuarioDesconectadoIndex, 1)[0];
-                    io.emit('usuarioDesconectado', usuarioDesconectado);
-                    console.log("adios");
+                console.log(usersConectados);
+                console.log(usuarioDesconectadoIndex);
+
+                if (usuarioDesconectadoIndex) {
+                    usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
+
+                    io.emit('arrayUsers', usersConectados);
+
                 }
             });
 
@@ -38,5 +45,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(3000, () => {
-    console.log('listening on http://localhost:3000');
+    console.log('Listening on http://localhost:3000');
 });
