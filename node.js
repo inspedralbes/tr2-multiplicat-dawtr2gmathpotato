@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const server = require("http").Server(app);
-const io = new Server(server);
+const io = require('socket.io')(server);
 const fs = require('fs');
 const { Socket } = require('socket.io');
 var users = [];
@@ -15,15 +15,18 @@ io.on('connection', (socket) => {
         try {
             users.push(nuevoUsuario);
             
-            io.broadcast.emit('usuarioConectado', users);
-            console.log("hola")
+            socket.broadcast.emit('usuarioConectado', users);   
+            for (let i = 0; i < users.length; i++) {
+                console.log("hola", users[i]);
+            }
 
-            socket.on('disconect', () => {
-                const usuarioDesconectado = users.findIndex(user => user.id === socket.id);
+            socket.on('disconnect', () => {
+                const usuarioDesconectadoIndex = users.findIndex(user => user.id === socket.id);
 
-                if (usuarioDesconectado) {
-                    users.splice(users.indexOf(usuarioDesconectado, 1));
-                    io.broadcast.emit('usuarioDesconectado', socket.id);
+                if (usuarioDesconectadoIndex !== -1) {
+                    const usuarioDesconectado = users.splice(usuarioDesconectadoIndex, 1)[0];
+                    io.emit('usuarioDesconectado', usuarioDesconectado);
+                    console.log("adios");
                 }
             });
 
