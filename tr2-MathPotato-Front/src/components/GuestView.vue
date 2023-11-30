@@ -1,14 +1,15 @@
 <template>
     <div>
-        <h1>Welcome, Guest!</h1>
-        <div class="card flex justify-content-center">
+    <h1>Welcome, Guest!</h1>
+    <div class="card flex justify-content-center">
+        
+        <span class="p-float-label">
+            <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
+            <label for="value">Name</label>
+        </span>
+        <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
+        <Button @click="onSubmit()" label="Submit" :to="{ path: '/play' }"/>
                 
-                <span class="p-float-label">
-                        <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
-                        <label for="value">Name</label>
-                </span>
-                <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
-                <Button @click="onSubmit()" label="Submit" />
                 <ul>
                     <li>
                         <h3>Users Conectados</h3>
