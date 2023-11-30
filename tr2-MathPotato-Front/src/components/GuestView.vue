@@ -2,14 +2,14 @@
     <div>
         <h1>Welcome, Guest!</h1>
         <div class="card flex justify-content-center">
-                <form @submit="onSubmit" >
-                        <span class="p-float-label">
-                                <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
-                                <label for="value">Name</label>
-                        </span>
-                        <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
-                        <Button @click="onSubmit()" label="Submit" />
-                </form>
+                
+                <span class="p-float-label">
+                        <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
+                        <label for="value">Name</label>
+                </span>
+                <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
+                <Button @click="onSubmit()" label="Submit" />
+               
                 <Toast />
         </div>
     </div>
@@ -47,3 +47,4 @@ export default {
     gap: 10px;
 } */
 </style>
+       
