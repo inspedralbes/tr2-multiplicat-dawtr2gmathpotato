@@ -9,7 +9,16 @@
                 </span>
                 <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
                 <Button @click="onSubmit()" label="Submit" />
-               
+                <ul>
+                    <li>
+                        <h3>Users Conectados</h3>
+                        <ul>
+                            <li v-for="user in users" :key="user.username">
+                                {{ user.username }}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
                 <Toast />
         </div>
     </div>
@@ -23,7 +32,8 @@ export default {
     data() {
         return {
             username: '',
-            errorMessage: ''
+            errorMessage: '',
+            users: []
         };
     },
     methods: {
@@ -33,10 +43,20 @@ export default {
             } else {
                 // Submit the form
                 socket.emit('join', this.username);
+                
             }
-        }
-    }
+        },
+        handleUserList(users) {
+        this.users = users;
+        console.log(this.users);
+        },
+    },
+    mounted() {
+        // Escuchar eventos de usuarios después de que el componente está montado
+        socket.on('nuevosUsuario', this.handleUserList);
+  },
 };
+
     
 </script>
 
