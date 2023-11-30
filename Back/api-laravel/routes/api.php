@@ -17,4 +17,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 // Route::resource('preguntes', PreguntesController::class);
 Route::post('/preguntes',[PreguntesController::class, 'afegir']);
-Route::get('/preguntes/{id_pregunta}', [PreguntesController::class, 'mostrar']);
+Route::get('/mostrar/{id}', [PreguntesController::class, 'mostrar']);
