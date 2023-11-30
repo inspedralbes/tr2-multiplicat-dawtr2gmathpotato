@@ -142,7 +142,6 @@ INSERT INTO `preguntas` (`id_pregunta`, `pregunta`, `user`, `activo`) VALUES
 (97, '15 / 3', 'Aitor', 1),
 (98, '68 + 22', 'Aitor', 1),
 (99, '63 + 31', 'Aitor', 1),
-<<<<<<< HEAD
 (100, '71 + 23', 'Aitor', 1),
 (101, '24 + 37', 'Aitor', 1),
 (102, '53 - 17', 'Aitor', 1),
@@ -244,9 +243,6 @@ INSERT INTO `preguntas` (`id_pregunta`, `pregunta`, `user`, `activo`) VALUES
 (198, '40 - 15', 'Aitor', 1),
 (199, '65 + 9', 'Aitor', 1),
 (200, '27 * 4', 'Aitor', 1);
-=======
-(100, '71 + 23', 'Aitor', 1);
->>>>>>> origin/base-datos-back
 
 --
 -- Índexs per a les taules bolcades
@@ -266,11 +262,7 @@ ALTER TABLE `preguntas`
 -- AUTO_INCREMENT per la taula `preguntas`
 --
 ALTER TABLE `preguntas`
-<<<<<<< HEAD
   MODIFY `id_pregunta` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
-=======
-  MODIFY `id_pregunta` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
->>>>>>> origin/base-datos-back
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
