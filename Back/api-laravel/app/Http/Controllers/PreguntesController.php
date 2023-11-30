@@ -38,8 +38,51 @@ class PreguntesController extends Controller
         'preguntas' => $preguntas
     ]);
 }
+public function getCountPreguntas()
+{
+    $count = Preguntas::count();
 
+    return response()->json([
+        'status' => 1,
+        'count' => $count
+    ]);
+}
+public function updatePregunta(Request $request, $id )
+{
+    $request->validate([
+        'pregunta' => 'required|string|max:255',
+        'user' => 'required|string',
+    ]);
+        $pregunta = Preguntas::findOrFail($id);
+        $pregunta->pregunta = $request->pregunta;
+        $pregunta->user = $request->user;
+        $pregunta->save();
 
+        return response()->json([
+            'status' => 1,
+            'message' => 'Pregunta actualizada correctamente'
+        ]);
 
+        return response()->json([
+            'status' => 0,
+            'message' => 'Error al actualizar la pregunta',
+        ]);
+}
+public function deletePregunta($id)
+{
    
+        $pregunta = Preguntas::findOrFail($id);
+        $pregunta->delete();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Pregunta eliminada correctamente'
+        ]);
+    
+        return response()->json([
+            'status' => 0,
+            'message' => 'Error al eliminar la pregunta',
+            
+        ] );
+        }
 }

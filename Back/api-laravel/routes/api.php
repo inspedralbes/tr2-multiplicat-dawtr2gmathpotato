@@ -20,3 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::resource('preguntes', PreguntesController::class);
 Route::post('/preguntes',[PreguntesController::class, 'afegir']);
 Route::get('/preguntes/random', [PreguntesController::class, 'getPreguntasRandom']);
+Route::get('/preguntes/count', [PreguntesController::class, 'getCountPreguntas']);
+Route::put('/preguntes/{id_pregunta}', [PreguntesController::class, 'updatePregunta']);
+Route::delete('/preguntes/{_pregunta}', [PreguntesController::class, 'deletePregunta']);
+
