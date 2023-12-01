@@ -7,6 +7,8 @@ const { Socket } = require('socket.io');
 var mysql = require('mysql');
 var usersConectados = [];
 
+const objPreguntes = {};
+
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -16,15 +18,24 @@ var con = mysql.createConnection({
 
 con.connect(function(err){
     if (err) throw err;
-    con.query("SELECT * FROM preguntas", function (err, pregunta, fields) {
+    con.query("SELECT * FROM preguntas", function (err, pregunta) {
         if (err) throw err;
+
         for (let i = 0; i < pregunta.length; i++) {
+
             console.log("La pregunta es: ", pregunta[i].pregunta);           
             const resultatPregunta = eval(pregunta[i].pregunta);
             console.log("--> ", resultatPregunta);
+            
+            objPreguntes[i] = {
+                id: pregunta[i].id_pregunta,
+                pregunta: pregunta[i].pregunta,
+            };
         }
+        console.log('Objeto con las preguntas y sus resultados:', objPreguntes);
     });
 });
+
 
 
 app.get('/', (req, res) => {
