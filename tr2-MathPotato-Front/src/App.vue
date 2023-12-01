@@ -4,6 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
+  <div>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
 
@@ -11,13 +12,14 @@ import { RouterLink, RouterView } from 'vue-router'
       <HelloWorld msg="You did it!" />
 
       <nav>
-        <RouterLink to="/"></RouterLink>
-        <RouterLink to="/guest">GuestView</RouterLink>
+        <!-- <RouterLink to="/">GuestView</RouterLink> -->
+        <!-- <RouterLink to="/guest">GuestView</RouterLink> -->
       </nav>
     </div>
   </header>
 
   <RouterView />
+</div>
 </template>
 
 <style scoped>

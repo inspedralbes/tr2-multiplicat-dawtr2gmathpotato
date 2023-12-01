@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import tauler from '../components/tauler.vue'
 
 const router = createRouter({
@@ -7,21 +6,21 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/guest',
       name: 'guest',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../components/GuestView.vue')
+      component: () => import('../components/GuestView.vue') 
     },
     {
       path: '/play',
       name: 'play',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
       component: () => tauler
+    },
+    {
+      path: '/waiting',
+      name: 'waiting',
+      component: () => import('../components/WaitingView.vue')
     }
 
 

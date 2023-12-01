@@ -1,4 +1,5 @@
 <template>
+    <div class="container">
     <div id="grid">
         <div v-for="(user, index) in users" :id="getId(index)">
             <div class="user">
@@ -7,9 +8,10 @@
             </div>
         </div>
     </div>
+</div>
 </template>
 <style>
-body {
+.container {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
     height: 100vh;

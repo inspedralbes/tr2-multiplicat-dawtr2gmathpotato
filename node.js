@@ -2,11 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
+import { join } from 'path';
+import { createPinia } from 'pinia';
+// import { useAppStore } from './tr2-MathPotato-Front/src/stores/guestStore.js';
 const app = express();
 
 app.use(cors());
 
-var usersConectados = [];
+const usersConectados = [];
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -15,23 +18,23 @@ const io = new Server(server, {
     },
 });
 app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, '../../../index.html'));
+    res.sendFile(join(__dirname, './tr2-MathPotato-Front/src/components/GuestView.vue'));
 });
 
 io.on('connection', (socket) => {
         console.log("User connected.");
         console.log(socket.id);
-        if (usersConectados.length > 0) {
-            io.emit('nuevosUsuario', usersConectados);
-            console.log("hi");
-        }
-
+        
         try {
-
             socket.on('join', (data) => {
                 usersConectados.push({username:data, id:socket.id});
-                console.log(data);
-                io.emit('nuevosUsuario', usersConectados);
+                console.log("esto"+data);
+                io.emit('usersConnected', usersConectados);
+                console.log(usersConectados);
+                // io.to(socket.id).emit('redirect', '/waiting');
+
+                // const appStore = useAppStore();
+                // appStore.setGuestInfo(data, socket.id);
             });
 
 
@@ -50,10 +53,11 @@ io.on('connection', (socket) => {
                 console.log(usersConectados);
                 console.log(usuarioDesconectadoIndex);
 
-                if (usuarioDesconectadoIndex) {
-                    usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
+                if (usuarioDesconectadoIndex !== -1) {
+                    usersConectados.splice(usuarioDesconectadoIndex, 1);
 
-                    io.emit('arrayUsers', usersConectados);
+                    io.emit('usersDesconectados', usersConectados);
+                    // io.to(socket.id).emit('redirect', '/');   
 
                 }
                 console.log('User Disconnected');
