@@ -9,6 +9,8 @@ var usersConectados = [];
 
 const objPreguntes = {};
 
+//--------------------------BASE DE DATOS----------------------------
+
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -32,9 +34,7 @@ con.connect(function(err){
                 pregunta: pregunta[i].pregunta,
             };
         }
-        io.emit('preguntas', objPreguntes);
-        
-        console.log('Objeto con las preguntas y sus resultados:', objPreguntes);
+     
     });
 });
 
@@ -75,7 +75,12 @@ io.on('connection', (socket) => {
             console.error("Error ", error);
         }
     });
+    
     socket.emit("username");
+
+    socket.emit('preguntas', objPreguntes);
+        
+    console.log('Objeto con las preguntas y sus resultados:', objPreguntes);
 });
 
 server.listen(3000, () => {
