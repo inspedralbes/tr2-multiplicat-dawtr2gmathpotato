@@ -16,11 +16,16 @@ var con = mysql.createConnection({
 
 con.connect(function(err){
     if (err) throw err;
-    con.query("SELECT * FROM preguntas", function (err, result, fields) {
+    con.query("SELECT * FROM preguntas", function (err, pregunta, fields) {
         if (err) throw err;
-        console.log(result);
+        for (let i = 0; i < pregunta.length; i++) {
+            console.log("La pregunta es: ", pregunta[i].pregunta);           
+            const resultatPregunta = eval(pregunta[i].pregunta);
+            console.log("--> ", resultatPregunta);
+        }
     });
 });
+
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
