@@ -5,18 +5,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <div>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <!-- <RouterLink to="/">GuestView</RouterLink> -->
-        <!-- <RouterLink to="/guest">GuestView</RouterLink> -->
-      </nav>
-    </div>
-  </header>
+  
 
   <RouterView />
 </div>

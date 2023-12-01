@@ -10,7 +10,7 @@
     </div>
 </div>
 </template>
-<style>
+<style scoped>
 .container {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;

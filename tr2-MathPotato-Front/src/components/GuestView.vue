@@ -2,6 +2,7 @@
     <div>
     <h1>Welcome, Guest!</h1>
     <div class="card flex justify-content-center">
+        <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
         
         <span class="p-float-label">
             <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
