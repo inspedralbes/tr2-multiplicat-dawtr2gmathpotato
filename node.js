@@ -1,4 +1,5 @@
 const express = require('express');
+const express = require('express');
 const app = express();
 const server = require("http").Server(app);
 const io = require('socket.io')(server);
@@ -41,12 +42,22 @@ con.connect(function(err){
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
     socket.on('Nuevo usuario', (nuevoUsuario) => {
+    socket.on('Nuevo usuario', (nuevoUsuario) => {
         console.log("User connected.");
         console.log(socket.id);
+        
+        try {
+            usersConectados.push(nuevoUsuario);
+            
+            socket.broadcast.emit('usuarioConectado', usersConectados);   
+            for (let i = 0; i < usersConectados.length; i++) {
+                console.log("hola", usersConectados[i]);
+            }
         
         try {
             usersConectados.push(nuevoUsuario);
@@ -82,6 +93,8 @@ io.on('connection', (socket) => {
     console.log('Objeto con las preguntas y sus resultados:', objPreguntes);
 });
 
+server.listen(3000, () => {
+    console.log('Listening on http://localhost:3000');
 server.listen(3000, () => {
     console.log('Listening on http://localhost:3000');
 });

@@ -1,32 +1,17 @@
 {
     "arrSalas": [
         {
-            "sales": [
-                {
-                    "nom": "",
-                    "nUsuaris": "",
-                    "temps": "45",
-                    "users": [
-                        {
-                            "nombre": "",
-                            "bomba": "false",
-                            "vidas": "3"
-                        },
-                        {
-                            "nombre": "Jose",
-                            "bomba": "true",
-                            "vidas": "3"
-                        }
-                    ]
-                }
-            ],
-            "waiting": [
-                {
-                    "nombre": "Laia",
+            "sales":[ {
+                "nom": "",
+                "nUsuaris": "",
+                "temps": "45",
+                "users": [{
+                    "nombre": "",
                     "bomba": "false",
-                    "vidas": "0"
-                }
-            ]
+                    "vidas": "3"
+                }, {"nombre": "Jose", "bomba":"true", "vidas":"3"}]
+            } ],
+            "waiting":[{"nombre": "Laia", "bomba":"false", "vidas":"0"}]
         }
     ]
 }
