@@ -32,6 +32,8 @@ con.connect(function(err){
                 pregunta: pregunta[i].pregunta,
             };
         }
+        io.emit('preguntas', objPreguntes);
+        
         console.log('Objeto con las preguntas y sus resultados:', objPreguntes);
     });
 });
