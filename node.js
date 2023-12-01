@@ -41,7 +41,6 @@ con.connect(function(err){
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
-    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
@@ -67,7 +66,6 @@ io.on('connection', (socket) => {
                     usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
 
                     io.emit('arrayUsers', usersConectados);
-
                 }
             });
 
