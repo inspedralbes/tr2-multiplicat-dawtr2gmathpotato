@@ -84,5 +84,36 @@ public function deletePregunta($id)
             'message' => 'Error al eliminar la pregunta',
             
         ] );
+        } 
+        public function validarPregunta($id)
+        {
+            $pregunta = Preguntas::find($id);
+        
+            if ($pregunta) {
+                if ($pregunta->activo) {
+                    return response()->json([
+                        'status' => 1,
+                        'pregunta' => $pregunta,
+                        'message' => 'La pregunta está activa',
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 0,
+                        'message' => 'La pregunta no está activa',
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'No se encontró la pregunta',
+                ]);
+            }
         }
+        
+
+        
+        
+        
 }
+        
+    

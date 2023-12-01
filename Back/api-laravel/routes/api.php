@@ -22,5 +22,6 @@ Route::post('/preguntes',[PreguntesController::class, 'afegir']);
 Route::get('/preguntes/random', [PreguntesController::class, 'getPreguntasRandom']);
 Route::get('/preguntes/count', [PreguntesController::class, 'getCountPreguntas']);
 Route::put('/preguntes/{id_pregunta}', [PreguntesController::class, 'updatePregunta']);
-Route::delete('/preguntes/{_pregunta}', [PreguntesController::class, 'deletePregunta']);
+Route::delete('/preguntes/{id_pregunta}', [PreguntesController::class, 'deletePregunta']);
+Route::get('/preguntes/validar-pregunta/{id_pregunta}', [PreguntesController::class, 'validarPregunta']);
 
