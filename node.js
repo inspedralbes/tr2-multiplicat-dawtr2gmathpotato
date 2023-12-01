@@ -4,7 +4,23 @@ const server = require("http").Server(app);
 const io = require('socket.io')(server);
 const fs = require('fs');
 const { Socket } = require('socket.io');
+var mysql = require('mysql');
 var usersConectados = [];
+
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "Potato"
+});
+
+con.connect(function(err){
+    if (err) throw err;
+    con.query("SELECT * FROM preguntas", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+    });
+});
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
