@@ -4,10 +4,12 @@ const server = require("http").Server(app);
 const io = require('socket.io')(server);
 const fs = require('fs');
 const { Socket } = require('socket.io');
+// import fetch from 'node-fetch';
 var mysql = require('mysql');
 var usersConectados = [];
 
 const objPreguntes = {};
+const URL = "http://127.0.0.1:8000/api/preguntes/random";
 
 //--------------------------BASE DE DATOS----------------------------
 
@@ -23,7 +25,7 @@ con.connect(function(err){
     con.query("SELECT * FROM preguntas", function (err, pregunta) {
         if (err) throw err;
 
-        for (let i = 0; i < pregunta.length; i++) {
+        for (let i = 0; i < 50; i++) {
 
             console.log("La pregunta es: ", pregunta[i].pregunta);           
             const resultatPregunta = eval(pregunta[i].pregunta);
@@ -37,8 +39,6 @@ con.connect(function(err){
      
     });
 });
-
-
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
