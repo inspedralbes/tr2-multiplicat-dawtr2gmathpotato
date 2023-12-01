@@ -15,6 +15,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
 // Route::resource('preguntes', PreguntesController::class);
 Route::post('/preguntes',[PreguntesController::class, 'afegir']);
-Route::get('/mostrar/{id}', [PreguntesController::class, 'mostrar']);
+Route::get('/preguntes/random', [PreguntesController::class, 'getPreguntasRandom']);
+Route::get('/preguntes/count', [PreguntesController::class, 'getCountPreguntas']);
+Route::put('/preguntes/{id_pregunta}', [PreguntesController::class, 'updatePregunta']);
+Route::delete('/preguntes/{id_pregunta}', [PreguntesController::class, 'deletePregunta']);
+Route::get('/preguntes/validar-pregunta/{id_pregunta}', [PreguntesController::class, 'validarPregunta']);
+
