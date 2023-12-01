@@ -22,54 +22,49 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-        console.log("User connected.");
-        console.log(socket.id);
-        
-        try {
-            socket.on('join', (data) => {
-                usersConectados.push({username:data, id:socket.id});
-                console.log("esto"+data);
-                io.emit('usersConnected', usersConectados);
-                console.log(usersConectados);
-                // io.to(socket.id).emit('redirect', '/waiting');
+    console.log("Usuario conectado.");
+    console.log(socket.id);
 
-                // const appStore = useAppStore();
-                // appStore.setGuestInfo(data, socket.id);
-            });
+    try {
+        socket.on('join', (dataUser) => {
+            // Verifica si el usuario con el mismo socket.id ya existe en el array
+            const existingUserIndex = usersConectados.findIndex(user => user.id === socket.id);
 
+            if (existingUserIndex !== -1) {
+                // Si el usuario ya existe, actualiza su nombre de usuario
+                usersConectados[existingUserIndex].username = dataUser;
+            } else {
+                // Si el usuario no existe, agrégalo al array
+                usersConectados.push({ username: dataUser, id: socket.id });
+            }
 
+            console.log(dataUser); // data = nombre de usuario
+            io.emit('usersConnected', usersConectados);
+        });
 
-            // usersConectados.push(nuevoUsuario);
-            
-            // socket.broadcast.emit('usuarioConectado', usersConectados);   
-            // for (let i = 0; i < usersConectados.length; i++) {
-            //     console.log("hola", usersConectados[i]);
-                
-            // }
+        socket.on('disconnect', () => {
+            const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
 
-            socket.on('disconnect', () => {
-                const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
+            console.log(usersConectados);
+            console.log(usuarioDesconectadoIndex);
 
-                console.log(usersConectados);
+            if (usuarioDesconectadoIndex !== -1) {
+                usersConectados.splice(usuarioDesconectadoIndex, 1);
                 console.log(usuarioDesconectadoIndex);
 
-                if (usuarioDesconectadoIndex !== -1) {
-                    usersConectados.splice(usuarioDesconectadoIndex, 1);
+                io.emit('usersDesconectados', usersConectados);
+            }
+            console.log('Usuario desconectado');
+        });
+    } catch (error) {
+        console.error("Error ", error);
+    }
 
-                    io.emit('usersDesconectados', usersConectados);
-                    // io.to(socket.id).emit('redirect', '/');   
-
-                }
-                console.log('User Disconnected');
-            });
-
-        } catch (error) {
-            console.error("Error ", error);
-        }
-
-    socket.emit("username");
+    // socket.emit("username");
+    socket.on('disconnect', () => {
+        io.emit('usersDesconectados', usersConectados);
+    });
 });
-
 server.listen(5175, () => {
     console.log('Listening on http://localhost:5175');
 });

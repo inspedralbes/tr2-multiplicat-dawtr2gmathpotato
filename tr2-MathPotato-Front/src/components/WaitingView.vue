@@ -40,8 +40,8 @@
             console.log(this.users);
             socket.emit('usersWaitingGame', this.users);
 
-            const store = useAppStore();
-            store.getGuestInfo(this.users);
+            // const store = useAppStore();
+            // store.getGuestInfo(this.users);
             },
         },
     }

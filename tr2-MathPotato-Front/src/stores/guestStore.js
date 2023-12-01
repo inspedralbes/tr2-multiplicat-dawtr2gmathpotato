@@ -12,16 +12,16 @@ export const useAppStore = defineStore('app', {
     actions: {
         setUsers(items){
             this.users = items;
+            console.log(this.users);
         },
         getUsers(){
             return this.users;
         },
-        setGuestInfo(items) {
-            console.log(items);
-            for (let i = 0; i < items.length; i++) {
-                this.guestInfo.username = items[i].username;
-                this.guestInfo.id = items[i].id;
-            }
+        setGuestInfo(username, id) {
+            this.guestInfo.username = username;
+            this.guestInfo.id = id;
+
+            console.log('infoGuest');
             console.log(this.guestInfo.username);
             console.log(this.guestInfo.id);
             
@@ -32,6 +32,9 @@ export const useAppStore = defineStore('app', {
         clearGuestInfo() {
             this.guestInfo.username = '';
             this.guestInfo.id = '';
-        },
+        }, 
+        updateUsersOnDisconnect(users) {
+            this.setUsers(users);
+        }
     }
 });
