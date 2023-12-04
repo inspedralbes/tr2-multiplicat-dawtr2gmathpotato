@@ -236,7 +236,7 @@ export default {
                     name: "Pepinho",
                     image: "./src/assets/Icon_2.png",
                     background: '#' + Math.floor(Math.random() * 16777215).toString(16),
-                    bomba: true
+                    bomba: false
                 },
                 {
                     id: 4,
