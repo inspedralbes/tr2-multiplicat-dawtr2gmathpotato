@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Crear y Eliminar Usuario</title>
-    <script src="/socket.io/socket.io.js"></script>
+    <title>Socket.IO - Ejemplo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
 </head>
 <body>
-    <h1>Crear y Eliminar Usuario</h1>
-    
-        <input type="text" id="username" placeholder="Nombre de usuario" required>
-        <button id="add_user">Agregar Usuario</button>
-
-
-    <ul id="usuarios">
-        <li></li>
-    </ul>
-
     <script>
-        let username;
         const socket = io();
 
-        document.getElementById("add_user").addEventListener("click", () => {
-            if (document.getElementById("username").value) {
-                username = document.getElementById("username").value;
-                socket.emit('Nuevo usuario', username);
-            }
+        socket.on('connect', () => {
+            console.log('Conectado al servidor.');
+
+            // Escuchar el evento 'preguntas' enviado desde el servidor
+           
         });
+
+
+
+        socket.on('preguntas', (objPreguntes) => {
+                console.log('Objeto de preguntas recibido:', objPreguntes);
+
+                for (const key in objPreguntes) {
+                    if (Object.hasOwnProperty.call(objPreguntes, key)) {
+                        console.log(`ID: ${objPreguntes[key].id}, Pregunta: ${objPreguntes[key].pregunta}`);
+                    }
+                }
+            });
     </script>
 </body>
 </html>

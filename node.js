@@ -1,48 +1,78 @@
-import express from 'express';
-import cors from 'cors';
-import { createServer } from 'node:http';
-import { Server } from 'socket.io';
+const express = require('express');
 const app = express();
-
-app.use(cors());
-
+const server = require("http").Server(app);
+const io = require('socket.io')(server);
+const fs = require('fs');
+const { Socket } = require('socket.io');
+// import fetch from 'node-fetch';
+var mysql = require('mysql');
 var usersConectados = [];
-const server = createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: '*',
-        methods: ['GET', 'POST'],
-    },
+
+const objPreguntes = {};
+const URL = "http://127.0.0.1:8000/api/preguntes/random";
+
+//--------------------------BASE DE DATOS----------------------------
+
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "Potato"
 });
+
+con.connect(function (err) {
+    if (err) throw err;
+    con.query("SELECT * FROM preguntas", function (err, pregunta) {
+        if (err) throw err;
+
+        fetch(URL)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                for (let i = 0; i < data.preguntas.length; i++) {
+                    objPreguntes[i] = {
+                        id: data.preguntas[i].id_pregunta,
+                        pregunta: data.preguntas[i].pregunta,
+                    };
+                }
+
+                io.emit('preguntasAleatorias', data);
+            })
+            .catch(error => {
+                console.error('Hubo un problema con la solicitud fetch:', error);
+            });
+
+        for (let i = 0; i < objPreguntes.length; i++) {
+            console.log("La pregunta es: ", pregunta[i].pregunta);
+            const resultatPregunta = eval(pregunta[i].pregunta);
+            console.log("--> ", resultatPregunta);
+
+            objPreguntes[i] = {
+                id: pregunta[i].id_pregunta,
+                pregunta: pregunta[i].pregunta,
+            };
+        }
+
+    });
+});
+
 app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, '../../../index.html'));
+    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
+    socket.on('Nuevo usuario', (nuevoUsuario) => {
         console.log("User connected.");
         console.log(socket.id);
-        if (usersConectados.length > 0) {
-            io.emit('nuevosUsuario', usersConectados);
-            console.log("hi");
-        }
 
         try {
+            usersConectados.push(nuevoUsuario);
 
-            socket.on('join', (data) => {
-                usersConectados.push({username:data, id:socket.id});
-                console.log(data);
-                io.emit('nuevosUsuario', usersConectados);
-            });
-
-
-
-            // usersConectados.push(nuevoUsuario);
-            
-            // socket.broadcast.emit('usuarioConectado', usersConectados);   
-            // for (let i = 0; i < usersConectados.length; i++) {
-            //     console.log("hola", usersConectados[i]);
-                
-            // }
+            socket.broadcast.emit('usuarioConectado', usersConectados);
+            for (let i = 0; i < usersConectados.length; i++) {
+                console.log("hola", usersConectados[i]);
+            }
 
             socket.on('disconnect', () => {
                 const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
@@ -56,16 +86,19 @@ io.on('connection', (socket) => {
                     io.emit('arrayUsers', usersConectados);
 
                 }
-                console.log('User Disconnected');
             });
-
         } catch (error) {
             console.error("Error ", error);
         }
+    });
+    console.log('preguntasAleatorias', objPreguntes);
 
     socket.emit("username");
+
+    socket.emit('preguntas', objPreguntes);
+
 });
 
-server.listen(5175, () => {
-    console.log('Listening on http://localhost:5175');
+server.listen(3000, () => {
+    console.log('Listening on http://localhost:3000');
 });
