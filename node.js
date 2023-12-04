@@ -3,9 +3,9 @@ import cors from 'cors';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { join } from 'path';
+import mysql from 'mysql';
 
 // import fetch from 'node-fetch';
-var mysql = require('mysql');
 const app = express();
 
 app.use(cors());
@@ -25,7 +25,7 @@ const io = new Server(server, {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, './tr2-MathPotato-Front/src/components/GuestView.vue'));
+    res.sendFile(join(__dirname, 'index.html'));
 });
 
 //--------------------------BASE DE DATOS----------------------------
@@ -34,7 +34,7 @@ var con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "Potato"
+    database: "potato"
 });
 
 con.connect(function (err) {
