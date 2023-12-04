@@ -10,7 +10,7 @@ DOCUMENTACIÓ DEL GRUP 1:
 * Eric Gómez - Rol: Disseny i Desplegament
 * Aitor Barreiro - Rol: Desplegament i Back
 * Rubén Lora - Rol: Front i Disseny
-* Fabian Roldan - Rol Back i Front
+* Fabian Roldan - Rol: Back i Front
 * URL del prototip de penpot
 * [URL del taiga.io](https://tree.taiga.io/project/fabian03-tr2daw23-24-1/backlog)
 * URL de paleta de colors
