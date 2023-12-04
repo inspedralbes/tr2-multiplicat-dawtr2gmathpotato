@@ -2,14 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
-import { join } from 'path';
-import { createPinia } from 'pinia';
-// import { useAppStore } from './tr2-MathPotato-Front/src/stores/guestStore.js';
 const app = express();
 
 app.use(cors());
 
-const usersConectados = [];
+var usersConectados = [];
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -18,53 +15,57 @@ const io = new Server(server, {
     },
 });
 app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, './tr2-MathPotato-Front/src/components/GuestView.vue'));
+    res.sendFile(join(__dirname, '../../../index.html'));
 });
 
 io.on('connection', (socket) => {
-    console.log("Usuario conectado.");
-    console.log(socket.id);
+        console.log("User connected.");
+        console.log(socket.id);
+        if (usersConectados.length > 0) {
+            io.emit('nuevosUsuario', usersConectados);
+            console.log("hi");
+        }
 
-    try {
-        socket.on('join', (dataUser) => {
-            // Verifica si el usuario con el mismo socket.id ya existe en el array
-            const existingUserIndex = usersConectados.findIndex(user => user.id === socket.id);
+        try {
 
-            if (existingUserIndex !== -1) {
-                // Si el usuario ya existe, actualiza su nombre de usuario
-                usersConectados[existingUserIndex].username = dataUser;
-            } else {
-                // Si el usuario no existe, agrégalo al array
-                usersConectados.push({ username: dataUser, id: socket.id });
-            }
+            socket.on('join', (data) => {
+                usersConectados.push({username:data, id:socket.id});
+                console.log(data);
+                io.emit('nuevosUsuario', usersConectados);
+            });
 
-            console.log(dataUser); // data = nombre de usuario
-            io.emit('usersConnected', usersConectados);
-        });
 
-        socket.on('disconnect', () => {
-            const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
 
-            console.log(usersConectados);
-            console.log(usuarioDesconectadoIndex);
+            // usersConectados.push(nuevoUsuario);
+            
+            // socket.broadcast.emit('usuarioConectado', usersConectados);   
+            // for (let i = 0; i < usersConectados.length; i++) {
+            //     console.log("hola", usersConectados[i]);
+                
+            // }
 
-            if (usuarioDesconectadoIndex !== -1) {
-                usersConectados.splice(usuarioDesconectadoIndex, 1);
+            socket.on('disconnect', () => {
+                const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
+
+                console.log(usersConectados);
                 console.log(usuarioDesconectadoIndex);
 
-                io.emit('usersDesconectados', usersConectados);
-            }
-            console.log('Usuario desconectado');
-        });
-    } catch (error) {
-        console.error("Error ", error);
-    }
+                if (usuarioDesconectadoIndex) {
+                    usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
 
-    // socket.emit("username");
-    socket.on('disconnect', () => {
-        io.emit('usersDesconectados', usersConectados);
-    });
+                    io.emit('arrayUsers', usersConectados);
+
+                }
+                console.log('User Disconnected');
+            });
+
+        } catch (error) {
+            console.error("Error ", error);
+        }
+
+    socket.emit("username");
 });
+
 server.listen(5175, () => {
     console.log('Listening on http://localhost:5175');
 });
