@@ -2,7 +2,7 @@
   "name": "tr2-mathpotato-front",
   "version": "0.0.0",
   "private": true,
-  "type": "module", 
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -30,5 +30,9 @@
     "prettier": "^3.0.3",
     "vite": "^4.4.11",
     "vitest": "^0.34.6"
-  }
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite.",
+  "main": "vite.config.js",
+  "author": "",
+  "license": "ISC"
 }
