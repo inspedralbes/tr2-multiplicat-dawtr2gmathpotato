@@ -2,22 +2,26 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB; 
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $sqlFile = storage_path('app/preguntas.sql'); 
+        $sqlFilePath = storage_path('app/preguntas.sql');
 
-        if (file_exists($sqlFile)) {
-            DB::unprepared(file_get_contents($sqlFile));
+        if (File::exists($sqlFilePath)) {
+            try {
+                $sqlContent = File::get($sqlFilePath);
+                DB::unprepared($sqlContent);
+                $this->command->info('Datos insertados correctamente.');
+            } catch (\Exception $e) {
+                $this->command->error('Error al ejecutar el archivo SQL: ' . $e->getMessage());
+            }
         } else {
-            echo "Archivo SQL no encontrado: $sqlFile";
+            $this->command->error("Archivo SQL no encontrado: $sqlFilePath");
         }
     }
 }
-
