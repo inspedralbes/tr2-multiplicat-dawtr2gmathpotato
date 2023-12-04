@@ -75,7 +75,6 @@ con.connect(function (err) {
 });
 
 
-
 io.on('connection', (socket) => {
         console.log("User connected.");
         console.log(socket.id);
@@ -89,7 +88,7 @@ io.on('connection', (socket) => {
             socket.on('join', (data) => {
                 usersConectados.push({username:data, id:socket.id});
                 console.log(data);
-                io.emit('nuevosUsuario', usersConectados);
+                io.emit('usersConnected', usersConectados);
             });
 
 
@@ -124,9 +123,9 @@ io.on('connection', (socket) => {
 
     console.log('preguntasAleatorias', objPreguntes);
 
-        socket.emit("username");
+    // socket.emit("username");
     
-        socket.emit('preguntas', objPreguntes);
+    socket.emit('preguntas', objPreguntes);
 
 });
         // io.emit('arrayUsers', usersConectados);
