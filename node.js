@@ -20,23 +20,40 @@ var con = mysql.createConnection({
     database: "Potato"
 });
 
-con.connect(function(err){
+con.connect(function (err) {
     if (err) throw err;
     con.query("SELECT * FROM preguntas", function (err, pregunta) {
         if (err) throw err;
 
-        for (let i = 0; i < 50; i++) {
+        fetch(URL)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                for (let i = 0; i < data.preguntas.length; i++) {
+                    objPreguntes[i] = {
+                        id: data.preguntas[i].id_pregunta,
+                        pregunta: data.preguntas[i].pregunta,
+                    };
+                }
 
-            console.log("La pregunta es: ", pregunta[i].pregunta);           
+                io.emit('preguntasAleatorias', data);
+            })
+            .catch(error => {
+                console.error('Hubo un problema con la solicitud fetch:', error);
+            });
+
+        for (let i = 0; i < objPreguntes.length; i++) {
+            console.log("La pregunta es: ", pregunta[i].pregunta);
             const resultatPregunta = eval(pregunta[i].pregunta);
             console.log("--> ", resultatPregunta);
-            
+
             objPreguntes[i] = {
                 id: pregunta[i].id_pregunta,
                 pregunta: pregunta[i].pregunta,
             };
         }
-     
+
     });
 });
 
@@ -48,11 +65,11 @@ io.on('connection', (socket) => {
     socket.on('Nuevo usuario', (nuevoUsuario) => {
         console.log("User connected.");
         console.log(socket.id);
-        
+
         try {
             usersConectados.push(nuevoUsuario);
-            
-            socket.broadcast.emit('usuarioConectado', usersConectados);   
+
+            socket.broadcast.emit('usuarioConectado', usersConectados);
             for (let i = 0; i < usersConectados.length; i++) {
                 console.log("hola", usersConectados[i]);
             }
@@ -70,17 +87,16 @@ io.on('connection', (socket) => {
 
                 }
             });
-
         } catch (error) {
             console.error("Error ", error);
         }
     });
-    
+    console.log('preguntasAleatorias', objPreguntes);
+
     socket.emit("username");
 
     socket.emit('preguntas', objPreguntes);
-        
-    console.log('Objeto con las preguntas y sus resultados:', objPreguntes);
+
 });
 
 server.listen(3000, () => {
