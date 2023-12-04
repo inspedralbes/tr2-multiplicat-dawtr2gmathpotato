@@ -232,6 +232,16 @@ export default {
             return store.getUsers();
         }        
     },
+    watch: {
+        users: {
+            immediate: true, // Ejecutar al inicio
+            handler(newVal, oldVal) {
+                if (newVal && newVal.length > 0) {
+                    this.changeBomb();
+                }
+            }
+        }
+    },
     methods: {
         getId(index) {
             let size = this.users.length;
@@ -301,7 +311,9 @@ export default {
 
             };
         },
-        changeBomb() {
+        async changeBomb() {
+            await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
+
             let size = this.users.length;
             let usersWithBomb = this.findUsersWithBomb();
             console.log(usersWithBomb);
@@ -311,24 +323,34 @@ export default {
                 newUserBomb = 0;
             }
             let object = "user" + (newUserBomb);
-            let userBombpos = document.getElementById(object).getBoundingClientRect();
-            let objectAnt = "user" + (usersWithBomb);
-            let objectAntpos = document.getElementById(objectAnt).getBoundingClientRect();
-            let userBombXAnt = objectAntpos.x + 100;
-            let userBombYAnt = objectAntpos.y;
-            document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
-            document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
-            let userBombX = userBombpos.x + 100;
-            let userBombY = userBombpos.y;
-            document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
-            document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
-            //usersWithBomb.forEach(user => user.bomba = true);
-            //let random = Math.floor(Math.random() * size);
-            this.users[newUserBomb].bomba = true;
-            document.getElementById("bombContainer").classList.add("moveBomb");
-            setTimeout(() => {
-                document.getElementById("bombContainer").classList.remove("moveBomb");
-            }, 1000);
+            let userElement = document.getElementById(object);
+
+            // Verificar si el elemento está presente antes de acceder a sus propiedades
+            if (userElement) {
+                let userBombpos = userElement.getBoundingClientRect();
+                let objectAnt = "user" + (usersWithBomb);
+                let objectAntElement = document.getElementById(objectAnt);
+                if (objectAntElement) {
+                    let objectAntpos = objectAntElement.getBoundingClientRect();
+                    let userBombXAnt = objectAntpos.x + 100;
+                    let userBombYAnt = objectAntpos.y;
+                    if(this.users.length>2){
+                        document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
+                        document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
+                    }
+                }
+
+                let userBombX = userBombpos.x + 100;
+                let userBombY = userBombpos.y;
+                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
+                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
+
+                this.users[newUserBomb].bomba = true;
+                document.getElementById("bombContainer").classList.add("moveBomb");
+                setTimeout(() => {
+                    document.getElementById("bombContainer").classList.remove("moveBomb");
+                }, 1000);
+            }
         },
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
@@ -337,7 +359,6 @@ export default {
     },
     mounted() {
         console.log(this.users);
-        this.changeBomb();
         return this.users.findIndex(user => user.bomba === true);
         //return this.users.filter(user => user.bomba === true);
     }
