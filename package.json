@@ -14,11 +14,8 @@
     "@vue/composition-api": "^1.7.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "pinia": "^2.1.7",
-    "type": "module",
     "mysql": "^2.18.1",
     "node-fetch": "^3.3.2",
-
     "socket.io": "^4.7.2"
   },
   "directories": {
