@@ -1,17 +1,24 @@
 <template>
     <div>
-    <h1>Welcome, Guest!</h1>
-    <div class="card flex justify-content-center">
-        <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
-        
-        <span class="p-float-label">
-            <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
-            <label for="value">Name</label>
-        </span>
-        <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
-        <Button @click="onSubmit()" label="Submit" />
+        <h1>Welcome, Guest!</h1>
+        <div class="card flex justify-content-center">
                 
-               
+                <span class="p-float-label">
+                        <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
+                        <label for="value">Name</label>
+                </span>
+                <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
+                <Button @click="onSubmit()" label="Submit" />
+                <ul>
+                    <li>
+                        <h3>Users Conectados</h3>
+                        <ul>
+                            <li v-for="user in users" :key="user.username">
+                                {{ user.username }}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
                 <Toast />
         </div>
     </div>
@@ -36,8 +43,7 @@ export default {
             } else {
                 // Submit the form
                 socket.emit('join', this.username);
-
-                this.$router.push({ path: '/waiting' });             
+                
             }
         },
         handleUserList(users) {
@@ -45,10 +51,10 @@ export default {
         console.log(this.users);
         },
     },
-//     mounted() {
-//         // Escuchar eventos de usuarios después de que el componente está montado
-//         socket.on('nuevosUsuario', this.handleUserList);
-//   },
+    mounted() {
+        // Escuchar eventos de usuarios después de que el componente está montado
+        socket.on('nuevosUsuario', this.handleUserList);
+  },
 };
 
     
