@@ -78,10 +78,7 @@ con.connect(function (err) {
 io.on('connection', (socket) => {
         console.log("User connected.");
         console.log(socket.id);
-        if (usersConectados.length > 0) {
-            io.emit('nuevosUsuario', usersConectados);
-            console.log("hi");
-        }
+        
 
         try {
 
