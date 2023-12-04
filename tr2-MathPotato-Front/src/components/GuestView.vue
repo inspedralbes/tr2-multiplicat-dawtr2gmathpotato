@@ -37,7 +37,7 @@ export default {
                 // Submit the form
                 socket.emit('join', this.username);
 
-                this.$router.push({ path: '/waiting' });             
+                this.$router.push({ path: '/play' });             
             }
         },
         handleUserList(users) {

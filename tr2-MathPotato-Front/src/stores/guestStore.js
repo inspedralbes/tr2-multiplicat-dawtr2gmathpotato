@@ -5,6 +5,8 @@ export const useAppStore = defineStore('app', {
         guestInfo: {
             username: '',
             id: '',
+            bomba: false,
+            image: './assets/Icon_2.png'
         },
         users:[]
 

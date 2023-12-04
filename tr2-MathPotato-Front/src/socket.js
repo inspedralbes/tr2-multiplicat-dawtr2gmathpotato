@@ -22,6 +22,7 @@ socket.on("usersConnected", (usersConnected) => {
 
     // Establece el array de usuarios en Pinia
     store.setUsers(usersConnected);
+    console.log(usersConnected);
 });
 
 // socket.on("username", (username, id) => { 

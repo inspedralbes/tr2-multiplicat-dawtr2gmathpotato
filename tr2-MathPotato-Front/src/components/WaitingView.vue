@@ -7,6 +7,7 @@
                     <li v-for="user in users" :key="user" >
                         {{ console.log(users)  }}
                         {{ user.username }}
+                        {{ user.bomba }}
                         
                     </li>
                 </ul>
@@ -31,6 +32,7 @@
                 }],*/
 
                 users: computed(() => store.getUsers()),
+                
             };
         },
         methods: {
@@ -39,6 +41,7 @@
             this.users = users;
             console.log(this.users);
             socket.emit('usersWaitingGame', this.users);
+            
 
             // const store = useAppStore();
             // store.getGuestInfo(this.users);

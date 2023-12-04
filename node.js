@@ -83,7 +83,11 @@ io.on('connection', (socket) => {
         try {
 
             socket.on('join', (data) => {
-                usersConectados.push({username:data, id:socket.id});
+                if(usersConectados.length === 0){
+                    usersConectados.push({username:data, id:socket.id, bomba: true});
+                } else{
+                    usersConectados.push({username:data, id:socket.id, bomba: false});
+                }
                 console.log(data);
                 io.emit('usersConnected', usersConectados);
             });
