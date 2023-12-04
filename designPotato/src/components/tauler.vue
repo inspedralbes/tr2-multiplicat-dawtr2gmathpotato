@@ -302,10 +302,7 @@ export default {
                         case 1:
                             return "rightmid";
                         case 2:
-                        case 2:
                             return "bottommid";
-                        case 3:
-                            return "leftmid";
                         case 3:
                             return "leftmid";
                     }
@@ -323,7 +320,6 @@ export default {
                         case 3:
                             return "bottomleft";
                         case 4:
-                            return "leftmid";
                             return "leftmid";
 
                     }
@@ -344,7 +340,6 @@ export default {
                             return "bottomleft";
                         case 5:
 
-                            return "leftmid";
                             return "leftmid";
                     }
 
