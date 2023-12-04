@@ -221,7 +221,7 @@ export default {
                     name: "Pepito",
                     image: "./src/assets/Icon_2.png",
                     background: '#' + Math.floor(Math.random() * 16777215).toString(16),
-                    bomba: false
+                    bomba: true
 
                 },
                 {
@@ -259,6 +259,7 @@ export default {
                     background: '#' + Math.floor(Math.random() * 16777215).toString(16),
                     bomba: false
                 }
+               
 
             ]
         }
@@ -267,8 +268,17 @@ export default {
         getId(index) {
             let size = this.users.length;
             switch (size) {
+                case 1:
+                    return "topmid";
+                case 2:
+                    switch (index) {
+                        case 0:
+                            return "topmid";
+                        case 1:
+                            return "bottommid";
+                    }
+                    break;
                 case 3:
-
                     switch (index) {
                         case 0:
                             return "topmid";
@@ -318,7 +328,6 @@ export default {
                         case 4:
                             return "bottomleft";
                         case 5:
-
                             return "leftmid";
                     }
 
