@@ -50,7 +50,7 @@ socket.on("gameStart", (gameStart) => {
 
 });
 
-socket.on("preguntas", (objPreguntes) => {
-    
+socket.on("pregunta", (objPreguntes) => {
+    console.log(objPreguntes);
 
 });

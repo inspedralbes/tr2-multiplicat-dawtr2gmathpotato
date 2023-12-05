@@ -43,9 +43,6 @@ io.on('connection', (socket) => {
         console.log("User connected.");
         console.log(socket.id);
         
-
-        try {
-
             socket.on('join', (data) => {
                 if(usersConectados.length === 0){
                     usersConectados.push({username:data, id:socket.id, bomba: true, image: './src/assets/Icon_2.png'});
@@ -55,117 +52,98 @@ io.on('connection', (socket) => {
                 console.log(data);
                 io.emit('usersConnected', usersConectados);
 
-                if(usersConectados.length >= 3 && usersConectados.length <=6){
-                    io.emit('gameStart', 'The Game Start');
-
-                }
+                
             });
 
             socket.on('preguntes', () => {
                 console.log('preguntasAleatorias', objPreguntes);
-                socket.emit('preguntas', objPreguntes);
+                io.emit('preguntas', objPreguntes);
             })
 
 
+            socket.on('startGame', (data) => {
+                if(usersConectados.length >= 3 && usersConectados.length <=6){
+                    console.log("startGame");
+                    getPreguntes();
+                    newPregunta();
+                }        
+            });
 
-    console.log("User connected.");
-    console.log(socket.id);
-    
-    socket.on('join', (data) => {
-        if (usersConectados.length === 0) {
-            usersConectados.push({ username: data, id: socket.id, bomba: true });
-        } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false });
-        }
-        console.log(data);
-        io.emit('usersConnected', usersConectados);
-    });
+            function getPreguntes() {
+                preguntas = fetch(URL).then(response => {
+                    return response.json();
+                    
+                });
+                console.log(preguntas);
 
-    socket.on('startGame', (data) => {
-        console.log("startGame");
-        getPreguntes();
-        newPregunta();
-    });
-
-    function getPreguntes() {
-        preguntas = fetch(URL).then(response => {
-            return response.json();
-        });
-
-    }
-
-    function newPregunta() {
-        socket.emit('pregunta', { "id": preguntas[pregActual].id, "pregunta": preguntas[pregActual].pregunta });
-    }
-
-    socket.on('resposta', (data) => {
-        console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
-
-        const resultatPregunta = eval(objPreguntes[pregActual].pregunta);
-        console.log("--> ", resultatPregunta); //FUNCIONA
-
-        console.log(usersConectados + "HOLAESTOYAQUIYTUCIEGO"); //FUNCIONA
-        console.log(resultatPregunta);
-
-        if (resultatPregunta === respuesta) {
-            console.log("entraaaaaaaaaaaaaaaaaaaaaaaaaa?");
-            pregActual++;
-            console.log(pregActual);
-
-            usersConectados[userBomba].bomba = false;
-
-            console.log(usersConectados[userBomba]);
-            console.log(userBomba);
-            if (userBomba + 1 === usersConectados.length) {
-                userBomba = 0;
-            } else {
-                userBomba++;
             }
-            usersConectados[userBomba].bomba = true;
-            console.log(userBomba);
-            socket.emit('usersConnected', usersConectados);
-            newPregunta();
-        } else {
-            console.log("has fallao tonto");
-            pregActual++;
-            usersConectados[userBomba].bomba = true;
-            socket.emit('usersConnected', usersConectados);
-            newPregunta();
-        }
-    });
 
-    // usersConectados.push(nuevoUsuario);
+            function newPregunta() {
+                console.log(preguntas);    
+                io.emit('pregunta', { "id": preguntas[pregActual].id_pregunta, "pregunta": preguntas[pregActual].pregunta });
+            }
 
-    // socket.broadcast.emit('usuarioConectado', usersConectados);   
-    // for (let i = 0; i < usersConectados.length; i++) {
-    //     console.log("hola", usersConectados[i]);
+            socket.on('resposta', (data) => {
+                console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
 
-    // }
+                const resultatPregunta = eval(objPreguntes[pregActual].pregunta);
+                console.log("--> ", resultatPregunta); //FUNCIONA
 
-    socket.on('disconnect', () => {
-        const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
+                console.log(usersConectados + "HOLAESTOYAQUIYTUCIEGO"); //FUNCIONA
+                console.log(resultatPregunta);
 
-        console.log(usersConectados);
-        console.log(usuarioDesconectadoIndex);
+                if (resultatPregunta === respuesta) {
+                    console.log("entraaaaaaaaaaaaaaaaaaaaaaaaaa?");
+                    pregActual++;
+                    console.log(pregActual);
 
-        if (usuarioDesconectadoIndex) {
-            usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
+                    usersConectados[userBomba].bomba = false;
 
-            io.emit('usersDesconectados', usersConectados);
-        }
-        console.log('Usuario desconectado');
-    });
+                    console.log(usersConectados[userBomba]);
+                    console.log(userBomba);
+                    if (userBomba + 1 === usersConectados.length) {
+                        userBomba = 0;
+                    } else {
+                        userBomba++;
+                    }
+                    usersConectados[userBomba].bomba = true;
+                    console.log(userBomba);
+                    socket.emit('usersConnected', usersConectados);
+                    newPregunta();
+                } else {
+                    console.log("has fallao tonto");
+                    pregActual++;
+                    usersConectados[userBomba].bomba = true;
+                    socket.emit('usersConnected', usersConectados);
+                    newPregunta();
+                }
+            });
 
-    socket.on('disconnect', () => {
-        io.emit('usersDesconectados', usersConectados);
-    });
 
-    console.log('preguntasAleatorias', objPreguntes);
-    // socket.emit("username");
+            socket.on('disconnect', () => {
+                const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
 
-    socket.emit('preguntas', objPreguntes[pregActual]); //Primera pregunta
+                console.log(usersConectados);
+                console.log(usuarioDesconectadoIndex);
 
-});
+                if (usuarioDesconectadoIndex) {
+                    usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
+
+                    io.emit('usersDesconectados', usersConectados);
+                }
+                console.log('Usuario desconectado');
+            });
+
+            socket.on('disconnect', () => {
+                io.emit('usersDesconectados', usersConectados);
+            });
+
+            console.log('preguntasAleatorias', objPreguntes);
+            // socket.emit("username");
+
+            socket.emit('preguntas', objPreguntes[pregActual]); //Primera pregunta
+
+        });
 // io.emit('arrayUsers', usersConectados);
 
 server.listen(5175, () => {
