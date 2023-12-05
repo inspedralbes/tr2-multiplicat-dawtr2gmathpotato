@@ -7,15 +7,21 @@
                     <p>{{ user.username }}</p>
                 </div>
             </div>
-            <div id="bombContainer" v-if="users.length>2"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
-            <div id="middle">
-                <h1></h1>
-                <button @click="changeBomb" id="buttonC" v-if="users.length>2">Change bomb</button>
+            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
+            <div id="middle"> 
+                <Button @click="startGame"  id="startGameButton" :disabled="users.length <= 2" v-if="!gameStarted">START!</Button>
+                
+                <div v-if="gameStarted" class="gameContainer" >
+                    <h3>{{ message }}</h3>
+                    <input type="text"  name="resposta" id="resposta">
+                    <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
+                    <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
+                </div>               
             </div>
-
         </div>
     </div>
 </template>
+
 <style scoped>
 :root {
     --xPositionAnt: 0;
@@ -23,7 +29,9 @@
     --xPosition: 0;
     --yPosition: 0;
 }
-
+.hidden {
+    display: hidden;
+}
 #background {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
@@ -33,9 +41,15 @@
     background-position: center;
 }
 
+.gameContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
 .moveBomb {
     animation-name: bombMovement;
-    animation-duration: 1s;
+    animation-duration: 2s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-direction: alternate;
@@ -45,6 +59,7 @@
     position: absolute;
     top: var(--yPosition);
     left: var(--xPosition);
+    
 }
 
 @keyframes bombMovement {
@@ -217,13 +232,15 @@
 </style>
 <script>
 import { useAppStore } from '../stores/guestStore.js';
-import { computed } from 'vue';
+import { socket } from '../socket';
+
 export default {
     data() {       
         return {
-           
-
-
+            gameStarted: false,
+            message: "Pregunta",
+            pregunta: {},
+            respuesta: "",
         };
     },
     computed: {
@@ -235,7 +252,7 @@ export default {
     watch: {
         users: {
             immediate: true, // Ejecutar al inicio
-            handler(newVal, oldVal) {
+            handler(newVal) {
                 if (newVal && newVal.length > 0) {
                     this.changeBomb();
                 }
@@ -243,6 +260,16 @@ export default {
         }
     },
     methods: {
+        enviarResposta(){
+            const resposta = this.respuesta;
+            
+            socket.emit('respuesta', { resposta });
+        },
+        startGame() {
+            this.gameStarted = true;
+
+            socket.emit('startGame');
+        },
         getId(index) {
             let size = this.users.length;
             switch (size) {
@@ -338,7 +365,7 @@ export default {
                         document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
                         document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
                     }
-                }
+                } 
 
                 let userBombX = userBombpos.x + 100;
                 let userBombY = userBombpos.y;
@@ -349,7 +376,7 @@ export default {
                 document.getElementById("bombContainer").classList.add("moveBomb");
                 setTimeout(() => {
                     document.getElementById("bombContainer").classList.remove("moveBomb");
-                }, 1000);
+                }, 2000);
             }
         },
         findUsersWithBomb() {

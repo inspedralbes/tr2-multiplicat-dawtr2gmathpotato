@@ -40,6 +40,34 @@ var con = mysql.createConnection({
 });
 
 io.on('connection', (socket) => {
+        console.log("User connected.");
+        console.log(socket.id);
+        
+
+        try {
+
+            socket.on('join', (data) => {
+                if(usersConectados.length === 0){
+                    usersConectados.push({username:data, id:socket.id, bomba: true, image: './src/assets/Icon_2.png'});
+                } else{
+                    usersConectados.push({username:data, id:socket.id, bomba: false, image: './src/assets/Icon_2.png'});
+                }
+                console.log(data);
+                io.emit('usersConnected', usersConectados);
+
+                if(usersConectados.length >= 3 && usersConectados.length <=6){
+                    io.emit('gameStart', 'The Game Start');
+
+                }
+            });
+
+            socket.on('preguntes', () => {
+                console.log('preguntasAleatorias', objPreguntes);
+                socket.emit('preguntas', objPreguntes);
+            })
+
+
+
     console.log("User connected.");
     console.log(socket.id);
     
