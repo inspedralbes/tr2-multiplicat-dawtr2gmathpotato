@@ -64,7 +64,7 @@ con.connect(function (err) {
                 
                 });
                 for (let i = 0; i < pregunta.length; i++) {
-                    if (pregunta[i].id_pregunta === objPreguntes[i].id) {
+                    if (objPreguntes[i] && pregunta[i].id_pregunta === objPreguntes[i].id) {
                         console.log(pregunta[i].id_pregunta, pregunta[i].pregunta);
                     }
                 }
