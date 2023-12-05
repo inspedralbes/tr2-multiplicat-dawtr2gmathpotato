@@ -7,7 +7,8 @@ import PrimeVue from 'primevue/config';
 
 //import theme primevue
 
-import 'primevue/resources/themes/md-light-deeppurple/theme.css';
+import 'primevue/resources/themes/md-light-indigo/theme.css';
+import 'primeicons/primeicons.css'
 
 //import components
 import InputText from 'primevue/inputtext';

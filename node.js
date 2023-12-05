@@ -91,14 +91,16 @@ io.on('connection', (socket) => {
                 console.log(data);
                 io.emit('usersConnected', usersConectados);
 
-                if(userConectados.length >= 3 && usersConectados.length <=6){
+                if(usersConectados.length >= 3 && usersConectados.length <=6){
                     io.emit('gameStart', 'The Game Start');
+
                 }
-
-
-
-
             });
+
+            socket.on('preguntes', () => {
+                console.log('preguntasAleatorias', objPreguntes);
+                socket.emit('preguntas', objPreguntes);
+            })
 
 
 
