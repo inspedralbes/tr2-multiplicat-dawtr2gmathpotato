@@ -267,6 +267,8 @@ export default {
         },
         startGame() {
             this.gameStarted = true;
+
+            socket.emit('startGame');
         },
         getId(index) {
             let size = this.users.length;
