@@ -70,12 +70,15 @@ io.on('connection', (socket) => {
             });
 
             function getPreguntes() {
-                preguntas = fetch(URL).then(response => {
-                    return response.json();
-                    
-                });
-                console.log(preguntas);
-
+                fetch(URL)
+                    .then(response => response.json())
+                    .then(data => {
+                        preguntas = data;
+                        console.log(preguntas);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
             }
 
             function newPregunta() {
