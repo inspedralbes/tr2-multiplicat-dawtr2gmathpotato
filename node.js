@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
@@ -7,6 +7,8 @@ import mysql from 'mysql';
 
 // import fetch from 'node-fetch';
 const app = express();
+var pregActual = 0;
+var userBomba = 0;
 
 app.use(cors());
 const server = createServer(app);
@@ -37,52 +39,11 @@ var con = mysql.createConnection({
     database: "potato"
 });
 
-con.connect(function (err) {
-    if (err) throw err;
-    con.query("SELECT * FROM preguntas", function (err, pregunta) {
-        if (err) throw err;
-
-        fetch(URL)
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                console.log('Datos obtenidos:', data);
-                for (let i = 0; i < data.preguntas.length; i++) {
-                    objPreguntes[i] = {
-                        id: data.preguntas[i].id_pregunta,
-                        pregunta: data.preguntas[i].pregunta,
-                    };
-                }
-
-                io.emit('preguntasAleatorias', data);
-
-                Object.keys(objPreguntes).forEach(key => {
-                    console.log("La pregunta es: ", objPreguntes[key].pregunta);
-                    const resultatPregunta = eval(objPreguntes[key].pregunta);
-                    console.log("--> ", resultatPregunta);
-                
-                });
-                for (let i = 0; i < pregunta.length; i++) {
-                    if (objPreguntes[i] && pregunta[i].id_pregunta === objPreguntes[i].id) {
-                        console.log(pregunta[i].id_pregunta, pregunta[i].pregunta);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Hubo un problema con la solicitud fetch:', error);
-            });
-    });
-});
-
-
 io.on('connection', (socket) => {
     console.log("User connected.");
     console.log(socket.id);
 
-
     try {
-
         socket.on('join', (data) => {
             if (usersConectados.length === 0) {
                 usersConectados.push({ username: data, id: socket.id, bomba: true });
@@ -93,7 +54,60 @@ io.on('connection', (socket) => {
             io.emit('usersConnected', usersConectados);
         });
 
+        socket.on('pregunta', (data) => {
+            function newPregunta() {
+                fetch(URL)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        objPreguntes[pregActual] = {
+                            id: data.preguntas[pregActual].id_pregunta,
+                            pregunta: data.preguntas[pregActual].pregunta,
+                        };
+                        socket.emit('preguntasAleatorias', data);
+                    })
+                    .catch(error => {
+                        console.error('Hubo un problema con la solicitud fetch:', error);
+                    });
+            }
+        });
 
+        socket.on('resposta', (data) => {
+            console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
+
+            const resultatPregunta = eval(objPreguntes[pregActual].pregunta);
+            console.log("--> ", resultatPregunta); //FUNCIONA
+
+            console.log(usersConectados + "HOLAESTOYAQUIYTUCIEGO"); //FUNCIONA
+            console.log(resultatPregunta);
+
+            if (resultatPregunta === respuesta) {
+                console.log("entraaaaaaaaaaaaaaaaaaaaaaaaaa?");
+                pregActual++;
+                console.log(pregActual);
+
+                usersConectados[userBomba].bomba = false;
+
+                console.log(usersConectados[userBomba]);
+                console.log(userBomba);
+                if (userBomba + 1 === usersConectados.length) {
+                    userBomba = 0;
+                } else {
+                    userBomba++;
+                }
+                usersConectados[userBomba].bomba = true;
+                console.log(userBomba);
+                socket.emit('usersConnected', usersConectados);
+                newPregunta();
+            } else {
+                console.log("has fallao tonto");
+                pregActual++;
+                usersConectados[userBomba].bomba = true;
+                socket.emit('usersConnected', usersConectados);
+                newPregunta();
+            }
+        });
 
         // usersConectados.push(nuevoUsuario);
 
@@ -124,10 +138,9 @@ io.on('connection', (socket) => {
     });
 
     console.log('preguntasAleatorias', objPreguntes);
-
     // socket.emit("username");
 
-    socket.emit('preguntas', objPreguntes);
+    socket.emit('preguntas', objPreguntes[pregActual]); //Primera pregunta
 
 });
 // io.emit('arrayUsers', usersConectados);
