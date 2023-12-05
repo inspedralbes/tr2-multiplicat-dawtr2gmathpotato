@@ -10,8 +10,9 @@
             <div id="bombContainer" v-if="users.length>2"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
             <div id="middle">
                 <h1></h1>
-                <button @click="changeBomb" id="buttonC" v-if="users.length>2">Change bomb</button>
+                <button @click="changeBomb" id="buttonC" v-if="users.length>=3">Change bomb</button>
             </div>
+            
 
         </div>
     </div>
@@ -338,7 +339,7 @@ export default {
                         document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
                         document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
                     }
-                }
+                } 
 
                 let userBombX = userBombpos.x + 100;
                 let userBombY = userBombpos.y;

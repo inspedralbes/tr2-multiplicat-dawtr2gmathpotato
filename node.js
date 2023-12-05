@@ -84,13 +84,22 @@ io.on('connection', (socket) => {
 
             socket.on('join', (data) => {
                 if(usersConectados.length === 0){
-                    usersConectados.push({username:data, id:socket.id, bomba: true});
+                    usersConectados.push({username:data, id:socket.id, bomba: true, image: './src/assets/Icon_2.png'});
                 } else{
-                    usersConectados.push({username:data, id:socket.id, bomba: false});
+                    usersConectados.push({username:data, id:socket.id, bomba: false, image: './src/assets/Icon_2.png'});
                 }
                 console.log(data);
                 io.emit('usersConnected', usersConectados);
+
+                if(userConectados.length >= 3 && usersConectados.length <=6){
+                    io.emit('gameStart', 'The Game Start');
+                }
+
+
+
+
             });
+
 
 
 
