@@ -84,6 +84,8 @@ io.on('connection', (socket) => {
             })
             .then(data => {
                 preguntas = data;
+                console.log(preguntas.preguntas[pregActual].id_pregunta)
+                console.log(preguntas.preguntas[pregActual].pregunta)
                 console.log("PreguntasAqui" + preguntas);
             }).then(() => {
                 if (!gameStart) {
@@ -91,15 +93,12 @@ io.on('connection', (socket) => {
                     newPregunta();
                 }
             }
-
-
-            );
-
+        );
     }
 
     function newPregunta() {
         console.log(preguntas);
-        io.emit('pregunta', { "id": preguntas[pregActual].id_pregunta, "pregunta": preguntas[pregActual].pregunta });
+        io.emit('pregunta', { "id": preguntas.preguntas[pregActual].id_pregunta, "pregunta": preguntas.preguntas[pregActual].pregunta });
     }
 
     socket.on('resposta', (data) => {

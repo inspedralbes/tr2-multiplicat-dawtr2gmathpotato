@@ -46,11 +46,9 @@ socket.on("disconnect", () => {
 socket.on("gameStart", (gameStart) => {
     console.log(gameStart);
     socket.emit("preguntes");
-
-
 });
 
-socket.on("pregunta", (objPreguntes) => {
-    console.log(objPreguntes);
-
+socket.on("pregunta", (pregunta) => {
+    // console.log(objPreguntes);
+    this.message = pregunta;
 });

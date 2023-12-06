@@ -12,7 +12,7 @@
                 <Button @click="startGame"  id="startGameButton" :disabled="users.length <= 2" v-if="!gameStarted">START!</Button>
                 
                 <div v-if="gameStarted" class="gameContainer" >
-                    <h3>{{ message }}</h3>
+                    <h3>{{ message.pregunta }}</h3>
                     <input type="text"  name="resposta" id="resposta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
                     <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
