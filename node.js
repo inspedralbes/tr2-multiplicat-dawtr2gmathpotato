@@ -10,6 +10,7 @@ const app = express();
 var pregActual = 0;
 var userBomba = 0;
 var preguntas = [];
+var gameStart = false
 
 app.use(cors());
 const server = createServer(app);
@@ -40,113 +41,128 @@ var con = mysql.createConnection({
 });
 
 io.on('connection', (socket) => {
-        console.log("User connected.");
-        console.log(socket.id);
-        
-            socket.on('join', (data) => {
-                if(usersConectados.length === 0){
-                    usersConectados.push({username:data, id:socket.id, bomba: true, image: './src/assets/Icon_2.png'});
-                } else{
-                    usersConectados.push({username:data, id:socket.id, bomba: false, image: './src/assets/Icon_2.png'});
-                }
-                console.log(data);
-                io.emit('usersConnected', usersConectados);
+    console.log("User connected.");
+    console.log(socket.id);
 
-                
-            });
-
-            socket.on('preguntes', () => {
-                console.log('preguntasAleatorias', objPreguntes);
-                io.emit('preguntas', objPreguntes);
-            })
+    socket.on('join', (data) => {
+        if (usersConectados.length === 0) {
+            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_2.png' });
+        } else {
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png' });
+        }
+        console.log(data);
+        io.emit('usersConnected', usersConectados);
 
 
-            socket.on('startGame', (data) => {
-                if(usersConectados.length >= 3 && usersConectados.length <=6){
-                    console.log("startGame");
-                    getPreguntes();
-                    newPregunta();
-                }        
-            });
+    });
 
-            function getPreguntes() {
-                fetch(URL)
-                    .then(response => response.json())
-                    .then(data => {
-                        preguntas = data;
-                        console.log(preguntas);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                    });
-            }
+    socket.on('preguntes', () => {
+        console.log('preguntasAleatorias', objPreguntes);
+        io.emit('preguntas', objPreguntes);
+    })
 
-            function newPregunta() {
-                console.log(preguntas);    
-                io.emit('pregunta', { "id": preguntas[pregActual].id_pregunta, "pregunta": preguntas[pregActual].pregunta });
-            }
 
-            socket.on('resposta', (data) => {
-                console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
+    socket.on('startGame', (data) => {
+        if (usersConectados.length >= 3 && usersConectados.length <= 6) {
+            console.log("startGame");
+            getPreguntes()
 
-                const resultatPregunta = eval(objPreguntes[pregActual].pregunta);
-                console.log("--> ", resultatPregunta); //FUNCIONA
 
-                console.log(usersConectados + "HOLAESTOYAQUIYTUCIEGO"); //FUNCIONA
-                console.log(resultatPregunta);
+        }
+    });
 
-                if (resultatPregunta === respuesta) {
-                    console.log("entraaaaaaaaaaaaaaaaaaaaaaaaaa?");
-                    pregActual++;
-                    console.log(pregActual);
+    function getPreguntes() {
 
-                    usersConectados[userBomba].bomba = false;
-
-                    console.log(usersConectados[userBomba]);
-                    console.log(userBomba);
-                    if (userBomba + 1 === usersConectados.length) {
-                        userBomba = 0;
-                    } else {
-                        userBomba++;
-                    }
-                    usersConectados[userBomba].bomba = true;
-                    console.log(userBomba);
-                    socket.emit('usersConnected', usersConectados);
-                    newPregunta();
+        fetch(URL)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
                 } else {
-                    console.log("has fallao tonto");
-                    pregActual++;
-                    usersConectados[userBomba].bomba = true;
-                    socket.emit('usersConnected', usersConectados);
+                    console.log(response);
+                    throw new Error('Network response was not ok.');
+                }
+            })
+            .then(data => {
+                preguntas = data;
+                console.log("PreguntasAqui" + preguntas);
+            }).then(() => {
+                if (!gameStart) {
+                    gameStart = true
                     newPregunta();
                 }
-            });
+            }
 
 
-            socket.on('disconnect', () => {
-                const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
+            );
 
-                console.log(usersConectados);
-                console.log(usuarioDesconectadoIndex);
+    }
 
-                if (usuarioDesconectadoIndex) {
-                    usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
+    function newPregunta() {
+        console.log(preguntas);
+        io.emit('pregunta', { "id": preguntas[pregActual].id_pregunta, "pregunta": preguntas[pregActual].pregunta });
+    }
 
-                    io.emit('usersDesconectados', usersConectados);
-                }
-                console.log('Usuario desconectado');
-            });
+    socket.on('resposta', (data) => {
+        console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
 
-            socket.on('disconnect', () => {
-                io.emit('usersDesconectados', usersConectados);
-            });
+        const resultatPregunta = eval(objPreguntes[pregActual].pregunta);
+        console.log("--> ", resultatPregunta); //FUNCIONA
 
-            console.log('preguntasAleatorias', objPreguntes);
-            // socket.emit("username");
+        console.log(usersConectados + "HOLAESTOYAQUIYTUCIEGO"); //FUNCIONA
+        console.log(resultatPregunta);
 
-            socket.emit('preguntas', objPreguntes[pregActual]); //Primera pregunta
+        if (resultatPregunta === respuesta) {
+            console.log("entraaaaaaaaaaaaaaaaaaaaaaaaaa?");
+            pregActual++;
+            console.log(pregActual);
 
-        });
+            usersConectados[userBomba].bomba = false;
+
+            console.log(usersConectados[userBomba]);
+            console.log(userBomba);
+            if (userBomba + 1 === usersConectados.length) {
+                userBomba = 0;
+            } else {
+                userBomba++;
+            }
+            usersConectados[userBomba].bomba = true;
+            console.log(userBomba);
+            socket.emit('usersConnected', usersConectados);
+            newPregunta();
+        } else {
+            console.log("has fallao tonto");
+            pregActual++;
+            usersConectados[userBomba].bomba = true;
+            socket.emit('usersConnected', usersConectados);
+            newPregunta();
+        }
+    });
+
+
+    socket.on('disconnect', () => {
+        const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
+
+        console.log(usersConectados);
+        console.log(usuarioDesconectadoIndex);
+
+        if (usuarioDesconectadoIndex) {
+            usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
+
+            io.emit('usersDesconectados', usersConectados);
+        }
+        console.log('Usuario desconectado');
+    });
+
+    socket.on('disconnect', () => {
+        io.emit('usersDesconectados', usersConectados);
+    });
+
+    console.log('preguntasAleatorias', objPreguntes);
+    // socket.emit("username");
+
+    socket.emit('preguntas', objPreguntes[pregActual]); //Primera pregunta
+
+});
 // io.emit('arrayUsers', usersConectados);
 
 server.listen(5175, () => {
