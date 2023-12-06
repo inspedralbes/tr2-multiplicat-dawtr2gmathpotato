@@ -247,7 +247,11 @@ export default {
         users() {
             let store = useAppStore();
             return store.getUsers();
-        }        
+        },
+        message(){
+            let store = useAppStore();
+            return store.getPregunta();
+        }       
     },
     watch: {
         users: {

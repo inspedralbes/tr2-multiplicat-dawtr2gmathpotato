@@ -8,7 +8,11 @@ export const useAppStore = defineStore('app', {
             bomba: false,
             image: './assets/Icon_2.png'
         },
-        users:[]
+        users:[],
+        pregunta: {
+            id_pregunta:"",
+            pregunta:""
+        }
 
     }), 
     actions: {
@@ -37,6 +41,13 @@ export const useAppStore = defineStore('app', {
         }, 
         updateUsersOnDisconnect(users) {
             this.setUsers(users);
+        },
+        setPregunta(pregunta){
+            this.pregunta.id_pregunta=pregunta.id_pregunta;
+            this.pregunta.pregunta=pregunta.pregunta
+        },
+        getPregunta(){
+            return this.pregunta;  
         }
     }
 });
