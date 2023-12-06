@@ -50,5 +50,6 @@ socket.on("gameStart", (gameStart) => {
 
 socket.on("pregunta", (pregunta) => {
     // console.log(objPreguntes);
-    this.message = pregunta;
+    const storeDisc=useAppStore();
+    storeDisc.setPregunta(pregunta);
 });
