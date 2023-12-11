@@ -3,6 +3,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config';
+import '/node_modules/primeflex/primeflex.css'
 // import { createComponent } from '@vue/composition-api';
 
 //import theme primevue

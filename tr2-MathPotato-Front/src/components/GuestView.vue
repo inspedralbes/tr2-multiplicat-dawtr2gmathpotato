@@ -1,5 +1,6 @@
 <template>
     <div>
+
     <h1>Welcome, Guest!</h1>
     <div class="card flex justify-content-center">
         <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
@@ -14,6 +15,7 @@
                 
                
                 <Toast />
+
         </div>
     </div>
 </template>
@@ -38,21 +40,23 @@ export default {
                 // Submit the form
                 socket.emit('join', this.username);
 
+
                 this.$router.push({ path: '/play' });             
+
             }
         },
         handleUserList(users) {
-        this.users = users;
-        console.log(this.users);
+            this.users = users;
+            console.log(this.users);
         },
     },
-//     mounted() {
-//         // Escuchar eventos de usuarios después de que el componente está montado
-//         socket.on('nuevosUsuario', this.handleUserList);
-//   },
+    //     mounted() {
+    //         // Escuchar eventos de usuarios después de que el componente está montado
+    //         socket.on('nuevosUsuario', this.handleUserList);
+    //   },
 };
 
-    
+
 </script>
 
 <style scoped>
