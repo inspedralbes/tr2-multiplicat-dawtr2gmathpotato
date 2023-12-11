@@ -7,6 +7,5 @@
 3. Fer un clone de  tot el que hi ha dins del nostre repositori de github
 4. L'estructura de la base de dades es pot obtenir fácilment fent un php artisan migrate en local (amb XAMPP habilitat per mysql), exportant la base de dades resultant, i important l'estructura i els continguts a la base de dades remota.
 5. Executar l'ordre **cp .env.example .env** i dins tindrem que posar les dades que siguin necessaries en el .env per poder així connectar la base de dades, després fem un **php artisan key:generate** en el directori de api-laravel
-4. Editar el fitxer .env per a que inclogui les credencials de la base de dades remota.
 
 EN CONSTRUCCIÓ...
