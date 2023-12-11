@@ -237,7 +237,6 @@ import { socket } from '../socket';
 export default {
     data() {       
         return {
-            gameStarted: false,
             pregunta: {},
             respuesta: "",
            
@@ -252,7 +251,10 @@ export default {
             let store = useAppStore();
             return store.getUsers();
         },
-        
+        gameStarted() {
+            let store = useAppStore();
+            return store.getGameStarted();
+        },
         message(){
             let store = useAppStore();
             return store.getPregunta();
@@ -277,9 +279,7 @@ export default {
             socket.emit('resposta',  resposta );
         },
         startGame() {
-            this.gameStarted = true;
-
-            socket.emit('startGame');
+            socket.emit('startGame', true);
         },
         getId(index) {
             let size = this.users.length;
