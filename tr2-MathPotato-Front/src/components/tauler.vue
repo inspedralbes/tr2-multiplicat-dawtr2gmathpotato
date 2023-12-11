@@ -13,7 +13,7 @@
                 
                 <div v-if="gameStarted" class="gameContainer" >
                     <h3>{{ message.pregunta }}</h3>
-                    <input type="text"  name="resposta" id="resposta">
+                    <input type="text"  name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
                     <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
                 </div>               
@@ -238,26 +238,33 @@ export default {
     data() {       
         return {
             gameStarted: false,
-            message: "Pregunta",
             pregunta: {},
             respuesta: "",
+           
         };
     },
     computed: {
+        encertada(){
+            let store = useAppStore();
+            return store.getRespostaAnterior();
+        },
         users() {
             let store = useAppStore();
             return store.getUsers();
         },
+        
         message(){
             let store = useAppStore();
             return store.getPregunta();
         }       
+        
     },
     watch: {
         users: {
             immediate: true, // Ejecutar al inicio
             handler(newVal) {
-                if (newVal && newVal.length > 0) {
+                console.log(this.encertada);
+                if (newVal && newVal.length > 0 && this.encertada) {
                     this.changeBomb();
                 }
             }
@@ -266,8 +273,8 @@ export default {
     methods: {
         enviarResposta(){
             const resposta = this.respuesta;
-            
-            socket.emit('respuesta', { resposta });
+            console.log("emit respost -> ", resposta);
+            socket.emit('resposta',  resposta );
         },
         startGame() {
             this.gameStarted = true;
