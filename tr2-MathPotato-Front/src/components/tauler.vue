@@ -13,7 +13,7 @@
                 
                 <div v-if="gameStarted" class="gameContainer" >
                     <h3>{{ message.pregunta }}</h3>
-                    <input type="text"  name="resposta" id="resposta" v-model="respuesta">
+                    <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
                     <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
                 </div>               
@@ -275,6 +275,7 @@ export default {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
             socket.emit('resposta',  resposta );
+            this.respuesta = "";
         },
         startGame() {
             this.gameStarted = true;
