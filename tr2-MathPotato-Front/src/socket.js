@@ -22,6 +22,8 @@ socket.on("usersConnected", (usersConnected) => {
 
     // Establece el array de usuarios en Pinia
     store.setUsers(usersConnected);
+    console.log(usersConnected);
+
 });
 
 // socket.on("username", (username, id) => { 
@@ -39,4 +41,15 @@ socket.on("usersDesconectados", (usersConnected) => {
 socket.on("disconnect", () => {
     const storeDisc = useAppStore();
     storeDisc.clearGuestInfo();
+});
+
+socket.on("gameStart", (gameStart) => {
+    console.log(gameStart);
+    socket.emit("preguntes");
+});
+
+socket.on("pregunta", (pregunta) => {
+    // console.log(objPreguntes);
+    const storeDisc=useAppStore();
+    storeDisc.setPregunta(pregunta);
 });

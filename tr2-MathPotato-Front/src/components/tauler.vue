@@ -1,35 +1,79 @@
 <template>
-    <div class="container">
-    <div id="grid">
-        <div v-for="(user, index) in users" :id="getId(index)">
-            <div class="user">
-                <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background}};">
-                <p>{{ user.name }}</p>
+    <div id="background">
+        <div id="grid">
+            <div v-for="(user, index) in users" :id="getId(index)">
+                <div class="user" :id="'user' + index">
+                    <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background}};">
+                    <p>{{ user.username }}</p>
+                </div>
+            </div>
+            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
+            <div id="middle"> 
+                <Button @click="startGame"  id="startGameButton" :disabled="users.length <= 2" v-if="!gameStarted">START!</Button>
+                
+                <div v-if="gameStarted" class="gameContainer" >
+                    <h3>{{ message.pregunta }}</h3>
+                    <input type="text"  name="resposta" id="resposta">
+                    <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
+                    <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
+                </div>               
             </div>
         </div>
     </div>
-</div>
 </template>
+
 <style scoped>
-.container {
+:root {
+    --xPositionAnt: 0;
+    --yPositionAnt: 0;
+    --xPosition: 0;
+    --yPosition: 0;
+}
+.hidden {
+    display: hidden;
+}
+#background {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
     height: 100vh;
     width: 99vw;
     background-size: cover;
-
     background-position: center;
 }
 
-#background {
-    position: absolute;
-    width: 67vw;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: -1;
+.gameContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
 }
+.moveBomb {
+    animation-name: bombMovement;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
+}
+
+#bombContainer {
+    position: absolute;
+    top: var(--yPosition);
+    left: var(--xPosition);
+    
+}
+
+@keyframes bombMovement {
+    from {
+        top: var(--yPositionAnt);
+        left: var(--xPositionAnt);
+    }
+
+    to {
+        top: var(--yPosition);
+        left: var(--xPosition);
+    }
+}
+
 
 .icon {
     border-radius: 50%;
@@ -56,162 +100,201 @@
     background-position: center;
     background-size: cover;
     display: grid;
-    grid-template-areas: ". topleft topmid topright ." "leftmid . . . rightmid" ". bottomleft bottommid bottomright .";
+    grid-template-areas: ". topleft topmid topright ." "leftmid . middle . rightmid" ". bottomleft bottommid bottomright .";
     width: 87vw;
     height: 100vh;
     margin-left: auto;
     margin-right: auto;
 }
 
-#topleft {
-    grid-area: topleft;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
 
-#topmid {
-    grid-area: topmid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
 
-#topright {
-    grid-area: topright;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
+    #middle {
+        grid-area: middle;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
 
-#leftmid {
-    grid-area: leftmid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
+        font-weight: bold;
 
-#rightmid {
-    grid-area: rightmid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
+    }
 
-#bottomleft {
-    grid-area: bottomleft;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
 
-#bottommid {
-    grid-area: bottommid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
+    #topleft {
+        grid-area: topleft;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
 
-#bottomright {
-    grid-area: bottomright;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    font-weight: bold;
-    color: white;
-}
+    #topmid {
+        grid-area: topmid;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
+
+    #topright {
+        grid-area: topright;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
+
+    #leftmid {
+        grid-area: leftmid;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
+
+    #rightmid {
+        grid-area: rightmid;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
+
+    #bottomleft {
+        grid-area: bottomleft;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
+
+    #bottommid {
+        grid-area: bottommid;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
+
+    #bottomright {
+        grid-area: bottomright;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        font-weight: bold;
+        color: white;
+    }
+
+    .bomb {
+        width: 10vw;
+        animation-name: hunch;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        position: absolute;
+    }
+
+    @keyframes hunch {
+        from {
+            transform: scale(1);
+        }
+
+        to {
+            transform: scale(1.2);
+        }
+    }
+
 </style>
 <script>
+import { useAppStore } from '../stores/guestStore.js';
+import { socket } from '../socket';
+
 export default {
-    data() {
+    data() {       
         return {
-            users: [
-                {
-                    id: 1,
-                    name: "Pepito",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
-
-                },
-                {
-                    id: 2,
-                    name: "Pepita",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
-
-                },
-                {
-                    id: 3,
-                    name: "Pepinho",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
-                },
-                {
-                    id: 4,
-                    name: "Papote",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
-                },
-                {
-                    id: 5,
-                    name: "Papilla",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
-                },
-                {
-                    id: 6,
-                    name: "Juan",
-                    image: "./src/assets/LePotata.png",
-                    background: '#' + Math.floor(Math.random() * 16777215).toString(16)
+            gameStarted: false,
+            message: "Pregunta",
+            pregunta: {},
+            respuesta: "",
+        };
+    },
+    computed: {
+        users() {
+            let store = useAppStore();
+            return store.getUsers();
+        },
+        message(){
+            let store = useAppStore();
+            return store.getPregunta();
+        }       
+    },
+    watch: {
+        users: {
+            immediate: true, // Ejecutar al inicio
+            handler(newVal) {
+                if (newVal && newVal.length > 0) {
+                    this.changeBomb();
                 }
-                
-            ],
-            usersColocats: []
+            }
         }
     },
     methods: {
+        enviarResposta(){
+            const resposta = this.respuesta;
+            
+            socket.emit('respuesta', { resposta });
+        },
+        startGame() {
+            this.gameStarted = true;
+
+            socket.emit('startGame');
+        },
         getId(index) {
             let size = this.users.length;
             switch (size) {
-                case 3:
-
+                case 1:
+                    return "topmid";
+                case 2:
                     switch (index) {
                         case 0:
                             return "topmid";
                         case 1:
-                            return "bottomleft";
-                        case 2:
+                            return "bottommid";
+                    }
+                    break;
+                case 3:
+                    switch (index) {
+                        case 0:
+                            return "topmid";
+                        case 1:
                             return "bottomright";
+                        case 2:
+                            return "bottomleft";
                     }
                     break;
                 case 4:
@@ -219,11 +302,11 @@ export default {
                         case 0:
                             return "topmid";
                         case 1:
-                            return "leftmid";
-                        case 2:
                             return "rightmid";
-                        case 3:
+                        case 2:
                             return "bottommid";
+                        case 3:
+                            return "leftmid";
                     }
                     break;
                 case 5:
@@ -231,13 +314,13 @@ export default {
                         case 0:
                             return "topmid";
                         case 1:
-                            return "leftmid";
-                        case 2:
                             return "rightmid";
+                        case 2:
+                            return "bottomright";
                         case 3:
                             return "bottomleft";
                         case 4:
-                            return "bottomright";
+                            return "leftmid";
 
                     }
                     break;
@@ -248,18 +331,67 @@ export default {
                         case 1:
                             return "topright";
                         case 2:
-                            return "leftmid";
-                        case 3:
                             return "rightmid";
+                        case 3:
+                            return "bottomright";
                         case 4:
                             return "bottomleft";
                         case 5:
-                            return "bottomright";
-
+                            return "leftmid";
                     }
 
             };
-        }
+        },
+        async changeBomb() {
+            await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
+
+            let size = this.users.length;
+            let usersWithBomb = this.findUsersWithBomb();
+            console.log(usersWithBomb);
+            this.users[usersWithBomb].bomba = false;
+            let newUserBomb = usersWithBomb + 1;
+            if (newUserBomb >= size) {
+                newUserBomb = 0;
+            }
+            let object = "user" + (newUserBomb);
+            let userElement = document.getElementById(object);
+
+            // Verificar si el elemento está presente antes de acceder a sus propiedades
+            if (userElement) {
+                let userBombpos = userElement.getBoundingClientRect();
+                let objectAnt = "user" + (usersWithBomb);
+                let objectAntElement = document.getElementById(objectAnt);
+                if (objectAntElement) {
+                    let objectAntpos = objectAntElement.getBoundingClientRect();
+                    let userBombXAnt = objectAntpos.x + 100;
+                    let userBombYAnt = objectAntpos.y;
+                    if(this.users.length>2){
+                        document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
+                        document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
+                    }
+                } 
+
+                let userBombX = userBombpos.x + 100;
+                let userBombY = userBombpos.y;
+                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
+                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
+
+                this.users[newUserBomb].bomba = true;
+                document.getElementById("bombContainer").classList.add("moveBomb");
+                setTimeout(() => {
+                    document.getElementById("bombContainer").classList.remove("moveBomb");
+                }, 2000);
+            }
+        },
+        findUsersWithBomb() {
+            return this.users.findIndex(user => user.bomba === true);
+            //return this.users.filter(user => user.bomba === true);
+        },
+    },
+    mounted() {
+        console.log(this.users);
+        return this.users.findIndex(user => user.bomba === true);
+        //return this.users.filter(user => user.bomba === true);
     }
 }
 </script>

@@ -129,7 +129,7 @@ INSERT INTO `preguntas` (`id_pregunta`, `pregunta`, `user`, `activo`) VALUES
 (126, '18 * 3', 'Aitor', 1),
 (127, '78 + 9', 'Aitor', 1),
 (128, '59 - 26', 'Aitor', 1),
-(129, '94 / 6', 'Aitor', 1),
+(129, '90 / 6', 'Aitor', 1),
 (130, '41 - 14', 'Aitor', 1),
 (131, '25 * 4', 'Aitor', 1),
 (132, '52 - 19', 'Aitor', 1),

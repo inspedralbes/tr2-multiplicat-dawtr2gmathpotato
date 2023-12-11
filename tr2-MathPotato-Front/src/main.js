@@ -1,4 +1,4 @@
-// import './assets/main.css'
+import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -8,7 +8,8 @@ import '/node_modules/primeflex/primeflex.css'
 
 //import theme primevue
 
-import 'primevue/resources/themes/md-light-deeppurple/theme.css';
+import 'primevue/resources/themes/md-light-indigo/theme.css';
+import 'primeicons/primeicons.css'
 
 //import components
 import InputText from 'primevue/inputtext';

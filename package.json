@@ -2,7 +2,7 @@
   "name": "back",
   "type": "module",
   "version": "1.0.0",
-  "description": "**Tota** la informació del vostre projecte ha de ser accessible a partir d'aquí",
+  "description": "",
   "main": "serverSocket.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,8 +17,5 @@
     "mysql": "^2.18.1",
     "node-fetch": "^3.3.2",
     "socket.io": "^4.7.2"
-  },
-  "directories": {
-    "doc": "doc"
   }
 }
