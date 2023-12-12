@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
                     newPregunta();
                 }
             }
-        );
+            );
     }
 
     function newPregunta() {
@@ -111,7 +111,6 @@ io.on('connection', (socket) => {
         console.log(resultatPregunta);
 
         if (resultatPregunta === respuesta) {
-            console.log("entraaaaaaaaaaaaaaaaaaaaaaaaaa?");
             pregActual++;
             console.log(pregActual);
 
@@ -151,7 +150,9 @@ io.on('connection', (socket) => {
         }
         console.log('Usuario desconectado');
     });
-
+    socket.on('login', (data) => { 
+        console.log(data);
+    });
     socket.on('disconnect', () => {
         io.emit('usersDesconectados', usersConectados);
     });
