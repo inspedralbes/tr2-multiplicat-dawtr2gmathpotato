@@ -7,16 +7,18 @@
                     <p>{{ user.username }}</p>
                 </div>
             </div>
-            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
-            <div id="middle"> 
-                <Button @click="startGame"  id="startGameButton" :disabled="users.length <= 2" v-if="!gameStarted">START!</Button>
-                
-                <div v-if="gameStarted" class="gameContainer" >
+            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
+                    class="bomb" id="bomb"><span class="bombCounter">{{ contador }}</span></div>
+            <div id="middle">
+                <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
+                    v-if="!gameStarted">START!</Button>
+
+                <div v-if="gameStarted" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
-                    <input type="text"  name="resposta" id="resposta">
+                    <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
-                </div>               
+                    <Button @click="changeBomb" id="buttonC">Change bomb</Button>
+                </div>
             </div>
         </div>
     </div>
@@ -29,9 +31,11 @@
     --xPosition: 0;
     --yPosition: 0;
 }
+
 .hidden {
     display: hidden;
 }
+
 #background {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
@@ -41,12 +45,13 @@
     background-position: center;
 }
 
-.gameContainer{
+.gameContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
 }
+
 .moveBomb {
     animation-name: bombMovement;
     animation-duration: 2s;
@@ -59,7 +64,7 @@
     position: absolute;
     top: var(--yPosition);
     left: var(--xPosition);
-    
+
 }
 
 @keyframes bombMovement {
@@ -107,167 +112,186 @@
     margin-right: auto;
 }
 
+#middle {
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+
+    font-weight: bold;
+
+}
 
 
-    #middle {
-        grid-area: middle;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
+#topleft {
+    grid-area: topleft;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
 
-        font-weight: bold;
+#topmid {
+    grid-area: topmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
 
+#topright {
+    grid-area: topright;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#leftmid {
+    grid-area: leftmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#rightmid {
+    grid-area: rightmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottomleft {
+    grid-area: bottomleft;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottommid {
+    grid-area: bottommid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottomright {
+    grid-area: bottomright;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+.bomb {
+    width: 10vw;
+    animation-name: hunch;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    position: absolute;
+}
+
+.bombCounter {
+    position: absolute;
+    top: 56%;
+    left: 45%;
+    animation-name: hunch;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: red;
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+@keyframes hunch {
+    from {
+        transform: scale(1);
     }
 
-
-    #topleft {
-        grid-area: topleft;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
+    to {
+        transform: scale(1.2);
     }
-
-    #topmid {
-        grid-area: topmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #topright {
-        grid-area: topright;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #leftmid {
-        grid-area: leftmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #rightmid {
-        grid-area: rightmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottomleft {
-        grid-area: bottomleft;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottommid {
-        grid-area: bottommid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottomright {
-        grid-area: bottomright;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    .bomb {
-        width: 10vw;
-        animation-name: hunch;
-        animation-duration: 1s;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-        position: absolute;
-    }
-
-    @keyframes hunch {
-        from {
-            transform: scale(1);
-        }
-
-        to {
-            transform: scale(1.2);
-        }
-    }
-
+}
 </style>
 <script>
 import { useAppStore } from '../stores/guestStore.js';
 import { socket } from '../socket';
 
 export default {
-    data() {       
+    data() {
         return {
             gameStarted: false,
-            message: "Pregunta",
             pregunta: {},
             respuesta: "",
+
         };
     },
     computed: {
+        encertada() {
+            let store = useAppStore();
+            return store.getRespostaAnterior();
+        },
         users() {
             let store = useAppStore();
             return store.getUsers();
         },
-        message(){
+
+        message() {
             let store = useAppStore();
             return store.getPregunta();
-        }       
+        }
+
     },
     watch: {
         users: {
             immediate: true, // Ejecutar al inicio
             handler(newVal) {
-                if (newVal && newVal.length > 0) {
+                console.log(this.encertada);
+                if (newVal && newVal.length > 0 && this.encertada) {
                     this.changeBomb();
                 }
             }
         }
     },
     methods: {
-        enviarResposta(){
+        enviarResposta() {
             const resposta = this.respuesta;
-            
-            socket.emit('respuesta', { resposta });
+            console.log("emit respost -> ", resposta);
+            socket.emit('resposta', resposta);
+            this.respuesta = "";
         },
         startGame() {
             this.gameStarted = true;
@@ -365,11 +389,11 @@ export default {
                     let objectAntpos = objectAntElement.getBoundingClientRect();
                     let userBombXAnt = objectAntpos.x + 100;
                     let userBombYAnt = objectAntpos.y;
-                    if(this.users.length>2){
+                    if (this.users.length > 2) {
                         document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
                         document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
                     }
-                } 
+                }
 
                 let userBombX = userBombpos.x + 100;
                 let userBombY = userBombpos.y;

@@ -22,8 +22,9 @@ socket.on("usersConnected", (usersConnected) => {
 
     // Establece el array de usuarios en Pinia
     store.setUsers(usersConnected);
+    store.setRespostaAnterior();
     console.log(usersConnected);
-
+    store.setRespostaAnterior(true);
 });
 
 // socket.on("username", (username, id) => { 
@@ -52,4 +53,11 @@ socket.on("pregunta", (pregunta) => {
     // console.log(objPreguntes);
     const storeDisc=useAppStore();
     storeDisc.setPregunta(pregunta);
+});
+
+socket.on("changeBomb", (newUsersData) => {
+    const storeDisc=useAppStore();
+    storeDisc.setUsers(newUsersData.arrayUsers);
+    console.log(newUsersData.bombChange);
+    storeDisc.setRespostaAnterior(newUsersData.bombChange);
 });

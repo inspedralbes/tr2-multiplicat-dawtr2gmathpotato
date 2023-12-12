@@ -101,14 +101,14 @@ io.on('connection', (socket) => {
         io.emit('pregunta', { "id": preguntas.preguntas[pregActual].id_pregunta, "pregunta": preguntas.preguntas[pregActual].pregunta });
     }
 
-    socket.on('resposta', (data) => {
-        console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
+    socket.on('resposta', (resposta) => {
+        
+        console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
+        //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
 
-        const resultatPregunta = eval(objPreguntes[pregActual].pregunta);
-        console.log("--> ", resultatPregunta); //FUNCIONA
-
-        console.log(usersConectados + "HOLAESTOYAQUIYTUCIEGO"); //FUNCIONA
-        console.log(resultatPregunta);
+        const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
+        console.log("Result correct --> ", resultatPregunta); //FUNCIONA
+        console.log(resposta);
 
         if (resultatPregunta === respuesta) {
             pregActual++;
@@ -118,21 +118,22 @@ io.on('connection', (socket) => {
 
             console.log(usersConectados[userBomba]);
             console.log(userBomba);
-            if (userBomba + 1 === usersConectados.length) {
+            if (userBomba + 1 == usersConectados.length) {
                 userBomba = 0;
             } else {
                 userBomba++;
             }
             usersConectados[userBomba].bomba = true;
             console.log(userBomba);
-            socket.emit('usersConnected', usersConectados);
+            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();
         } else {
-            console.log("has fallao tonto");
+            console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
-            socket.emit('usersConnected', usersConectados);
+            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
             newPregunta();
+
         }
     });
 

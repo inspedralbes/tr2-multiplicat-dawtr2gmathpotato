@@ -12,7 +12,8 @@ export const useAppStore = defineStore('app', {
         pregunta: {
             id_pregunta:"",
             pregunta:""
-        }
+        },
+        respostaAnterior: true
 
     }), 
     actions: {
@@ -48,6 +49,12 @@ export const useAppStore = defineStore('app', {
         },
         getPregunta(){
             return this.pregunta;  
+        },
+        setRespostaAnterior(resposta){
+            this.respostaAnterior = resposta;
+        },
+        getRespostaAnterior(){
+            return this.respostaAnterior;
         }
     }
 });
