@@ -5,8 +5,8 @@
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
                         <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
-                        <div class="vidaContainer"><img src="../assets/potatHeart.png" alt=""></div>
-                        <div class="vidaContainer"><img src="../assets/potatHeart.png" alt=""></div>
+                        <div class="vidaContainer"><img :src="user.vides"></div>
+
                     </div>
                     <p>{{ user.username }}</p>
                     
@@ -251,6 +251,7 @@
 <script>
 import { useAppStore } from '../stores/guestStore.js';
 import { socket } from '../socket';
+import { useSSRContext, useTransitionState } from 'vue';
 
 export default {
     data() {       

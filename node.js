@@ -42,11 +42,14 @@ io.on('connection', (socket) => {
     console.log("User connected.");
     console.log(socket.id);
 
+    const vides = ['./src/assets/potatHeart.png', './src/assets/potatHeart.png'];
+
+
     socket.on('join', (data) => {
         if (usersConectados.length === 0) {
-            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_2.png' });
+           usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', vides: [...vides, ...vides] });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png' });
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', vides: [...vides, ...vides] });
         }
         console.log(data);
         io.emit('usersConnected', usersConectados);
