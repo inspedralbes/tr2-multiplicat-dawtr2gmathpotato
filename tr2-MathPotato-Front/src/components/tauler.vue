@@ -112,8 +112,6 @@
     margin-right: auto;
 }
 
-
-
 #middle {
     grid-area: middle;
     display: flex;
@@ -221,7 +219,7 @@
     animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-direction: alternate;
-    position: relative;
+    position: absolute;
 }
 
 .bombCounter {
@@ -258,28 +256,8 @@ export default {
             gameStarted: false,
             pregunta: {},
             respuesta: "",
-            contador: 0,
+
         };
-    },
-    created() {
-        let size = this.users.length + 1;
-        console.log(size);
-        switch (size) {
-            case 3:
-                this.contador = 30;
-                break;
-            case 4:
-                this.contador = 35;
-                break;
-            case 5:
-                this.contador = 40;
-                break;
-            case 6:
-                this.contador = 40;
-                break;
-            default:
-                this.contador = 0;
-        }
     },
     computed: {
         encertada() {
