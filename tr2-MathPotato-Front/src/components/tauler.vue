@@ -1,22 +1,26 @@
 <template>
     <div id="background">
         <div id="grid">
+            <Explosion v-if="explosionVisible" />
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background}};">
                     <p>{{ user.username }}</p>
                 </div>
             </div>
-            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
-            <div id="middle"> 
-                <Button @click="startGame"  id="startGameButton" :disabled="users.length <= 2" v-if="!gameStarted">START!</Button>
-                
-                <div v-if="gameStarted" class="gameContainer" >
+            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
+                    class="bomb" id="bomb"></div>
+            <div id="explosion"><img src="../assets/diedpotato.png" alt="Explosion"></div>
+            <!-- Aquí puedes colocar la imagen de la explosión -->
+            <div id="middle">
+                <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
+                    v-if="!gameStarted">START!</Button>
+
+                <div v-if="gameStarted" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
-                </div>               
+                </div>
             </div>
         </div>
     </div>
@@ -29,9 +33,11 @@
     --xPosition: 0;
     --yPosition: 0;
 }
+
 .hidden {
     display: hidden;
 }
+
 #background {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
@@ -41,12 +47,13 @@
     background-position: center;
 }
 
-.gameContainer{
+.gameContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
 }
+
 .moveBomb {
     animation-name: bombMovement;
     animation-duration: 2s;
@@ -59,7 +66,7 @@
     position: absolute;
     top: var(--yPosition);
     left: var(--xPosition);
-    
+
 }
 
 @keyframes bombMovement {
@@ -109,142 +116,162 @@
 
 
 
-    #middle {
-        grid-area: middle;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
+#middle {
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
 
-        font-weight: bold;
+    font-weight: bold;
 
+}
+
+
+#topleft {
+    grid-area: topleft;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#topmid {
+    grid-area: topmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#topright {
+    grid-area: topright;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#leftmid {
+    grid-area: leftmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#rightmid {
+    grid-area: rightmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottomleft {
+    grid-area: bottomleft;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottommid {
+    grid-area: bottommid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottomright {
+    grid-area: bottomright;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+.bomb {
+    width: 10vw;
+    animation-name: hunch;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    position: absolute;
+}
+
+@keyframes hunch {
+    from {
+        transform: scale(1);
     }
 
-
-    #topleft {
-        grid-area: topleft;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
+    to {
+        transform: scale(1.2);
     }
+}
 
-    #topmid {
-        grid-area: topmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
+.explosion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    /* Ajusta el índice z para asegurarte de que esté por encima de otros elementos */
+}
 
-    #topright {
-        grid-area: topright;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #leftmid {
-        grid-area: leftmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #rightmid {
-        grid-area: rightmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottomleft {
-        grid-area: bottomleft;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottommid {
-        grid-area: bottommid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottomright {
-        grid-area: bottomright;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    .bomb {
-        width: 10vw;
-        animation-name: hunch;
-        animation-duration: 1s;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-        position: absolute;
-    }
-
-    @keyframes hunch {
-        from {
-            transform: scale(1);
-        }
-
-        to {
-            transform: scale(1.2);
-        }
-    }
-
+.explosion img {
+    width: 200px;
+    /* Ajusta el tamaño de la imagen según sea necesario */
+}
 </style>
 <script>
-import { useAppStore } from '../stores/guestStore.js';
-import { socket } from '../socket';
+import { Explosion } from '@/components/Explosion.vue';
 
 export default {
-    data() {       
+
+    data() {
         return {
+            name: 'Explosion',
+            explosionVisible: false,
             gameStarted: false,
             pregunta: {},
             respuesta: "",
-           
+
         };
     },
     computed: {
-        encertada(){
+        encertada() {
             let store = useAppStore();
             return store.getRespostaAnterior();
         },
@@ -252,12 +279,12 @@ export default {
             let store = useAppStore();
             return store.getUsers();
         },
-        
-        message(){
+
+        message() {
             let store = useAppStore();
             return store.getPregunta();
-        }       
-        
+        }
+
     },
     watch: {
         users: {
@@ -267,14 +294,22 @@ export default {
                 if (newVal && newVal.length > 0 && this.encertada) {
                     this.changeBomb();
                 }
+                else {
+                    this.showFailureMessage();
+
+                }
             }
         }
     },
     methods: {
-        enviarResposta(){
+        showFailureMessage() {
+            alert('¡Has fallado! Inténtalo de nuevo.'); // Puedes usar un componente de notificación en lugar de alert
+        },
+
+        enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-            socket.emit('resposta',  resposta );
+            socket.emit('resposta', resposta);
             this.respuesta = "";
         },
         startGame() {
@@ -373,11 +408,11 @@ export default {
                     let objectAntpos = objectAntElement.getBoundingClientRect();
                     let userBombXAnt = objectAntpos.x + 100;
                     let userBombYAnt = objectAntpos.y;
-                    if(this.users.length>2){
+                    if (this.users.length > 2) {
                         document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
                         document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
                     }
-                } 
+                }
 
                 let userBombX = userBombpos.x + 100;
                 let userBombY = userBombpos.y;
@@ -385,6 +420,9 @@ export default {
                 document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
 
                 this.users[newUserBomb].bomba = true;
+                if (!this.encertada) {
+                    alert('¡Has fallado! Inténtalo de nuevo.');
+                }
                 document.getElementById("bombContainer").classList.add("moveBomb");
                 setTimeout(() => {
                     document.getElementById("bombContainer").classList.remove("moveBomb");
@@ -395,11 +433,21 @@ export default {
             return this.users.findIndex(user => user.bomba === true);
             //return this.users.filter(user => user.bomba === true);
         },
-    },
-    mounted() {
-        console.log(this.users);
-        return this.users.findIndex(user => user.bomba === true);
-        //return this.users.filter(user => user.bomba === true);
+
+        showFailureExplosion() {
+            this.explosionVisible = true;
+            setTimeout(() => {
+                this.explosionVisible = false;
+            }, 2000);
+
+
+        },
+        mounted() {
+            console.log(this.users);
+            return this.users.findIndex(user => user.bomba === true);
+            //return this.users.filter(user => user.bomba === true);
+        },
     }
 }
 </script>
+
