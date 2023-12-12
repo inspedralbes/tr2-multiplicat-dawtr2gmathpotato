@@ -15,7 +15,7 @@ class UsuarisController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'foto_perfil' => [
                 'required',
-                Rule::in(['1', '2', '3']), // Reemplaza 'valor1', 'valor2', 'valor3' con los valores permitidos
+                Rule::in(['1', '2', '3', '4', '5', '6', '7', '8', '9']), // Reemplaza 'valor1', 'valor2', 'valor3' con los valores permitidos
             ],
         ]);
         $usuari= new Usuarios();
