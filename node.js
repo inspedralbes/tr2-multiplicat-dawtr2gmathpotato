@@ -128,7 +128,7 @@ io.on('connection', (socket) => {
             console.log(userBomba);
             socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();
-        } else if (resultatPregunta != resposta) {
+        } else {
             console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
