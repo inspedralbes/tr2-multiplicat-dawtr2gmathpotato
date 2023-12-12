@@ -3,8 +3,13 @@
         <div id="grid">
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
-                    <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background}};">
+                    <div class="imageContainer">
+                        <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
+                        <div class="vidaContainer"><img src="../assets/potatHeart.png" alt=""></div>
+                        <div class="vidaContainer"><img src="../assets/potatHeart.png" alt=""></div>
+                    </div>
                     <p>{{ user.username }}</p>
+                    
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
@@ -93,7 +98,20 @@
     color: white;
 
 }
+.imageContainer {
+    display: flex;
+    align-items: center;
+}
 
+.vidaContainer {
+    margin-left: 10px; 
+}
+
+.vidaContainer img {
+    width: 70px;
+    height: 70px;
+    margin-top: 5px;
+}
 #grid {
     background-image: url("../assets/table.png");
     background-repeat: no-repeat;

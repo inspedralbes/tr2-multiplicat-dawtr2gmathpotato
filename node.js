@@ -4,8 +4,8 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
+import fetch from 'node-fetch';
 
-// import fetch from 'node-fetch';
 const app = express();
 var pregActual = 0;
 var userBomba = 0;
@@ -14,9 +14,7 @@ var gameStart = false
 
 app.use(cors());
 const server = createServer(app);
-
 const usersConectados = [];
-
 const objPreguntes = {};
 const URL = "http://127.0.0.1:8000/api/preguntes/random";
 
@@ -73,7 +71,7 @@ io.on('connection', (socket) => {
 
     function getPreguntes() {
 
-        fetch(URL)
+        fetch('http://127.0.0.1:8000/api/preguntes/random')
             .then(response => {
                 if (response.ok) {
                     return response.json();
