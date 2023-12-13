@@ -69,68 +69,68 @@
 @keyframes movePotato {
     0% {
         transform: translateX(0);
-        content: url('../assets/LePotata.png');
+        content: url('../assets/LePotatadinamita-new.png');
         left: 3%;
         top: 20%;
     }
     10%{
         transform: translateX(3px);
-        content: url('../assets/animationPotato.png');
+        content: url('../assets/animationPotatoDinamita-new3.png');
         left: 6%;
         top: 23%;
     }
     20%{
         transform: translateX(6px);
-        content: url('../assets/LePotata.png');
+        content: url('../assets/LePotatadinamita-new.png');
         left: 9%;
         top: 20%;
     }
     30%{
         transform: translateX(9px);
-        content: url('../assets/animationPotato.png');
+        content: url('../assets/animationPotatoDinamita-new3.png');
         left: 12%;
         top: 23%;
     }
     40%{
         transform: translateX(12px);
-        content: url('../assets/LePotata.png');
+        content: url('../assets/LePotatadinamita-new.png');
         left: 15%;
         top: 20%;
     }
     50%{
         transform: translateX(15px);
-        content: url('../assets/animationPotato.png');
+        content: url('../assets/animationPotatoDinamita-new3.png');
         left: 18%;
         top: 23%;
     }
     60%{
         transform: translateX(18px);
-        content: url('../assets/LePotata.png');
+        content: url('../assets/LePotatadinamita-new.png');
         left: 21%;
         top: 20%;
     }
     70%{
         transform: translateX(21px);
-        content: url('../assets/animationPotato.png');
+        content: url('../assets/animationPotatoDinamita-new3.png');
         left: 24%;
         top: 23%;
     }
     80%{
         transform: translateX(24px);
-        content: url('../assets/LePotata.png');
+        content: url('../assets/dinamita_1.png');
         left: 27%;
         top: 20%;
     }
     90%{
         transform: translateX(27px);
-        content: url('../assets/animationPotato.png');
+        content: url('../assets/dinamita-new_2.png');
         left: 30%;
         top: 23%;
     }
 
     100% {
         transform: translateX(30px);
-        content: url('../assets/LePotata.png');
+        content: url('../assets/dinamita_3.png');
         left: 33%;
         top: 20%;
 
