@@ -66,7 +66,8 @@ io.on('connection', (socket) => {
         if (usersConectados.length >= 3 && usersConectados.length <= 6) {
             console.log("startGame");
             getPreguntes()
-
+            iniciarTimer();
+            startTimer();
 
         }
     });
