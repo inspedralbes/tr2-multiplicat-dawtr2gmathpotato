@@ -10,7 +10,8 @@ export const socket = io(URL);
 
 
 const joinRoom = () => {
-    socket.emit('join', store.getUsers());
+    const store = useAppStore();
+    socket.emit('join', store.guestInfo.username, store.guestInfo.id);
   };
 
 onMounted(() => {

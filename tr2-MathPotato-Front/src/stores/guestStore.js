@@ -2,6 +2,16 @@ import { defineStore } from 'pinia';
 
 export const useAppStore = defineStore('app', {
     state: () => ({
+        infoGame: {            
+            rooms: {
+                gameRooms: [
+                    {idRoom: 1, roomName:'', users: [{username: '', id: '', bomba: false, image: './assets/Icon_2.png'}]},
+                    ],                    
+                waitingRoom: {
+                            users:[{username: '', id: '', bomba: false, image: './assets/Icon_2.png'}]
+                        }
+                    }
+                }, 
         guestInfo: {
             username: '',
             id: '',
@@ -23,8 +33,26 @@ export const useAppStore = defineStore('app', {
             console.log(this.users);
 
         },
+        setUsersInRoom(roomName, users){
+            if(this.infoGame.rooms.hasOwnProperty(roomName)) {
+                this.infoGame.rooms[roomName].users = users;
+                console.log('room users!');
+                console.log(this.infoGame.rooms[roomName].users);
+            }else{
+                console.error('La sala ${roomName} no existe');
+            }
+            
+        },
         getUsers(){
             return this.users;
+        },
+        getUsersInRoom(roomName){
+            if(this.infoGame.rooms.hasOwnProperty(roomName)) {
+                return this.infoGame.rooms[roomName].users;
+            }else{
+                console.error('La sala ${roomName} no existe');
+                return [];
+            }
         },
         setGuestInfo(username, id) {
             this.guestInfo.username = username;

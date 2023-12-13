@@ -51,6 +51,8 @@ io.on('connection', (socket) => {
         //cuando hayan mas de 6 usuarios conectados se meten en la sala de espera
         if(usersConectados.length < 6){
             socket.join('gameRoom');
+
+            // io.to('gameRoom').emit('usersConnected', usersConectados);
         }else{
             socket.join('waitingRoom');
             // Emitir a la sala de espera cuando alguien se une
@@ -62,7 +64,7 @@ io.on('connection', (socket) => {
         } else {
             usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_1.png' });
         }
-        console.log(data);
+        console.log(usersConectados);
         
         io.to('gameRoom').emit('usersConnected', usersConectados);
         console.log('Salas despues de unirse: ', io.sockets.adapter.rooms);
@@ -168,8 +170,10 @@ io.on('connection', (socket) => {
                 io.to('waitingRoom').emit('usersDesconectados', usersConectados);
             }
             console.log('Usuario desconectado: ', usuarioDesconectado);
-        }
-  
+    }
+        
+        
+        
     });
 
     
