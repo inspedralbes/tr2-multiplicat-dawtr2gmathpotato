@@ -13,7 +13,7 @@ class Usuarios extends Authenticatable
     use HasFactory, Notifiable,HasApiTokens;
     protected $table = 'usuaris';
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
         "foto_perfil"
