@@ -5,7 +5,7 @@ export const useAppStore = defineStore('app', {
         infoGame: {            
             rooms: {
                 gameRooms: [
-                    {idRoom: 1, roomName:'', users: [{username: '', id: '', bomba: false, image: './assets/Icon_2.png'}]},
+                    {idRoom: 1, roomName: "", users: [{username: '', id: '', bomba: false, image: './assets/Icon_2.png'}]},
                     ],                    
                 waitingRoom: {
                             users:[{username: '', id: '', bomba: false, image: './assets/Icon_2.png'}]
@@ -28,19 +28,21 @@ export const useAppStore = defineStore('app', {
 
     }), 
     actions: {
+        setRoomName(roomGame){
+            this.infoGame.rooms.gameRooms[0].roomName = roomGame;
+            console.log(this.infoGame.rooms.gameRooms[0].roomName);
+        },
+        getRoomName(){
+            return this.infoGame.rooms.gameRooms[0].roomName;
+        },
         setUsers(items){
             this.users = items;
             console.log(this.users);
 
         },
-        setUsersInRoom(roomName, users){
-            if(this.infoGame.rooms.hasOwnProperty(roomName)) {
-                this.infoGame.rooms[roomName].users = users;
-                console.log('room users!');
-                console.log(this.infoGame.rooms[roomName].users);
-            }else{
-                console.error('La sala ${roomName} no existe');
-            }
+        setUsersInRoom(roomGame, users){
+            this.infoGame.rooms.gameRooms[0].users = users;
+            console.log(this.infoGame.rooms.gameRooms[0].users);
             
         },
         getUsers(){

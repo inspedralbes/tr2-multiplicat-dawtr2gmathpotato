@@ -1,6 +1,6 @@
 
 import { io } from "socket.io-client";
-import { onMounted } from 'vue';
+// import { onMounted } from 'vue';
 import { useAppStore } from '@/stores/guestStore';
 
 // "undefined" means the URL will be computed from the `window.location` object
@@ -8,17 +8,17 @@ const URL = "localhost:5175";
 
 export const socket = io(URL);
 
+// const join = (roomGame) => {
+//     const store = useAppStore();
+//     socket.emit('join', { username: store.guestInfo.username, id: store.guestInfo.id, room: roomGame });
+//   };
 
-const joinRoom = () => {
-    const store = useAppStore();
-    socket.emit('join', store.guestInfo.username, store.guestInfo.id);
-  };
-
-onMounted(() => {
-    //join sala de juego
-    joinRoom();
-
-    socket.on("usersConnected", (usersConnected) => {
+// onMounted(() => {
+//     //join sala de juego
+//     join('gameRoom');
+//     console.log('hi');
+    socket.on("usersConnected", (usersConnected, roomGame) => {
+        console.log(roomGame);
         const store = useAppStore();
         console.log('Usuarios conectados: ', usersConnected);
         
@@ -32,6 +32,8 @@ onMounted(() => {
 
         // Establece el array de usuarios en Pinia
         store.setUsers(usersConnected);
+        store.setRoomName(roomGame);
+        store.setUsersInRoom(roomGame, usersConnected);
         store.setRespostaAnterior(true);
     });
 
@@ -73,5 +75,5 @@ onMounted(() => {
         store.setUsers(newUsersData.arrayUsers);
         store.setRespostaAnterior(newUsersData.bombChange);
     });
-});
+// });
 
