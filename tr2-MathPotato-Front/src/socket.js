@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { useAppStore } from '@/stores/guestStore';
 
 // "undefined" means the URL will be computed from the `window.location` object
-const URL = "localhost:3869";
+const URL = "http://mathpotato.daw.inspedralbes.cat:3869";
 
 export const socket = io(URL);
 

@@ -6,7 +6,7 @@ export const useAppStore = defineStore('app', {
             username: '',
             id: '',
             bomba: false,
-            image: './assets/Icon_2.png'
+            image: '@/assets/Icon_2.png'
         },
         users:[],
         pregunta: {

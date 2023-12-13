@@ -22,7 +22,7 @@
 
 <script>
 
-import { socket } from '../socket';
+import { socket } from '@/socket';
 
 export default {
     data() {

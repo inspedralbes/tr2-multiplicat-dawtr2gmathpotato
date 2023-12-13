@@ -18,7 +18,7 @@ const server = createServer(app);
 const usersConectados = [];
 
 const objPreguntes = {};
-const URL = "http://127.0.0.1:8000/api/preguntes/random";
+const URL = "http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/preguntes/random";
 
 const io = new Server(server, {
     cors: {
@@ -46,9 +46,9 @@ io.on('connection', (socket) => {
 
     socket.on('join', (data) => {
         if (usersConectados.length === 0) {
-            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_2.png' });
+            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './assets/Icon_1-c91901b1.png' });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png' });
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './assets/Icon_1-c91901b1.png' });
         }
         console.log(data);
         io.emit('usersConnected', usersConectados);
@@ -110,7 +110,7 @@ io.on('connection', (socket) => {
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(resposta);
 
-        if (resultatPregunta === respuesta) {
+        if (resultatPregunta == resposta) {
             pregActual++;
             console.log(pregActual);
 

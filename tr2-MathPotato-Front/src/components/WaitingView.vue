@@ -17,8 +17,8 @@
 </template>
 
 <script>
-    import { socket } from '../socket';
-    import { useAppStore } from '../stores/guestStore.js';
+    import { socket } from '@/socket';
+    import { useAppStore } from '@/stores/guestStore.js';
     import { computed } from 'vue';
 
     export default {

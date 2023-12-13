@@ -7,7 +7,7 @@
                     <p>{{ user.username }}</p>
                 </div>
             </div>
-            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
+            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="@/assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ contador }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
@@ -37,7 +37,7 @@
 }
 
 #background {
-    background-image: url("../assets/backround2.png");
+    background-image: url("@/assets/backround2.png");
     background-repeat: no-repeat;
     height: 100vh;
     width: 99vw;
@@ -100,7 +100,7 @@
 }
 
 #grid {
-    background-image: url("../assets/table.png");
+    background-image: url("@/assets/table.png");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -247,8 +247,8 @@
 }
 </style>
 <script>
-import { useAppStore } from '../stores/guestStore.js';
-import { socket } from '../socket';
+import { useAppStore } from '@/stores/guestStore.js';
+import { socket } from '@/socket';
 
 export default {
     data() {
