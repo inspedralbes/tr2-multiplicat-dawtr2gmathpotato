@@ -13,10 +13,11 @@ class Usuarios extends Authenticatable
     use HasFactory, Notifiable,HasApiTokens;
     protected $table = 'usuaris';
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
-        "foto_perfil"
+        'foto_perfil',
     ];
     public $timestamps = false;
 }

@@ -34,33 +34,38 @@ class UsuarisController extends Controller
         ]);
     }
 
-    public function login(Request $request){
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string|min:6',
-        ]);
-        User::where("email","=",$request->email)->first();
-        if(isset($usuari->id)){
-            if(Hash::check($request->password,$usuari->password)){
-                $token=$usuari->createToken('auth_token')->plainTextToken;
-                return response()->json([
-                    'status' => 1,
-                    'message' => 'Usuari logejat correctament',
-                    'token' => $token
-                ]);
-            }else{
-                return response()->json([
-                    'status' => 0,
-                    'message' => 'Contrasenya incorrecta'
-                ]);
-            }
-        }else{
+    public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|string|email',
+        'password' => 'required|string|min:6',
+    ]);
+
+    $usuari = Usuarios::where("email", "=", $request->email)->first();
+
+    if ($usuari) {  // Verifica si $usuari no es null
+        if (Hash::check($request->password, $usuari->password)) {
+            $token = $usuari->createToken('auth_token')->plainTextToken;
+            return response()->json([
+                'status' => 1,
+                'message' => 'Usuari logejat correctament',
+                'token' => $token
+            ]);
+        } else {
             return response()->json([
                 'status' => 0,
-                'message' => 'Usuari no registrat'
+                'message' => 'Contrasenya incorrecta'
             ]);
         }
+    } else {
+        return response()->json([
+            'status' => 0,
+            'message' => 'Usuari no registrat'
+        ]);
     }
+}
+
+    
     public function logout(){
        
     }
