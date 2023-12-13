@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
 
     socket.on('join', (data) => {
         //cuando hayan mas de 6 usuarios conectados se meten en la sala de espera
-        
+
         if(usersConectados.length < 6){
             socket.join('gameRoom');
             // Emitir a la sala de juego cuando alguien se une
@@ -163,11 +163,11 @@ io.on('connection', (socket) => {
 
             if(socket.rooms.has('gameRoom')){
                 socket.leave('gameRoom');
-                io.to('gameRoom').emit('usersDesconectados', usersConectados);
+                broadcast.to('gameRoom').emit('usersDesconectados', usersConectados, 'gameRoom');
             
             }else if(socket.rooms.has('waitingRoom')){
                 socket.leave('waitingRoom');
-                io.to('waitingRoom').emit('usersDesconectados', usersConectados);
+                broadcast.to('waitingRoom').emit('usersDesconectados', usersConectados);
             }
             console.log('Usuario desconectado: ', usuarioDesconectado);
     }

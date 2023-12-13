@@ -33,7 +33,7 @@ export const socket = io(URL);
         // Establece el array de usuarios en Pinia
         store.setUsers(usersConnected);
         store.setRoomName(roomGame);
-        store.setUsersInRoom(roomGame, usersConnected);
+        store.setUsersInRoom(usersConnected);
         store.setRespostaAnterior(true);
     });
 
@@ -47,13 +47,15 @@ export const socket = io(URL);
     socket.on("usersDesconectados", (usersConnected) => { 
         const store = useAppStore();
         console.log('Usuarios desconectados: ', usersConnected);
-        store.updateUsersOnDisconnect(usersConnected);    
+        store.updateUsersOnDisconnect(usersConnected);  
+        store.updateUsersOnDisconnectInRoom(usersConnected);  
     });
 
     socket.on("disconnect", () => {
         const store = useAppStore();
         console.log("*Desconectado del servidor*");
         store.clearGuestInfo();
+        store.updateUsersOnDisconnectInRoom(usersConnected);
     });
 
     socket.on("gameStarted", (gameStarted) => {

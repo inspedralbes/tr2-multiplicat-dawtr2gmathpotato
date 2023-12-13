@@ -5,13 +5,19 @@ export const useAppStore = defineStore('app', {
         infoGame: {            
             rooms: {
                 gameRooms: [
-                    {idRoom: 1, roomName: "", users: [{username: '', id: '', bomba: false, image: './assets/Icon_2.png'}]},
-                    ],                    
+                    {
+                        idRoom: 1, roomName: "", users: [
+                            {username: '', id: '', bomba: false, image: './assets/Icon_2.png'}
+                        ]
+                    },
+                ],                    
                 waitingRoom: {
-                            users:[{username: '', id: '', bomba: false, image: './assets/Icon_2.png'}]
-                        }
-                    }
-                }, 
+                    users:[
+                        {username: '', id: '', bomba: false, image: './assets/Icon_2.png'}
+                    ]
+                },
+                }
+            }, 
         guestInfo: {
             username: '',
             id: '',
@@ -35,27 +41,29 @@ export const useAppStore = defineStore('app', {
         getRoomName(){
             return this.infoGame.rooms.gameRooms[0].roomName;
         },
+        setUsersInRoom(users){
+            this.infoGame.rooms.gameRooms[0].users = users;
+            console.log(this.infoGame.rooms.gameRooms[0].users);
+        },
+        getUsersInRoom(){
+            return this.infoGame.rooms.gameRooms[0].users;
+        },
+        updateUsersOnDisconnectInRoom({roomName, users }) {
+            if(this.infoGame.rooms.hasOwnProperty(roomName)){
+                this.infoGame.rooms[roomName].users = users;
+                console.log('Usuarios en la sala ${roomName} actualizados: ', users);
+            }
+        },
         setUsers(items){
             this.users = items;
             console.log(this.users);
-
-        },
-        setUsersInRoom(roomGame, users){
-            this.infoGame.rooms.gameRooms[0].users = users;
-            console.log(this.infoGame.rooms.gameRooms[0].users);
-            
-        },
+        },     
         getUsers(){
             return this.users;
-        },
-        getUsersInRoom(roomName){
-            if(this.infoGame.rooms.hasOwnProperty(roomName)) {
-                return this.infoGame.rooms[roomName].users;
-            }else{
-                console.error('La sala ${roomName} no existe');
-                return [];
-            }
-        },
+        },    
+        updateUsersOnDisconnect(users) {
+            this.setUsers(users);
+        },    
         setGuestInfo(username, id) {
             this.guestInfo.username = username;
             this.guestInfo.id = id;
@@ -72,9 +80,7 @@ export const useAppStore = defineStore('app', {
             this.guestInfo.username = '';
             this.guestInfo.id = '';
         }, 
-        updateUsersOnDisconnect(users) {
-            this.setUsers(users);
-        },
+        
         setPregunta(pregunta){
             this.pregunta.id_pregunta=pregunta.id_pregunta;
             this.pregunta.pregunta=pregunta.pregunta
