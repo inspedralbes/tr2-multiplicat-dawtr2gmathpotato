@@ -38,6 +38,13 @@ export const useAppStore = defineStore('app', {
             this.infoGame.rooms.gameRooms[0].roomName = roomGame;
             console.log(this.infoGame.rooms.gameRooms[0].roomName);
         },
+        setGameRooms(gameRooms){
+            this.infoGame.rooms.gameRooms = gameRooms;
+            console.log(this.infoGame.rooms.gameRooms);
+        },
+        getGameRooms(){
+            return this.infoGame.rooms.gameRooms;
+        },
         getRoomName(){
             return this.infoGame.rooms.gameRooms[0].roomName;
         },

@@ -51,7 +51,7 @@ export const socket = io(URL);
         store.updateUsersOnDisconnectInRoom(usersConnected);  
     });
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", (usersConnected) => {
         const store = useAppStore();
         console.log("*Desconectado del servidor*");
         store.clearGuestInfo();
@@ -77,5 +77,11 @@ export const socket = io(URL);
         store.setUsers(newUsersData.arrayUsers);
         store.setRespostaAnterior(newUsersData.bombChange);
     });
+
+    // socket.on("gameRooms", (gameRooms) => {
+    //     const store = useAppStore();
+    //     console.log('Salas de juego: ', gameRooms);
+    //     store.setGameRooms(gameRooms);
+    // });
 // });
 

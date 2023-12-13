@@ -45,12 +45,13 @@ io.on('connection', (socket) => {
     console.log(socket.id);
 
     //obtener informacion sobre las salas
-    // console.log('Salas: ', io.sockets.adapter.rooms);
+    console.log('Salas: ', io.sockets.adapter.rooms);
 
     socket.on('join', (data) => {
         //cuando hayan mas de 6 usuarios conectados se meten en la sala de espera
 
         if(usersConectados.length < 6){
+            
             socket.join('gameRoom');
             // Emitir a la sala de juego cuando alguien se une
         }else{
@@ -69,6 +70,15 @@ io.on('connection', (socket) => {
         io.to('gameRoom').emit('usersConnected', usersConectados, 'gameRoom');
         console.log('Salas despues de unirse: ', io.sockets.adapter.rooms);
     });
+
+    // socket.on('gameRooms', (gameRoom) => {
+    //     const gameRooms = [];
+    //     gameRooms.push({ idRoom: 1, roomName: "gameRoom", users: usersConectados });
+    //     gameRooms.push({ idRoom: 2, roomName: "gameRoom2", users: usersConectados });
+        
+    //     console.log(gameRooms);
+    //     io.emit('gameRooms', gameRooms);
+    // });
 
     socket.on('preguntes', () => {
         console.log('preguntasAleatorias', objPreguntes);
