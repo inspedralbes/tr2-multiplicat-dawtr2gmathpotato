@@ -44,16 +44,28 @@ io.on('connection', (socket) => {
     console.log("User connected.");
     console.log(socket.id);
 
+    //obtener informacion sobre las salas
+    console.log('Salas: ', io.sockets.adapter.rooms);
+
     socket.on('join', (data) => {
+        //cuando hayan mas de 6 usuarios conectados se meten en la sala de espera
+        if(usersConectados.length < 6){
+            socket.join('gameRoom');
+        }else{
+            socket.join('waitingRoom');
+            // Emitir a la sala de espera cuando alguien se une
+            io.to('waitingRoom').emit('usersConnected', usersConectados);
+        }
+
         if (usersConectados.length === 0) {
-            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_2.png' });
+            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_1.png' });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png' });
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_1.png' });
         }
         console.log(data);
-        io.emit('usersConnected', usersConectados);
-
-
+        
+        io.to('gameRoom').emit('usersConnected', usersConectados);
+        console.log('Salas despues de unirse: ', io.sockets.adapter.rooms);
     });
 
     socket.on('preguntes', () => {
@@ -144,21 +156,23 @@ io.on('connection', (socket) => {
         console.log(usersConectados);
         console.log(usuarioDesconectadoIndex);
 
-        if (usuarioDesconectadoIndex) {
-            usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
+        if (usuarioDesconectadoIndex >= 0) {
+            const usuarioDesconectado = usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1)[0];
 
-            io.emit('usersDesconectados', usersConectados);
+            if(socket.rooms.has('gameRoom')){
+                socket.leave('gameRoom');
+                io.to('gameRoom').emit('usersDesconectados', usersConectados);
+            
+            }else if(socket.rooms.has('waitingRoom')){
+                socket.leave('waitingRoom');
+                io.to('waitingRoom').emit('usersDesconectados', usersConectados);
+            }
+            console.log('Usuario desconectado: ', usuarioDesconectado);
         }
-        
-        
-        console.log('Usuario desconectado');
+  
     });
 
-    socket.on('disconnect', () => {
-        io.emit('usersDesconectados', usersConectados);
-        
-    });
-
+    
     console.log('preguntasAleatorias', objPreguntes);
     // socket.emit("username");
 
