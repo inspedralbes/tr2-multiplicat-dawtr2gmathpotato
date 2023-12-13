@@ -140,6 +140,30 @@ io.on('connection', (socket) => {
 
     let timerInterval;
 
+    function iniciarTimer() {
+        const size = usersConectados.length + 1;
+        var timer = 0;
+
+        switch (size) {
+            case 3:
+                timer = 30;
+                break;
+            case 4:
+                timer = 35;
+                break;
+            case 5:
+                timer = 40;
+                break;
+            case 6:
+                timer = 40;
+                break;
+            default:
+                timer = 0;
+                break;
+        }
+        return timer;
+    }
+
     function startTimer(timer) {
         timerInterval = setInterval(function () {
             if (timer === 0) {

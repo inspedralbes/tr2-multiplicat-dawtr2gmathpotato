@@ -271,26 +271,7 @@ export default {
         },
         timer() {
             let store = useAppStore();
-            let size = this.users.length;
-
-            switch (size) {
-                case 3:
-                    this.timer = 30;
-                    break;
-                case 4:
-                    this.timer = 35;
-                    break;
-                case 5:
-                case 6:
-                    this.timer = 40;
-                    break;
-                default:
-                    this.timer = 0;
-                    break;
-            }
-
-            // return store.getTimer();
-            return this.timer;
+            return store.getTimer();
         },
         message() {
             let store = useAppStore();
