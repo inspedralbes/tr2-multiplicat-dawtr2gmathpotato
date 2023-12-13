@@ -47,12 +47,18 @@ socket.on("disconnect", () => {
 socket.on("gameStart", (gameStart) => {
     console.log(gameStart);
     socket.emit("preguntes");
+    socket.emit("startTimer");
 });
 
 socket.on("pregunta", (pregunta) => {
     // console.log(objPreguntes);
     const storeDisc=useAppStore();
-    storeDisc.setPregunta(pregunta);
+    storeDisc.setPregunta(pregunta); 
+});
+
+socket.on('timer', (timerValue) => {
+    const store = useAppStore();
+    store.setTimer(timerValue);
 });
 
 socket.on("changeBomb", (newUsersData) => {

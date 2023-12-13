@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
                     newPregunta();
                 }
             }
-        );
+            );
     }
 
     function newPregunta() {
@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
     }
 
     socket.on('resposta', (resposta) => {
-        
+
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
         //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
 
@@ -126,18 +126,43 @@ io.on('connection', (socket) => {
             }
             usersConectados[userBomba].bomba = true;
             console.log(userBomba);
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
+            socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
             newPregunta();
         } else {
             console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
+            socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
             newPregunta();
 
         }
     });
 
+    let timerInterval;
+
+    function startTimer(timer) {
+        timerInterval = setInterval(function () {
+            if (timer === 0) {
+                clearInterval(timerInterval);
+                console.log("Timer finalizado");
+                pregActual++;
+                newPregunta();
+            } else {
+                timer--;
+                console.log(timer);
+                io.emit('timer', timer);
+            }
+        }, 1000);
+    }
+
+    socket.on('startTimer', () => {
+        const tiempo = iniciarTimer();
+        if (tiempo > 0) {
+            startTimer(tiempo);
+        } else {
+            console.log("Tiempo no válido para iniciar el temporizador.");
+        }
+    });
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);

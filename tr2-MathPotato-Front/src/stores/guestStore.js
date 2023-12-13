@@ -10,10 +10,11 @@ export const useAppStore = defineStore('app', {
         },
         users:[],
         pregunta: {
-            id_pregunta:"",
+            id_pregunta:"", 
             pregunta:""
         },
-        respostaAnterior: true
+        respostaAnterior: true,
+        timer: 0
 
     }), 
     actions: {
@@ -55,6 +56,12 @@ export const useAppStore = defineStore('app', {
         },
         getRespostaAnterior(){
             return this.respostaAnterior;
+        },
+        setTimer(timerValue){
+            this.timer = timerValue;
+        },
+        getTimer(){
+            return this.timer;
         }
     }
 });

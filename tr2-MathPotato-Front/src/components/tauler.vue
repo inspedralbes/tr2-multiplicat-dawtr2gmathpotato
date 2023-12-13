@@ -3,12 +3,12 @@
         <div id="grid">
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
-                    <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background}};">
+                    <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background }};">
                     <p>{{ user.username }}</p>
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
-                    class="bomb" id="bomb"><span class="bombCounter">{{ contador }}</span></div>
+                    class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
                     v-if="!gameStarted">START!</Button>
@@ -224,8 +224,8 @@
 
 .bombCounter {
     position: absolute;
-    top: 56%;
-    left: 45%;
+    top: 6vw;
+    left: 9.3vh;
     animation-name: hunch;
     animation-duration: 1s;
     animation-iteration-count: infinite;
@@ -256,6 +256,7 @@ export default {
             gameStarted: false,
             pregunta: {},
             respuesta: "",
+            timer: 0,
 
         };
     },
@@ -268,7 +269,29 @@ export default {
             let store = useAppStore();
             return store.getUsers();
         },
+        timer() {
+            let store = useAppStore();
+            let size = this.users.length;
 
+            switch (size) {
+                case 3:
+                    this.timer = 30;
+                    break;
+                case 4:
+                    this.timer = 35;
+                    break;
+                case 5:
+                case 6:
+                    this.timer = 40;
+                    break;
+                default:
+                    this.timer = 0;
+                    break;
+            }
+
+            // return store.getTimer();
+            return this.timer;
+        },
         message() {
             let store = useAppStore();
             return store.getPregunta();
