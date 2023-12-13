@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\User; // Asegúrate de importar correctamente el modelo User
+use App\Models\Usuarios;
 use Illuminate\Support\Facades\Hash;
 
 class UsuarisController extends Controller
@@ -21,7 +21,7 @@ class UsuarisController extends Controller
             ],
         ]);
 
-        $usuari = new User(); // Asegúrate de utilizar el modelo User
+        $usuari = new Usuarios();
         $usuari->username = $request->username;
         $usuari->email = $request->email;
         $usuari->password = Hash::make($request->password);

@@ -26,8 +26,7 @@ class PreguntesController extends Controller
             'message' => 'Pregunta afegida correctament'
         ]);
     }
-    public function getPreguntasRandom()
-{
+    public function getPreguntasRandom(){
     $preguntasIds = Preguntas::inRandomOrder()->take(50)->distinct()->pluck('id_pregunta');
 
     

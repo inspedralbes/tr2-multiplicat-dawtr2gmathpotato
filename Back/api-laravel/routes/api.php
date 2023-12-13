@@ -4,7 +4,9 @@ use App\Http\Controllers\UsuarisController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('register', [UsuarisController::class, 'register']);
+
+
+Route::post('/register', [UsuarisController::class, 'register']);
 Route::post('login', [UsuarisController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
