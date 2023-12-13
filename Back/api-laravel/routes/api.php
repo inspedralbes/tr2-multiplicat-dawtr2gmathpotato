@@ -6,8 +6,13 @@ use Illuminate\Support\Facades\Route;
 
 
 
+<<<<<<< HEAD
 Route::post('/register', [UsuariosController::class, 'register']);
 Route::post('/login', [UsuariosController::class, 'login']);
+=======
+Route::post('/register', [UsuarisController::class, 'register']);
+Route::post('/login', [UsuarisController::class, 'login']);
+>>>>>>> develop
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('logout', [UsuariosController::class, 'logout']);
