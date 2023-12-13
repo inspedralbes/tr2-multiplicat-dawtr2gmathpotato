@@ -17,19 +17,11 @@ class Usuarios extends Authenticatable
     protected $primaryKey = 'id'; // Agrega esta línea para configurar la clave primaria.
 
     protected $fillable = [
-<<<<<<< HEAD
         'id',
         'name',
-=======
-        'username',
->>>>>>> origin/crear-usuario-afegir-preguntas
         'email',
         'password',
-<<<<<<< HEAD
         'foto_perfil'
-=======
-        'foto_perfil',
->>>>>>> develop
     ];
 
     public $timestamps = false;
