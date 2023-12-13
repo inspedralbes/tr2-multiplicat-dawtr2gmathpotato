@@ -13,8 +13,12 @@ class Usuarios extends Authenticatable
     use HasFactory, Notifiable,HasApiTokens;
     protected $table = 'usuaris';
     protected $fillable = [
+<<<<<<< HEAD
         'id',
         'name',
+=======
+        'username',
+>>>>>>> origin/crear-usuario-afegir-preguntas
         'email',
         'password',
         'foto_perfil',

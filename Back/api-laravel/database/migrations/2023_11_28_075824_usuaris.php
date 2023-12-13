@@ -13,7 +13,6 @@ return new class extends Migration
      */
     public function up()
     {
-        // Crear tabla users
         Schema::create('usuaris', function (Blueprint $table) {
             $table->string('username', 50);
             $table->string('email', 255)->unique();
@@ -21,10 +20,7 @@ return new class extends Migration
             $table->integer('num_victorias')->default(0);
             $table->integer('num_derrotas')->default(0);
             $table->enum ('foto_perfil', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
-            }    
-        ); 
-
-       
+        }); 
     }
 
     /**
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('usuaris');
     }
 };
