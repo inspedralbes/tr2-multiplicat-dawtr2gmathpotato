@@ -166,7 +166,7 @@ io.on('connection', (socket) => {
 });
 // io.emit('arrayUsers', usersConectados);
 
-server.listen(5175, () => {
-    console.log('Listening on http://localhost:5175');
+server.listen(3869, () => {
+    console.log('Listening on http://localhost:3869');
 
 });
