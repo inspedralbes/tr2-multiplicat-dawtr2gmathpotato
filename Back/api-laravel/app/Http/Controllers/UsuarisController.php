@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Usuarios;
@@ -34,6 +35,7 @@ class UsuarisController extends Controller
                 'message' => 'Usuari creat correctament'
             ]);
     }
+
     public function login(Request $request){
         $request->validate([
             'email' => 'required|string|email',
