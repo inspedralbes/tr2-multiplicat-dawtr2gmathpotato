@@ -110,7 +110,7 @@ io.on('connection', (socket) => {
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(resposta);
 
-        if (resultatPregunta === respuesta) {
+        if (resultatPregunta == resposta) {
             pregActual++;
             console.log(pregActual);
 
