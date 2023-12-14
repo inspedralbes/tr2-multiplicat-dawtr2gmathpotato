@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
 
     socket.on('resposta', (resposta) => {
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
-<<<<<<< HEAD
+
         //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
         
         const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
@@ -112,20 +112,11 @@ io.on('connection', (socket) => {
         console.log(resposta);
 
         if (resultatPregunta == resposta) {
-=======
     
-        const resultadoPregunta = eval(preguntas.preguntas[pregActual].pregunta);
-        console.log("Result correct --> ", resultadoPregunta);
-        console.log("Respuesta recibida --> ", resposta);
-    
-        if (resultadoPregunta == resposta) {
-            console.log("Respuesta correcta");
->>>>>>> crear-vides
             pregActual++;
             usersConectados[userBomba].bomba = false;
             userBomba = (userBomba + 1) % usersConectados.length;
             usersConectados[userBomba].bomba = true;
-<<<<<<< HEAD
             console.log(userBomba);
             io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();
@@ -136,26 +127,6 @@ io.on('connection', (socket) => {
             io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
             newPregunta();
 
-=======
-            io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
-            newPregunta();
-        } else {
-            console.log("Respuesta incorrecta!");
-            usersConectados[userBomba].life--;
-            if (usersConectados[userBomba].life =-1) {
-                console.log(`El usuario ${usersConectados[userBomba].username} ha perdido.`);
-                usersConectados.splice(userBomba, 1);
-                if (userBomba >= usersConectados.length) {
-                    userBomba = 0;
-                }
-                io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
-            } else {
-                pregActual++;
-                usersConectados[userBomba].bomba = true;
-                socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
-                newPregunta();
-            }
->>>>>>> crear-vides
         }
     });
 
