@@ -1,12 +1,15 @@
 # Documentació bàsica del projecte
-Ha d'incloure, com a mínim
+És una aplicació que utilizarem diferents tecnologies com podem veure en l'aparatat seguent de l'entorn. 
 ## Instruccions per crear un entorn de desenvolupament
-  - eines
-  - plugins
-  - ...
+  - Eines:
+    -Programes web: Penpot, Taiga,Github i Chat GPT.
+    -Aplicacións: Node, Laravel, Vue, MYSQL, Apache2 i Pinia.
+    -Programes: JavaScript, CSS, HTML i PHP 
+  - Plugins:
+    - Visual Studio Code: GitHub Copilot, Error Lens, Live Server, MySQL, node-snippets, Postman i Vue 3 Snippets.
 
 ## Instruccions per desplegar el projecte a producció
-Quins fitxers s'han d'editar i com (típicament per connectar la BD etc...)
+* [URL al README per a deployment](https://github.com/inspedralbes/tr2-multiplicat-dawtr2gmathpotato/blob/main/doc/deployREADME.md) 
 
 ## Instruccions per seguir codificant el projecte
 eines necessaries i com es crea l'entorn per que algú us ajudi en el vostre projecte.
