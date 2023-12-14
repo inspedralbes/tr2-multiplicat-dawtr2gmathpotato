@@ -47,9 +47,9 @@ io.on('connection', (socket) => {
 
     socket.on('join', (data) => {
         if (usersConectados.length === 0) {
-           usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png',life:2 });
+           usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_1.png',life:2 });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', life:2 });
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_1.png', life:2 });
         }
         console.log(data);
         io.emit('usersConnected', usersConectados);
