@@ -98,10 +98,10 @@ export default {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            username: this.username,
+                            nombre_usuario: this.username,
                             email: this.email,
-                            password: hashedPassword,
-                            password_confirmation: hashedConfirmation,
+                            contraseña: hashedPassword,
+                            contraseña_confirmation: hashedConfirmation,
                             foto_perfil: this.imatgeSeleccionada
                         })
                     });
