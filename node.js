@@ -142,7 +142,7 @@ io.on('connection', (socket) => {
     let timerInterval;
 
     function iniciarTimer() {
-        const size = usersConectados.length + 1;
+        const size = usersConectados.length;
         var timer = 0;
 
         switch (size) {
@@ -165,29 +165,28 @@ io.on('connection', (socket) => {
         return timer;
     }
 
-    function startTimer(timer) {
-        timerInterval = setInterval(function () {
-            if (timer === 0) {
-                clearInterval(timerInterval);
-                console.log("Timer finalizado");
-                pregActual++;
-                newPregunta();
-            } else {
-                timer--;
-                console.log(timer);
-                io.emit('timer', timer);
-            }
-        }, 1000);
-    }
+    function startTimer() {
+        let tiempo = iniciarTimer();
 
-    socket.on('startTimer', () => {
-        const tiempo = iniciarTimer();
         if (tiempo > 0) {
-            startTimer(tiempo);
+            timerInterval = setInterval(function () {
+                if (tiempo === 0) {
+                    clearInterval(timerInterval);
+                    console.log("Timer finalizado");
+                    pregActual++;
+                    newPregunta();
+                } else {
+                    tiempo--;
+                    console.log("timer", tiempo);
+                    io.emit('timer', tiempo);
+                }
+            }, 1000);
         } else {
             console.log("Tiempo no válido para iniciar el temporizador.");
         }
-    });
+    }
+
+    socket.on('startTimer', startTimer);
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
@@ -199,6 +198,7 @@ io.on('connection', (socket) => {
             usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
 
             io.emit('usersDesconectados', usersConectados);
+            clearInterval(timerInterval);
         }
         console.log('Usuario desconectado');
     });
