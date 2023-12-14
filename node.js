@@ -42,70 +42,80 @@ var con = mysql.createConnection({
 
 io.on('connection', (socket) => {
     console.log("User connected.");
-    // console.log(socket.id);
+    console.log(socket.id);
 
     //obtener informacion sobre las salas
     console.log('Salas: ', io.sockets.adapter.rooms);
 
+
     socket.on('join', (data) => {
-        //cuando hayan mas de 6 usuarios conectados se meten en la sala de espera
-        if (usersConectados.length === 0) {
+
+        if (usersConectados.length == 0) {
+            // Si no hay usuarios conectados, se agrega el primer usuario a la sala
             usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_1.png' });
         } else {
+            // Si ya hay usuarios, se agrega un nuevo usuario a la sala
             usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_1.png' });
         }
-        // console.log(usersConectados);
-
+    
+        // Se obtiene información sobre las salas existentes
         const gameRooms = io.sockets.adapter.rooms;
+        
+        
+        // Se calcula el total de usuarios en todas las salas de juego
         const totalUsersInGameRooms = Object.keys(gameRooms).reduce((total, room) => {
-            console.log(totalUsersInGameRooms);
             if(room.startsWith('gameRoom')){
                 return total + gameRooms[room].length;
             }
             return total;
         }, 0);
+        console.log(totalUsersInGameRooms);
         
+        
+        // Si el total de usuarios en todas las salas es menor o igual a 6
         if(totalUsersInGameRooms <= 6){
-            
+            // Se obtiene o crea una sala disponible
             let availableGameRoom = getAvailableGameRoom();
-            socket.join(availableGameRoom);
-            io.to(availableGameRoom).emit('usersConnected', usersConectados, availableGameRoom);
-        }else{
-            const newGameRoom = `gameRoom${Object.keys(gameRooms).filter(room => room.startsWith('gameRoom')).length + 1}`;
-            socket.join(newGameRoom);
-            io.to(newGameRoom).emit('usersConnected', usersConectados, newGameRoom);    
-           
-           
-        }
-        // if(usersConectados.length < 6){
             
-        //     socket.join('gameRoom');
-        //     // Emitir a la sala de juego cuando alguien se une
-        // }else{
-        //     socket.join('waitingRoom');
-        //     // Emitir a la sala de espera cuando alguien se une
-        //     io.to('waitingRoom').emit('usersConnected', usersConectados, 'waitingRoom');
-        // }
-
-        
-        
-        // io.to('gameRoom').emit('usersConnected', usersConectados, 'gameRoom');
-        // console.log('Salas despues de unirse: ', io.sockets.adapter.rooms);
+            // Se hace que el socket se una a la sala
+            socket.join(availableGameRoom);
+    
+            // Se emite a la sala actualizada con los usuarios conectados
+            io.to(availableGameRoom).emit('usersConnected', usersConectados, availableGameRoom);
+        } else {
+            // Si hay más de 6 usuarios, se crea una nueva sala
+            const newGameRoom = `gameRoom${Object.keys(gameRooms).filter(room => room.startsWith('gameRoom')).length + 1}`;
+            
+            // Se hace que el socket se una a la nueva sala
+            socket.join(newGameRoom);
+    
+            // Se emite a la nueva sala actualizada con los usuarios conectados
+            io.to(newGameRoom).emit('usersConnected', usersConectados, newGameRoom);
+        }
     });
 
-    function getAvailableGameRoom(){
         
-        const gameRooms = io.sockets.adapter.rooms;
-        const availableGameRooms = Object.keys(gameRooms).filter(room => {
-            return room.startsWith('gameRoom') && gameRooms[room].length < 6;
-        });
-    
-        if(availableGameRooms.length > 0){
-            return availableGameRooms[0];
-        }else{
-            return 'gameRoom1';
+        // Función para obtener una sala disponible o crear una nueva
+        function getAvailableGameRoom(){
+            const gameRooms = io.sockets.adapter.rooms;
+
+            // Se filtran las salas que comienzan con 'gameRoom' y tienen menos de 6 usuarios
+            const availableGameRooms = Object.keys(gameRooms).filter(room => {
+                return room.startsWith('gameRoom') && gameRooms[room].length < 6;
+            });
+
+            // Si hay una sala disponible, se devuelve la primera encontrada
+            if(availableGameRooms.length > 0){
+                console.log('Sala disponible: ', availableGameRooms[0]);
+                return availableGameRooms[0];
+            } else {
+                const newRoom = `gameRoom${Object.keys(gameRooms).filter(room => room.startsWith('gameRoom')).length + 1}`;
+                // Si no hay salas disponibles, se crea una nueva con un número incrementado
+                console.log('Nueva sala: ', newRoom);
+                return newRoom;
+            }
         }
-    }
+    
 
     
 

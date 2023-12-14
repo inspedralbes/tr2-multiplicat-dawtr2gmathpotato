@@ -35,6 +35,8 @@ export const socket = io(URL);
         store.setRoomName(roomGame);
         store.setUsersInRoom(usersConnected);
         store.setRespostaAnterior(true);
+
+        // socket.join(roomGame);
     });
 
     // socket.on("username", (username, id) => { 
