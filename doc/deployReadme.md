@@ -8,7 +8,3 @@
 4. Executar l'ordre **cp .env.example .env** i dins tindrem que posar les dades que siguin necessaries en el .env per poder així connectar la base de dades, després fem un **php artisan key:generate** en el directori de api-laravel
 5. Una vegada configurat el back s'han de modificar totes les rutes que apuntin a localhost per tal d'apuntar a on tinguem el servidor i la BBDD
 6. En acabar hem de fer un npm run build sobre el projecte i pujarlo al servidor **Atenció: cal assegurar-se de que el vite-config.vue te com a base './'**
-   
-   
-
-EN CONSTRUCCIÓ...
