@@ -117,6 +117,7 @@ io.on('connection', (socket) => {
             usersConectados[userBomba].bomba = false;
             userBomba = (userBomba + 1) % usersConectados.length;
             usersConectados[userBomba].bomba = true;
+
             console.log(userBomba);
             io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();

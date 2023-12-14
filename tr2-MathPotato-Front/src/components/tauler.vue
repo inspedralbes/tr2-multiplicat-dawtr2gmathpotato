@@ -4,10 +4,11 @@
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
-                        <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
                         <div class="vidaContainer" v-for="n in user.life" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
+                        <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
+                       
                     </div>
                     <p>{{ user.username }}</p>
                     
