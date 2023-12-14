@@ -40,7 +40,7 @@
                             class="icon"></label></div>
             </div>
 
-            <Button label="Sign In" icon="pi pi-user" class="w-full" @click="registrar"></Button>
+            <Button label="Sign In" icon="pi pi-user" class="w-full" @click="register"></Button>
         </div>
     </div>
 </template>
@@ -68,6 +68,7 @@ input[type="radio"]:checked+label>img {
 import { socket } from '../socket';
 
 export default {
+    
     data() {
         return {
             username: '',
@@ -88,33 +89,17 @@ export default {
             console.log(this.users);
         },
         async register() {
-                try {
-                    const hashedPassword = await hashFunction(this.password);
-                    const hashedConfirmation = await hashFunction(this.passwordConfirmation);
+            let user={
+                            "nombre_usuario": this.username,
+                            "email": this.email,
+                            "contraseña": this.password,
+                            "contraseña_confirmation": this.passwordConfirmation,
+                            "foto_perfil": this.imatgeSeleccionada
+                        };
+                
+                    socket.emit('register', user);
 
-                    const response = await fetch('localhost:8000/api/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            nombre_usuario: this.username,
-                            email: this.email,
-                            contraseña: hashedPassword,
-                            contraseña_confirmation: hashedConfirmation,
-                            foto_perfil: this.imatgeSeleccionada
-                        })
-                    });
-
-                    if (response.ok) {
-                        this.$router.push({ path: '/play' });
-                    } else {
-                        throw new Error('Registration failed');
-                    }
-                } catch (error) {
-                    console.error(error);
-                    // Show error message to the user
-                }
+                    this.$router.push({ path: '/login' });
             }
     },
 }

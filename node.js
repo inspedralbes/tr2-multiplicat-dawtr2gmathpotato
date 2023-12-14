@@ -55,7 +55,26 @@ io.on('connection', (socket) => {
 
 
     });
-
+    socket.on('register', (userData) => {
+        fetch('http://localhost:8000/api/register', {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.log(response);
+                throw new Error('Network response was not ok.');
+            }
+        }).then(data => {
+            console.log(data);
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    });
     socket.on('preguntes', () => {
         console.log('preguntasAleatorias', objPreguntes);
         io.emit('preguntas', objPreguntes);
