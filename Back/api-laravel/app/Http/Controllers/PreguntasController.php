@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Preguntas; 
 
-class PreguntesController extends Controller
+class PreguntasController extends Controller
 {
     public function index()
     {
@@ -15,19 +15,18 @@ class PreguntesController extends Controller
     {
         $request->validate([
             'pregunta' => 'required|string|max:255',
-            'user' => 'required|string',
+            'usuario' => 'required|string',
         ]);
         $pregunta = new Preguntas();
         $pregunta->pregunta=$request -> pregunta;
-        $pregunta->user=$request -> user;
+        $pregunta->usuario=$request -> usuario;
         $pregunta->save();
         return response()->json([
             'status' => 1,
             'message' => 'Pregunta afegida correctament'
         ]);
     }
-    public function getPreguntasRandom()
-{
+    public function getPreguntasRandom(){
     $preguntasIds = Preguntas::inRandomOrder()->take(50)->distinct()->pluck('id_pregunta');
 
     
@@ -51,11 +50,11 @@ public function updatePregunta(Request $request, $id )
 {
     $request->validate([
         'pregunta' => 'required|string|max:255',
-        'user' => 'required|string',
+        'usuario' => 'required|string',
     ]);
         $pregunta = Preguntas::findOrFail($id);
         $pregunta->pregunta = $request->pregunta;
-        $pregunta->user = $request->user;
+        $pregunta->usuario = $request->usuario;
         $pregunta->save();
 
         return response()->json([

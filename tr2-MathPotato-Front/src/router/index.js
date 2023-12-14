@@ -5,7 +5,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/guest',
       name: 'guest',
       component: () => import('../components/GuestView.vue') 
     },
@@ -31,8 +31,13 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: () => import('../components/Register.vue')
-    }
+    },
+    {
+      path: '/',
+      name: 'landingPageView',
+      component: () => import('../components/LandingPageView.vue')
 
+    }
 
   ]
 })

@@ -47,7 +47,6 @@ socket.on("disconnect", () => {
 socket.on("gameStart", (gameStart) => {
     console.log(gameStart);
     socket.emit("preguntes");
-    socket.emit("startTimer");
 });
 
 socket.on("pregunta", (pregunta) => {

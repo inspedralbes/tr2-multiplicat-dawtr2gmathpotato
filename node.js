@@ -62,13 +62,13 @@ io.on('connection', (socket) => {
     })
 
 
-    socket.on('startGame', (data) => {
+    socket.on('startGame', (gameStarted) => {
         if (usersConectados.length >= 3 && usersConectados.length <= 6) {
             console.log("startGame");
-            getPreguntes()
-            iniciarTimer();
+            getPreguntes();
+            io.emit('gameStarted', gameStarted);            iniciarTimer();
             startTimer();
-
+            
         }
     });
 
@@ -95,6 +95,7 @@ io.on('connection', (socket) => {
                 }
             }
             );
+            );
     }
 
     function newPregunta() {
@@ -106,13 +107,12 @@ io.on('connection', (socket) => {
 
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
         //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
-
+        
         const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(resposta);
 
         if (resultatPregunta == resposta) {
-            console.log("respuesta correcta");
             pregActual++;
             console.log(pregActual);
 
@@ -127,13 +127,13 @@ io.on('connection', (socket) => {
             }
             usersConectados[userBomba].bomba = true;
             console.log(userBomba);
-            socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
+            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();
         } else {
             console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
-            socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
+            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
             newPregunta();
 
         }
@@ -200,11 +200,16 @@ io.on('connection', (socket) => {
             io.emit('usersDesconectados', usersConectados);
             clearInterval(timerInterval);
         }
+        
+        
         console.log('Usuario desconectado');
     });
-
+    socket.on('login', (data) => { 
+        console.log(data);
+    });
     socket.on('disconnect', () => {
         io.emit('usersDesconectados', usersConectados);
+        
     });
 
     console.log('preguntasAleatorias', objPreguntes);
