@@ -8,7 +8,6 @@
                         <div class="vidaContainer" v-for="n in user.life" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
-
                     </div>
                     <p>{{ user.username }}</p>
                     
@@ -102,8 +101,8 @@
 }
 .imageContainer {
     display: flex;
+    
 }
-
 .vidaContainer img {
     width: 40px;
     height: 40px;

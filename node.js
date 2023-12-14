@@ -103,49 +103,38 @@ io.on('connection', (socket) => {
     }
 
     socket.on('resposta', (resposta) => {
-        
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
-        //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
-
-        const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
-        console.log("Result correct --> ", resultatPregunta); //FUNCIONA
-        console.log(resposta);
-
-        if (resultatPregunta == resposta) {
-            console.log("respuesta correcta");
+    
+        const resultadoPregunta = eval(preguntas.preguntas[pregActual].pregunta);
+        console.log("Result correct --> ", resultadoPregunta);
+        console.log("Respuesta recibida --> ", resposta);
+    
+        if (resultadoPregunta == resposta) {
+            console.log("Respuesta correcta");
             pregActual++;
-            console.log(pregActual);
-
             usersConectados[userBomba].bomba = false;
-
-            console.log(usersConectados[userBomba]);
-            console.log(userBomba);
-            if (userBomba + 1 == usersConectados.length) {
-                userBomba = 0;
-            } else {
-                userBomba++;
-            }
+            userBomba = (userBomba + 1) % usersConectados.length;
             usersConectados[userBomba].bomba = true;
-            console.log(userBomba);
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
+            io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
             newPregunta();
         } else {
-            console.log("resposta incorrecta!");
-            if(usersConectados[userBomba].life == 0){
+            console.log("Respuesta incorrecta!");
             usersConectados[userBomba].life--;
-            console.log("El usuario" + usersConectados[userBomba].username + "ha perdido");
-            usersConectados.splice(userBomba, 1);
-            }else{
-                usersConectados[userBomba].life--;
+            if (usersConectados[userBomba].life =-1) {
+                console.log(`El usuario ${usersConectados[userBomba].username} ha perdido.`);
+                usersConectados.splice(userBomba, 1);
+                if (userBomba >= usersConectados.length) {
+                    userBomba = 0;
+                }
+                io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
+            } else {
+                pregActual++;
+                usersConectados[userBomba].bomba = true;
+                socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
+                newPregunta();
             }
-            pregActual++;
-            usersConectados[userBomba].bomba = true;
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
-            newPregunta();
-
         }
     });
-
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
