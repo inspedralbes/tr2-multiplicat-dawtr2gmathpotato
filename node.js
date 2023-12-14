@@ -13,6 +13,8 @@ var pregActual = 0;
 var userBomba = 0;
 var preguntas = [];
 var gameStart = false
+var timer = 0;
+var timerAnterior = 0;
 
 app.use(cors());
 const server = createServer(app);
@@ -136,7 +138,7 @@ io.on('connection', (socket) => {
             clearInterval(timerInterval);
             startTimer();
             newPregunta();
-            
+
         } else {
             console.log("resposta incorrecta!");
             pregActual++;
@@ -152,8 +154,8 @@ io.on('connection', (socket) => {
 
     function iniciarTimer() {
         const size = usersConectados.length;
-        let timer = 0;
-    
+
+
         switch (size) {
             case 3:
                 timer = 30;
@@ -171,11 +173,11 @@ io.on('connection', (socket) => {
         }
         return timer;
     }
-    
+
     function startTimer() {
         clearInterval(timerInterval);
         let tiempo = iniciarTimer();
-    
+
         if (tiempo > 0) {
             timerInterval = setInterval(function () {
                 if (tiempo == 0) {
@@ -193,7 +195,7 @@ io.on('connection', (socket) => {
             console.log("Tiempo no válido para iniciar el temporizador.");
         }
     }
-    
+
     socket.on('startTimer', startTimer);
 
     socket.on('disconnect', () => {
