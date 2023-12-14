@@ -62,12 +62,12 @@ io.on('connection', (socket) => {
     })
 
 
-    socket.on('startGame', (data) => {
+    socket.on('startGame', (gameStarted) => {
         if (usersConectados.length >= 3 && usersConectados.length <= 6) {
             console.log("startGame");
-            getPreguntes()
-
-
+            getPreguntes();
+            io.emit('gameStarted', gameStarted);
+            
         }
     });
 
@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
         
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
         //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
-
+        
         const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(resposta);
@@ -125,18 +125,17 @@ io.on('connection', (socket) => {
             }
             usersConectados[userBomba].bomba = true;
             console.log(userBomba);
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
+            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();
         } else {
             console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
+            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
             newPregunta();
 
         }
     });
-
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);

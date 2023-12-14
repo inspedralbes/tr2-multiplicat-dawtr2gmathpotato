@@ -44,9 +44,10 @@ socket.on("disconnect", () => {
     storeDisc.clearGuestInfo();
 });
 
-socket.on("gameStart", (gameStart) => {
-    console.log(gameStart);
-    socket.emit("preguntes");
+socket.on("gameStarted", (gameStarted) => {
+    const storeDisc = useAppStore();
+    storeDisc.setGameStarted(gameStarted);
+
 });
 
 socket.on("pregunta", (pregunta) => {
