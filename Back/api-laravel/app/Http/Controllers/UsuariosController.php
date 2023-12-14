@@ -18,10 +18,9 @@ class usuariosController extends Controller
                 'contraseña' => 'required|string|min:6|confirmed',
                 'foto_perfil' => [
                     'required',
-                    Rule::in(['1', '2', '3']),
+                    Rule::in(['1', '2', '3', '4', '5', '6', '7', '8', '9']),
                 ],
             ]);
-           
             $usuario = new Usuarios();
             $usuario->nombre_usuario = $request->nombre_usuario;
             $usuario->email = $request->email;
