@@ -42,14 +42,14 @@ io.on('connection', (socket) => {
     console.log("User connected.");
     console.log(socket.id);
 
-    const vides = ['./src/assets/potatHeart.png', './src/assets/potatHeart.png'];
+    
 
 
     socket.on('join', (data) => {
         if (usersConectados.length === 0) {
-           usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', vides: [...vides, ...vides] });
+           usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png',life:2 });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', vides: [...vides, ...vides] });
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', life:2 });
         }
         console.log(data);
         io.emit('usersConnected', usersConectados);
@@ -131,6 +131,13 @@ io.on('connection', (socket) => {
             newPregunta();
         } else {
             console.log("resposta incorrecta!");
+            if(usersConectados[userBomba].life == 0){
+            usersConectados[userBomba].life--;
+            console.log("El usuario" + usersConectados[userBomba].username + "ha perdido");
+            usersConectados.splice(userBomba, 1);
+            }else{
+                usersConectados[userBomba].life--;
+            }
             pregActual++;
             usersConectados[userBomba].bomba = true;
             socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});

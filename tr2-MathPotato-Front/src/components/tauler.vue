@@ -5,7 +5,9 @@
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
                         <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
-                        <div class="vidaContainer"><img :src="user.vides"></div>
+                        <div class="vidaContainer" v-for="n in user.life" :key="n">
+                            <img src="@/assets/potatHeart.png">
+                        </div>
 
                     </div>
                     <p>{{ user.username }}</p>
@@ -100,16 +102,11 @@
 }
 .imageContainer {
     display: flex;
-    align-items: center;
-}
-
-.vidaContainer {
-    margin-left: 10px; 
 }
 
 .vidaContainer img {
-    width: 70px;
-    height: 70px;
+    width: 40px;
+    height: 40px;
     margin-top: 5px;
 }
 #grid {
