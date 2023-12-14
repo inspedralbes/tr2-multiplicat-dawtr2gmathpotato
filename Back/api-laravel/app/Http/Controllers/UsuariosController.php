@@ -42,7 +42,6 @@ class usuariosController extends Controller
             'contraseña' => 'required|string|min:6',
         ]);
     
-        // Cambia la línea siguiente para asignar el resultado de la consulta a $usuario
         $usuario = Usuarios::where("email", "=", $request->email)->first();
     
         if ($usuario) {
@@ -67,7 +66,11 @@ class usuariosController extends Controller
         }
     }
     public function logout(){
-       
+        auth()->user()->tokens()->delete();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Sessió tancada correctament'
+        ]);
     }
     public function Perfilusuario( ){
     }

@@ -10,8 +10,8 @@ Route::post('/register', [UsuariosController::class, 'register']);
 Route::post('/login', [UsuariosController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('logout', [UsuariosController::class, 'logout']);
-    Route::get('PerfilUsuari', [UsuarisController::class, 'PerfilUsuari']);
+    Route::post('/logout', [UsuariosController::class, 'logout']);
+    Route::post('PerfilUsuari', [UsuarisController::class, 'PerfilUsuari']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
