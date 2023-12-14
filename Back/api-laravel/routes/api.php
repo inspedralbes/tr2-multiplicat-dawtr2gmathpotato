@@ -4,10 +4,15 @@ use App\Http\Controllers\UsuariosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+<<<<<<< HEAD
 
 
 Route::post('/register', [UsuariosController::class, 'register']);
 Route::post('/login', [UsuariosController::class, 'login']);
+=======
+Route::post('/register', [UsuarisController::class, 'register']);
+Route::post('login', [UsuarisController::class, 'login']);
+>>>>>>> crear-vides
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('logout', [UsuariosController::class, 'logout']);

@@ -4,8 +4,8 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
+import fetch from 'node-fetch';
 
-// import fetch from 'node-fetch';
 const app = express();
 var pregActual = 0;
 var userBomba = 0;
@@ -14,9 +14,7 @@ var gameStart = false
 
 app.use(cors());
 const server = createServer(app);
-
 const usersConectados = [];
-
 const objPreguntes = {};
 const URL = "http://127.0.0.1:8000/api/preguntes/random";
 
@@ -44,11 +42,14 @@ io.on('connection', (socket) => {
     console.log("User connected.");
     console.log(socket.id);
 
+    
+
+
     socket.on('join', (data) => {
         if (usersConectados.length === 0) {
-            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_2.png' });
+           usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png',life:2 });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png' });
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', life:2 });
         }
         console.log(data);
         io.emit('usersConnected', usersConectados);
@@ -73,7 +74,7 @@ io.on('connection', (socket) => {
 
     function getPreguntes() {
 
-        fetch(URL)
+        fetch('http://127.0.0.1:8000/api/preguntes/random')
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -102,8 +103,8 @@ io.on('connection', (socket) => {
     }
 
     socket.on('resposta', (resposta) => {
-        
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
+<<<<<<< HEAD
         //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
         
         const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
@@ -111,19 +112,20 @@ io.on('connection', (socket) => {
         console.log(resposta);
 
         if (resultatPregunta == resposta) {
+=======
+    
+        const resultadoPregunta = eval(preguntas.preguntas[pregActual].pregunta);
+        console.log("Result correct --> ", resultadoPregunta);
+        console.log("Respuesta recibida --> ", resposta);
+    
+        if (resultadoPregunta == resposta) {
+            console.log("Respuesta correcta");
+>>>>>>> crear-vides
             pregActual++;
-            console.log(pregActual);
-
             usersConectados[userBomba].bomba = false;
-
-            console.log(usersConectados[userBomba]);
-            console.log(userBomba);
-            if (userBomba + 1 == usersConectados.length) {
-                userBomba = 0;
-            } else {
-                userBomba++;
-            }
+            userBomba = (userBomba + 1) % usersConectados.length;
             usersConectados[userBomba].bomba = true;
+<<<<<<< HEAD
             console.log(userBomba);
             io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();
@@ -134,6 +136,26 @@ io.on('connection', (socket) => {
             io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
             newPregunta();
 
+=======
+            io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
+            newPregunta();
+        } else {
+            console.log("Respuesta incorrecta!");
+            usersConectados[userBomba].life--;
+            if (usersConectados[userBomba].life =-1) {
+                console.log(`El usuario ${usersConectados[userBomba].username} ha perdido.`);
+                usersConectados.splice(userBomba, 1);
+                if (userBomba >= usersConectados.length) {
+                    userBomba = 0;
+                }
+                io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
+            } else {
+                pregActual++;
+                usersConectados[userBomba].bomba = true;
+                socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
+                newPregunta();
+            }
+>>>>>>> crear-vides
         }
     });
 
