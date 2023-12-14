@@ -58,14 +58,44 @@ io.on('connection', (socket) => {
     socket.on('register', (userData) => {
         console.log(userData);
         fetch('http://localhost:8000/api/register', {
-    method: 'POST',
-    body: JSON.stringify(userData),
-    headers: {
-        'Content-Type': 'application/json'
-    }
-}).then(response => {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
             if (response.ok) {
-                return response.json();
+                if (usersConectados.length === 0) {
+                    usersConectados.push({ username: userData.nombre_usuario, id: socket.id, bomba: true, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
+                } else {
+                    usersConectados.push({ username: userData.nombre_usuario, id: socket.id, bomba: false, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
+                }
+                io.emit('usersConnected', usersConectados);
+            } else {
+                console.log(response);
+                throw new Error('Network response was not ok.');
+            }
+        }).then(data => {
+            console.log(data);
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    });
+    socket.on('login', (userData) => {
+        fetch('http://localhost:8000/api/login', {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                if (usersConectados.length === 0) {
+                    usersConectados.push({ username: response.nombre_usuario, id: socket.id, bomba: true, image: './src/assets/Icon_' + response.foto_perfil + '.png' });
+                } else {
+                    usersConectados.push({ username: response.nombre_usuario, id: socket.id, bomba: false, image: './src/assets/Icon_' + response.foto_perfil + '.png' });
+                }
+                io.emit('usersConnected', usersConectados);
             } else {
                 console.log(response);
                 throw new Error('Network response was not ok.');

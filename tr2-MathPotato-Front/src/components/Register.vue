@@ -98,6 +98,7 @@ export default {
             };
 
             socket.emit('register', user);
+            this.$router.push({ path: '/play' })
 
         }
     },

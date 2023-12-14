@@ -45,7 +45,7 @@ export default {
             console.log(this.users);
         },
         Loggin(){
-            socket.emit('login', this.email, this.password);
+            socket.emit('login', {email:this.email, password:this.password});
             this.$router.push({ path: '/play' });
         }
     },

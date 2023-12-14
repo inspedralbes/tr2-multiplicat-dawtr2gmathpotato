@@ -50,7 +50,9 @@ class usuariosController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'usuario logejat correctament',
-                    'token' => $token
+                    'token' => $token,
+                    'usuario' => $usuario->nombre_usuario,
+                    'foto_perfil' => $usuario->foto_perfil,
                 ]);
             } else {
                 return response()->json([
