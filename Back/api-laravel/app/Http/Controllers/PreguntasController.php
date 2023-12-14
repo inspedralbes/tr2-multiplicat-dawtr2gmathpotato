@@ -108,6 +108,26 @@ public function deletePregunta($id)
                 ]);
             }
         }
+        public function activarPregunta($id){
+        $pregunta = Preguntas::find($id);
+
+        if ($pregunta) {
+        $pregunta->activo = true;
+        $pregunta->save();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'La pregunta ha sido activada correctamente',
+            'pregunta' => $pregunta,
+        ]);
+    } else {
+        return response()->json([
+            'status' => 0,
+            'message' => 'No se encontró la pregunta',
+        ]);
+    }
+}
+
         
 
         

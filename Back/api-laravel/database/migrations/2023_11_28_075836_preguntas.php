@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('id_pregunta');
             $table->string('pregunta', 100);
             $table->string('usuario', 255)->foreign('usuario')->references('email')->on('usuarios');
-            $table->boolean('activo')->default(true);
+            $table->boolean('activo')->default(false);
             }    
         ); 
     }

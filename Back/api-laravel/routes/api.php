@@ -26,4 +26,6 @@ Route::get('/preguntes/count', [PreguntasController::class, 'getCountPreguntas']
 Route::put('/preguntes/{id_pregunta}', [PreguntasController::class, 'updatePregunta']);
 Route::delete('/preguntes/{id_pregunta}', [PreguntasController::class, 'deletePregunta']);
 Route::get('/preguntes/validar-pregunta/{id_pregunta}', [PreguntasController::class, 'validarPregunta']);
+Route::post('/preguntes/activar/{id}', [PreguntasController::class, 'activarPregunta']);
+
 
