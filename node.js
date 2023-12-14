@@ -42,34 +42,72 @@ var con = mysql.createConnection({
 
 io.on('connection', (socket) => {
     console.log("User connected.");
-    console.log(socket.id);
+    // console.log(socket.id);
 
     //obtener informacion sobre las salas
     console.log('Salas: ', io.sockets.adapter.rooms);
 
     socket.on('join', (data) => {
         //cuando hayan mas de 6 usuarios conectados se meten en la sala de espera
-
-        if(usersConectados.length < 6){
-            
-            socket.join('gameRoom');
-            // Emitir a la sala de juego cuando alguien se une
-        }else{
-            socket.join('waitingRoom');
-            // Emitir a la sala de espera cuando alguien se une
-            io.to('waitingRoom').emit('usersConnected', usersConectados, 'waitingRoom');
-        }
-
         if (usersConectados.length === 0) {
             usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_1.png' });
         } else {
             usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_1.png' });
         }
-        console.log(usersConectados);
+        // console.log(usersConectados);
+
+        const gameRooms = io.sockets.adapter.rooms;
+        const totalUsersInGameRooms = Object.keys(gameRooms).reduce((total, room) => {
+            console.log(totalUsersInGameRooms);
+            if(room.startsWith('gameRoom')){
+                return total + gameRooms[room].length;
+            }
+            return total;
+        }, 0);
         
-        io.to('gameRoom').emit('usersConnected', usersConectados, 'gameRoom');
-        console.log('Salas despues de unirse: ', io.sockets.adapter.rooms);
+        if(totalUsersInGameRooms <= 6){
+            
+            let availableGameRoom = getAvailableGameRoom();
+            socket.join(availableGameRoom);
+            io.to(availableGameRoom).emit('usersConnected', usersConectados, availableGameRoom);
+        }else{
+            const newGameRoom = `gameRoom${Object.keys(gameRooms).filter(room => room.startsWith('gameRoom')).length + 1}`;
+            socket.join(newGameRoom);
+            io.to(newGameRoom).emit('usersConnected', usersConectados, newGameRoom);    
+           
+           
+        }
+        // if(usersConectados.length < 6){
+            
+        //     socket.join('gameRoom');
+        //     // Emitir a la sala de juego cuando alguien se une
+        // }else{
+        //     socket.join('waitingRoom');
+        //     // Emitir a la sala de espera cuando alguien se une
+        //     io.to('waitingRoom').emit('usersConnected', usersConectados, 'waitingRoom');
+        // }
+
+        
+        
+        // io.to('gameRoom').emit('usersConnected', usersConectados, 'gameRoom');
+        // console.log('Salas despues de unirse: ', io.sockets.adapter.rooms);
     });
+
+    function getAvailableGameRoom(){
+        
+        const gameRooms = io.sockets.adapter.rooms;
+        const availableGameRooms = Object.keys(gameRooms).filter(room => {
+            return room.startsWith('gameRoom') && gameRooms[room].length < 6;
+        });
+    
+        if(availableGameRooms.length > 0){
+            return availableGameRooms[0];
+        }else{
+            return 'gameRoom1';
+        }
+    }
+
+    
 
     // socket.on('gameRooms', (gameRoom) => {
     //     const gameRooms = [];
