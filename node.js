@@ -56,13 +56,14 @@ io.on('connection', (socket) => {
 
     });
     socket.on('register', (userData) => {
+        console.log(userData);
         fetch('http://localhost:8000/api/register', {
-            method: 'POST',
-            body: JSON.stringify(userData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
+    method: 'POST',
+    body: JSON.stringify(userData),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+}).then(response => {
             if (response.ok) {
                 return response.json();
             } else {
@@ -78,7 +79,7 @@ io.on('connection', (socket) => {
     socket.on('preguntes', () => {
         console.log('preguntasAleatorias', objPreguntes);
         io.emit('preguntas', objPreguntes);
-    })
+    });
 
 
     socket.on('startGame', (gameStarted) => {
@@ -86,7 +87,7 @@ io.on('connection', (socket) => {
             console.log("startGame");
             getPreguntes();
             io.emit('gameStarted', gameStarted);
-            
+
         }
     });
 
@@ -121,10 +122,10 @@ io.on('connection', (socket) => {
     }
 
     socket.on('resposta', (resposta) => {
-        
+
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
         //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
-        
+
         const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(resposta);
@@ -144,13 +145,13 @@ io.on('connection', (socket) => {
             }
             usersConectados[userBomba].bomba = true;
             console.log(userBomba);
-            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
+            io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
             newPregunta();
         } else {
             console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
-            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
+            io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
             newPregunta();
 
         }
@@ -167,16 +168,16 @@ io.on('connection', (socket) => {
 
             io.emit('usersDesconectados', usersConectados);
         }
-        
-        
+
+
         console.log('Usuario desconectado');
     });
-    socket.on('login', (data) => { 
+    socket.on('login', (data) => {
         console.log(data);
     });
     socket.on('disconnect', () => {
         io.emit('usersDesconectados', usersConectados);
-        
+
     });
 
     console.log('preguntasAleatorias', objPreguntes);
