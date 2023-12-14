@@ -4,6 +4,8 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
+import { clear } from 'node:console';
+import { start } from 'node:repl';
 
 // import fetch from 'node-fetch';
 const app = express();
@@ -98,8 +100,11 @@ io.on('connection', (socket) => {
     }
 
     function newPregunta() {
+        pregActual++;
+
         console.log(preguntas);
         io.emit('pregunta', { "id": preguntas.preguntas[pregActual].id_pregunta, "pregunta": preguntas.preguntas[pregActual].pregunta });
+        startTimer();
     }
 
     socket.on('resposta', (resposta) => {
@@ -128,14 +133,18 @@ io.on('connection', (socket) => {
             usersConectados[userBomba].bomba = true;
             console.log(userBomba);
             socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
+            clearInterval(timerInterval);
+            startTimer();
             newPregunta();
+            
         } else {
             console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
             socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
+            clearInterval(timerInterval);
+            startTimer();
             newPregunta();
-
         }
     });
 
@@ -164,15 +173,16 @@ io.on('connection', (socket) => {
     }
     
     function startTimer() {
+        clearInterval(timerInterval);
         let tiempo = iniciarTimer();
     
         if (tiempo > 0) {
             timerInterval = setInterval(function () {
-                if (tiempo === 0) {
+                if (tiempo == 0) {
                     pregActual++;
+                    clearInterval(timerInterval);
                     newPregunta();
                     console.log("Timer finalizado");
-                    clearInterval(timerInterval);
                 } else {
                     tiempo--;
                     console.log("timer", tiempo);

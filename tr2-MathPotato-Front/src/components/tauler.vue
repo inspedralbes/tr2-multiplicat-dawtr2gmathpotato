@@ -54,7 +54,7 @@
 
 .moveBomb {
     animation-name: bombMovement;
-    animation-duration: 2s;
+    animation-duration: 0.8s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-direction: alternate;
@@ -408,7 +408,7 @@ export default {
                 document.getElementById("bombContainer").classList.add("moveBomb");
                 setTimeout(() => {
                     document.getElementById("bombContainer").classList.remove("moveBomb");
-                }, 2000);
+                }, 800);
             }
         },
         findUsersWithBomb() {
