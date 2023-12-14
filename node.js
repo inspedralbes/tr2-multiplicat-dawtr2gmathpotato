@@ -148,6 +148,8 @@ io.on('connection', (socket) => {
 
             io.emit('usersDesconectados', usersConectados);
         }
+        
+        
         console.log('Usuario desconectado');
     });
     socket.on('login', (data) => { 
@@ -155,6 +157,7 @@ io.on('connection', (socket) => {
     });
     socket.on('disconnect', () => {
         io.emit('usersDesconectados', usersConectados);
+        
     });
 
     console.log('preguntasAleatorias', objPreguntes);
