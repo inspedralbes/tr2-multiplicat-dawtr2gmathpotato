@@ -40,8 +40,9 @@
 }
 
 .hidden {
-    display: hidden;
+    display: none;
 }
+
 
 #background {
     background-image: url("../assets/backround2.png");
@@ -313,8 +314,9 @@ export default {
             socket.emit('resposta', resposta);
             this.respuesta = "";
         },
-        startGame() {
+        async startGame() {
             socket.emit('startGame', true);
+            await this.$nextTick(); 
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
                 let userBombpos = objectAntElement.getBoundingClientRect();
@@ -393,46 +395,49 @@ export default {
             };
         },
         async changeBomb() {
-            await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
+    await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
 
-            let size = this.users.length;
-            let usersWithBomb = this.findUsersWithBomb();
-            console.log(usersWithBomb);
-            this.users[usersWithBomb].bomba = false;
-            let newUserBomb = usersWithBomb + 1;
-            if (newUserBomb >= size) {
-                newUserBomb = 0;
+    let size = this.users.length;
+    let usersWithBomb = this.findUsersWithBomb();
+    
+    if (usersWithBomb !== -1) {
+        this.users[usersWithBomb].bomba = false;
+        let newUserBomb = (usersWithBomb + 1) % size;
+
+        let object = "user" + newUserBomb;
+        let userElement = document.getElementById(object);
+
+        // Verificar si el elemento está presente antes de acceder a sus propiedades
+        if (userElement) {
+            let userBombpos = userElement.getBoundingClientRect();
+            let objectAnt = "user" + usersWithBomb;
+            let objectAntElement = document.getElementById(objectAnt);
+            
+            if (objectAntElement && this.users.length > 2) {
+                let objectAntpos = objectAntElement.getBoundingClientRect();
+                let userBombXAnt = objectAntpos.x + 100;
+                let userBombYAnt = objectAntpos.y;
+
+                document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
+                document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
             }
-            let object = "user" + (newUserBomb);
-            let userElement = document.getElementById(object);
 
-            // Verificar si el elemento está presente antes de acceder a sus propiedades
-            if (userElement) {
-                let userBombpos = userElement.getBoundingClientRect();
-                let objectAnt = "user" + (usersWithBomb);
-                let objectAntElement = document.getElementById(objectAnt);
-                if (objectAntElement) {
-                    let objectAntpos = objectAntElement.getBoundingClientRect();
-                    let userBombXAnt = objectAntpos.x + 100;
-                    let userBombYAnt = objectAntpos.y;
-                    if (this.users.length > 2) {
-                        document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
-                        document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
-                    }
-                }
+            let userBombX = userBombpos.x + 100;
+            let userBombY = userBombpos.y;
 
-                let userBombX = userBombpos.x + 100;
-                let userBombY = userBombpos.y;
-                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
-                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
+            document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
+            document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
 
-                this.users[newUserBomb].bomba = true;
-                document.getElementById("bombContainer").classList.add("moveBomb");
-                setTimeout(() => {
-                    document.getElementById("bombContainer").classList.remove("moveBomb");
-                }, 2000);
-            }
-        },
+            this.users[newUserBomb].bomba = true;
+            document.getElementById("bombContainer").classList.add("moveBomb");
+
+            setTimeout(() => {
+                document.getElementById("bombContainer").classList.remove("moveBomb");
+            }, 2000);
+        }
+    }
+},
+
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
             //return this.users.filter(user => user.bomba === true);
