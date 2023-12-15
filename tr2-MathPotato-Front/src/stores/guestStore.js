@@ -6,16 +6,11 @@ export const useAppStore = defineStore('app', {
             rooms: {
                 gameRooms: [
                     {
-                        idRoom: 1, roomName: "", users: [
+                         users: [
                             {username: '', id: '', bomba: false, image: './assets/Icon_2.png'}
                         ]
                     },
-                ],                    
-                waitingRoom: {
-                    users:[
-                        {username: '', id: '', bomba: false, image: './assets/Icon_2.png'}
-                    ]
-                },
+                ],   
                 }
             }, 
         guestInfo: {

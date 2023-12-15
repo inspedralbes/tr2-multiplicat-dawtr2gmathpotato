@@ -17,14 +17,22 @@ export const socket = io(URL);
 //     //join sala de juego
 //     join('gameRoom');
 //     console.log('hi');
-    socket.on("usersConnected", (usersConnected, roomGame) => {
-        console.log(roomGame);
+function getCurrentUser(users) {
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].id === socket.id) {
+            return users[i];
+        }
+    }
+}
+    socket.on("usersConnected", (usersConnected) => {
+        console.log("*Conectado al servidor*", usersConnected);
+        
         const store = useAppStore();
-        console.log('Usuarios conectados: ', usersConnected);
         
         // Filtra los usuarios basándose en el socket.id actual
-        const currentUser = usersConnected.find(user => user.id === socket.id);
-
+       let currentUser=getCurrentUser(usersConnected);
+        console.log(currentUser);
+        
         if (currentUser) {
             // Guarda la información del usuario actual en Pinia
             store.setGuestInfo(currentUser.username, currentUser.id);
@@ -32,7 +40,7 @@ export const socket = io(URL);
 
         // Establece el array de usuarios en Pinia
         store.setUsers(usersConnected);
-        store.setRoomName(roomGame);
+        
         store.setUsersInRoom(usersConnected);
         store.setRespostaAnterior(true);
 
