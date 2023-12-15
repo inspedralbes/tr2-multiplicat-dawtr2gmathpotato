@@ -402,7 +402,7 @@ export default {
     
     if (usersWithBomb !== -1) {
         this.users[usersWithBomb].bomba = false;
-        let newUserBomb = (usersWithBomb + 1) % size;
+        let newUserBomb = (usersWithBomb) % size;
 
         let object = "user" + newUserBomb;
         let userElement = document.getElementById(object);

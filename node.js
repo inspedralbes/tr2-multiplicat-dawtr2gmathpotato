@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('preguntes', () => {
-        console.log('preguntasAleatorias', objPreguntes);
+        // console.log('preguntasAleatorias', objPreguntes);
         io.emit('preguntas', objPreguntes);
     })
 
@@ -85,8 +85,8 @@ io.on('connection', (socket) => {
             })
             .then(data => {
                 preguntas = data;
-                console.log(preguntas.preguntas[pregActual].id_pregunta)
-                console.log(preguntas.preguntas[pregActual].pregunta)
+                // console.log(preguntas.preguntas[pregActual].id_pregunta)
+                // console.log(preguntas.preguntas[pregActual].pregunta)
                 console.log("PreguntasAqui" + preguntas);
             }).then(() => {
                 if (!gameStart) {
@@ -98,54 +98,35 @@ io.on('connection', (socket) => {
     }
 
     function newPregunta() {
-        console.log(preguntas);
+        // console.log(preguntas);
         io.emit('pregunta', { "id": preguntas.preguntas[pregActual].id_pregunta, "pregunta": preguntas.preguntas[pregActual].pregunta });
     }
 
     socket.on('resposta', (resposta) => {
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
+
+        //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
         
         const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
-        console.log("Result correct --> ", resultatPregunta);
-        console.log("Respuesta recibida --> ", resposta);
-    
+        console.log("Result correct --> ", resultatPregunta); //FUNCIONA
+        console.log(resposta);
+
         if (resultatPregunta == resposta) {
-            console.log("¡Respuesta correcta!");
+            console.log("Respuesta correcta!");
             pregActual++;
             usersConectados[userBomba].bomba = false;
             userBomba = (userBomba + 1) % usersConectados.length;
             usersConectados[userBomba].bomba = true;
-    
-            console.log("Bomba cambiada a usuario ", userBomba);
+            console.log(userBomba);
             io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
-            newPregunta();
-        } else {
-            console.log("Respuesta incorrecta!");
-            const userPerdido = usersConectados[userBomba + 1];
-            if (userPerdido) {
-                userPerdido.life--;
-    
-                if (userPerdido.life === -1) {
-                    console.log(`El usuario ${userPerdido.username} ha perdido.`);
-                    usersConectados.splice(userBomba + 1, 1);
-    
-                    if (userBomba + 1 >= usersConectados.length) {
-                        userBomba = 0;
-                    }
-                    io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
-                } else {
-                    pregActual++;
-                    usersConectados[userBomba].bomba = true;
-                    io.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
-                    newPregunta();
-                }
-            } else {
-                console.log("No hay usuario para restar vidas.");
-                // Puedes manejar esto según el flujo deseado.
-            }
-        }
-    });
-    
+        newPregunta();
+    } else {
+        console.log("Respuesta incorrecta!");
+        userBomba = (userBomba) % usersConectados.length;
+        usersConectados[userBomba].life--;
+        io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
+    }
+});
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
