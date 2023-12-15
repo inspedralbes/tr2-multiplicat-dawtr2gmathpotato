@@ -18,7 +18,7 @@ const server = createServer(app);
 const usersConectados = [];
 
 const objPreguntes = {};
-const URL = "http://127.0.0.1:8000/api/preguntes/random";
+const URL = "http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/preguntes/random";
 
 const io = new Server(server, {
     cors: {
@@ -168,7 +168,7 @@ io.on('connection', (socket) => {
 });
 // io.emit('arrayUsers', usersConectados);
 
-server.listen(5175, () => {
-    console.log('Listening on http://localhost:5175');
+server.listen(3869, () => {
+    console.log('Listening on http://localhost:3869');
 
 });

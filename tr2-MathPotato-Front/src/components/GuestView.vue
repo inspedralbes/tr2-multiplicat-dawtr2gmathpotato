@@ -11,7 +11,10 @@
         </span>
         <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
         <Button @click="onSubmit()" label="Submit" />
-        <Toast />
+        
+                
+               
+                <Toast />
 
         </div>
     </div>
@@ -19,7 +22,7 @@
 
 <script>
 
-import { socket } from '../socket';
+import { socket } from '@/socket';
 
 export default {
     data() {
