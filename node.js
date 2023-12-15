@@ -4,8 +4,8 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
+import fetch from 'node-fetch';
 
-// import fetch from 'node-fetch';
 const app = express();
 var pregActual = 0;
 var userBomba = 0;
@@ -14,9 +14,7 @@ var gameStart = false
 
 app.use(cors());
 const server = createServer(app);
-
 const usersConectados = [];
-
 const objPreguntes = {};
 const URL = "http://127.0.0.1:8000/api/preguntes/random";
 
@@ -44,11 +42,14 @@ io.on('connection', (socket) => {
     console.log("User connected.");
     console.log(socket.id);
 
+    
+
+
     socket.on('join', (data) => {
         if (usersConectados.length === 0) {
-            usersConectados.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_2.png' });
+           usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png',life:2 });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png' });
+            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', life:2 });
         }
         console.log(data);
         io.emit('usersConnected', usersConectados);
@@ -62,18 +63,18 @@ io.on('connection', (socket) => {
     })
 
 
-    socket.on('startGame', (data) => {
+    socket.on('startGame', (gameStarted) => {
         if (usersConectados.length >= 3 && usersConectados.length <= 6) {
             console.log("startGame");
-            getPreguntes()
-
-
+            getPreguntes();
+            io.emit('gameStarted', gameStarted);
+            
         }
     });
 
     function getPreguntes() {
 
-        fetch(URL)
+        fetch('http://127.0.0.1:8000/api/preguntes/random')
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -102,41 +103,33 @@ io.on('connection', (socket) => {
     }
 
     socket.on('resposta', (resposta) => {
-        
         console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
-        //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
 
+        //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
+        
         const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(resposta);
 
         if (resultatPregunta == resposta) {
+    
             pregActual++;
-            console.log(pregActual);
-
             usersConectados[userBomba].bomba = false;
-
-            console.log(usersConectados[userBomba]);
-            console.log(userBomba);
-            if (userBomba + 1 == usersConectados.length) {
-                userBomba = 0;
-            } else {
-                userBomba++;
-            }
+            userBomba = (userBomba + 1) % usersConectados.length;
             usersConectados[userBomba].bomba = true;
+
             console.log(userBomba);
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
+            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
             newPregunta();
         } else {
             console.log("resposta incorrecta!");
             pregActual++;
             usersConectados[userBomba].bomba = true;
-            socket.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
+            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
             newPregunta();
 
         }
     });
-
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
@@ -149,6 +142,8 @@ io.on('connection', (socket) => {
 
             io.emit('usersDesconectados', usersConectados);
         }
+        
+        
         console.log('Usuario desconectado');
     });
     socket.on('login', (data) => { 
@@ -156,6 +151,7 @@ io.on('connection', (socket) => {
     });
     socket.on('disconnect', () => {
         io.emit('usersDesconectados', usersConectados);
+        
     });
 
     console.log('preguntasAleatorias', objPreguntes);

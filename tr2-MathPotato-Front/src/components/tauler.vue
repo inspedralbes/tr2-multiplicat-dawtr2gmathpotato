@@ -3,8 +3,15 @@
         <div id="grid">
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
-                    <img :src="user.image" alt="image" class="icon" style="background-color: {{ user.background}};">
+                    <div class="imageContainer">
+                        <div class="vidaContainer" v-for="n in user.life" :key="n">
+                            <img src="@/assets/potatHeart.png">
+                        </div>
+                        <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
+                       
+                    </div>
                     <p>{{ user.username }}</p>
+                    
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
@@ -98,7 +105,15 @@
     color: white;
 
 }
-
+.imageContainer {
+    display: flex;
+    
+}
+.vidaContainer img {
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+}
 #grid {
     background-image: url("../assets/table.png");
     background-repeat: no-repeat;
@@ -249,11 +264,11 @@
 <script>
 import { useAppStore } from '../stores/guestStore.js';
 import { socket } from '../socket';
+import { useSSRContext, useTransitionState } from 'vue';
 
 export default {
     data() {
         return {
-            gameStarted: false,
             pregunta: {},
             respuesta: "",
 
@@ -268,8 +283,11 @@ export default {
             let store = useAppStore();
             return store.getUsers();
         },
-
-        message() {
+        gameStarted() {
+            let store = useAppStore();
+            return store.getGameStarted();
+        },
+        message(){
             let store = useAppStore();
             return store.getPregunta();
         }
@@ -294,9 +312,7 @@ export default {
             this.respuesta = "";
         },
         startGame() {
-            this.gameStarted = true;
-
-            socket.emit('startGame');
+            socket.emit('startGame', true);
         },
         getId(index) {
             let size = this.users.length;
