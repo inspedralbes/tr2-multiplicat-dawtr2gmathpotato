@@ -1,6 +1,6 @@
 
 
-INSERT INTO `preguntas` (`id_pregunta`, `pregunta`, `user`, `activo`) VALUES
+INSERT INTO `preguntas` (`id_pregunta`, `pregunta`, `usuario`, `activo`) VALUES
 (1, '24 + 37', 'Aitor', 1),
 (2, '79 - 15', 'Aitor', 1),
 (3, '8 * 7', 'Aitor', 1),
