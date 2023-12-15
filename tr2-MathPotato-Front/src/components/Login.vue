@@ -19,7 +19,7 @@
             <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
         </div>
 
-        <Button label="Sign In" icon="pi pi-user" class="w-full"></Button>
+        <Button label="Sign In" icon="pi pi-user" class="w-full" @click="Login"></Button>
     </div>
 </div>
 </template>
@@ -44,7 +44,7 @@ export default {
             this.users = users;
             console.log(this.users);
         },
-        Loggin(){
+        Login(){
             socket.emit('login', {email:this.email, password:this.password});
             this.$router.push({ path: '/play' });
         }

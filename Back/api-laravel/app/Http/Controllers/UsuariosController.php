@@ -40,30 +40,30 @@ class usuariosController extends Controller
             'email' => 'required|string|email',
             'contraseña' => 'required|string|min:6',
         ]);
-    
+
         // Cambia la línea siguiente para asignar el resultado de la consulta a $usuario
         $usuario = Usuarios::where("email", "=", $request->email)->first();
-    
+
         if ($usuario) {
             if (Hash::check($request->contraseña, $usuario->contraseña)) {
                 $token = $usuario->createToken('auth_token')->plainTextToken;
+                
                 return response()->json([
                     'status' => 1,
-                    'message' => 'usuario logejat correctament',
-                    'token' => $token,
-                    'usuario' => $usuario->nombre_usuario,
-                    'foto_perfil' => $usuario->foto_perfil,
+                    'message' => 'Inicio de sesión exitoso',
+                    'usuario' => $usuario,
+                    'token' => $token
                 ]);
             } else {
                 return response()->json([
                     'status' => 0,
-                    'message' => 'Contrasenya incorrecta'
+                    'message' => 'Contraseña incorrecta'
                 ]);
             }
         } else {
             return response()->json([
                 'status' => 0,
-                'message' => 'usuario no registrat'
+                'message' => 'Usuario no registrado'
             ]);
         }
     }

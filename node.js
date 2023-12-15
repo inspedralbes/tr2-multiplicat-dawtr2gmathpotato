@@ -81,31 +81,30 @@ io.on('connection', (socket) => {
             console.error('There has been a problem with your fetch operation:', error);
         });
     });
-    socket.on('login', (userData) => {
-        fetch('http://localhost:8000/api/login', {
-            method: 'POST',
-            body: JSON.stringify(userData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            if (response.ok) {
-                if (usersConectados.length === 0) {
-                    usersConectados.push({ username: response.nombre_usuario, id: socket.id, bomba: true, image: './src/assets/Icon_' + response.foto_perfil + '.png' });
-                } else {
-                    usersConectados.push({ username: response.nombre_usuario, id: socket.id, bomba: false, image: './src/assets/Icon_' + response.foto_perfil + '.png' });
+    socket.on('login', async (userData) => {
+        console.log("heya" + userData);
+        let user = await getUser(userData);
+    });
+    async function getUser(userData) {
+        try {
+            const response = await fetch('http://localhost:8000/api/login', {
+                method: 'POST',
+                body: JSON.stringify(userData),
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-                io.emit('usersConnected', usersConectados);
+            });
+            if (response.ok) {
+                const data = await response.json();
+                return data;
             } else {
                 console.log(response);
                 throw new Error('Network response was not ok.');
             }
-        }).then(data => {
-            console.log(data);
-        }).catch(error => {
+        } catch (error) {
             console.error('There has been a problem with your fetch operation:', error);
-        });
-    });
+        }
+    }
     socket.on('preguntes', () => {
         console.log('preguntasAleatorias', objPreguntes);
         io.emit('preguntas', objPreguntes);
