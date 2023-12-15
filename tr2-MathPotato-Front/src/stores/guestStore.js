@@ -56,8 +56,8 @@ export const useAppStore = defineStore('app', {
                 console.log('Usuarios en la sala ${roomName} actualizados: ', users);
             }
         },
-        setUsers(items){
-            this.users = items;
+        setUsers(users){
+            this.users = users;
             console.log(this.users);
         },     
         getUsers(){
@@ -70,7 +70,7 @@ export const useAppStore = defineStore('app', {
             this.guestInfo.username = username;
             this.guestInfo.id = id;
 
-            console.log('infoGuest');
+            console.log('*infoGuest*');
             console.log(this.guestInfo.username);
             console.log(this.guestInfo.id);
             

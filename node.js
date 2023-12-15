@@ -65,17 +65,14 @@ io.on('connection', (socket) => {
         }
         socket.join("gameRoom"+lastRoom);
         console.log(gameRooms[gameRooms.length-1].users);
-        io.to("gameRoom"+lastRoom).emit('usersConnected', {users:gameRooms[gameRooms.length-1].users}, {idRoom:lastRoom, roomName:"gameRoom"+lastRoom});
+        io.to("gameRoom"+lastRoom).emit('usersConnected', gameRooms[gameRooms.length-1].users, gameRooms[gameRooms.length-1].roomName);
         console.log('Salas: ', io.sockets.adapter.rooms);
     });
 
-    socket.on('preguntes', (room) => {
-        io.to("gameRoom".room).emit('preguntas', gameRooms[room].preguntas);
-    })
-
 
     socket.on('startGame', (data) => { 
-        gameRooms[data.roomPosition].started = true;
+        console.log("aaaaaaaaaaaaa "+data);
+        gameRooms[data].started = true;
         if (gameRooms[data.roomPosition].users.length >= 3 && gameRooms[data.roomPosition].users.length <= 6) {
             console.log("startGame");
             getPreguntes();

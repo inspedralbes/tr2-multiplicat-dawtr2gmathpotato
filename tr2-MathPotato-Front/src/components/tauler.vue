@@ -268,6 +268,7 @@ export default {
                 if (newVal && newVal.length > 0 && this.encertada) {
                     this.changeBomb();
                 }
+                console.log(newVal);
             }
         }
     },
@@ -282,6 +283,7 @@ export default {
         },
         getId(index) {
             let size = this.users.length;
+            // console.log(size);
             switch (size) {
                 case 1:
                     return "topmid";
@@ -391,13 +393,13 @@ export default {
         },
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
-            //return this.users.filter(user => user.bomba === true);
+            //return this.users.users.filter(user => user.bomba === true);
         },
     },
     mounted() {
         console.log(this.users);
         return this.users.findIndex(user => user.bomba === true);
-        //return this.users.filter(user => user.bomba === true);
+        //return this.users.users.filter(user => user.bomba === true);
     }
 }
 </script>
