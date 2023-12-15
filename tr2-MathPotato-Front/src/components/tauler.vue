@@ -8,10 +8,10 @@
                             <img src="@/assets/potatHeart.png">
                         </div>
                         <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
-                       
+
                     </div>
                     <p>{{ user.username }}</p>
-                    
+
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
@@ -105,15 +105,18 @@
     color: white;
 
 }
+
 .imageContainer {
     display: flex;
-    
+
 }
+
 .vidaContainer img {
     width: 40px;
     height: 40px;
     margin-top: 5px;
 }
+
 #grid {
     background-image: url("../assets/table.png");
     background-repeat: no-repeat;
@@ -287,7 +290,7 @@ export default {
             let store = useAppStore();
             return store.getGameStarted();
         },
-        message(){
+        message() {
             let store = useAppStore();
             return store.getPregunta();
         }
@@ -295,7 +298,6 @@ export default {
     },
     watch: {
         users: {
-            immediate: true, // Ejecutar al inicio
             handler(newVal) {
                 console.log(this.encertada);
                 if (newVal && newVal.length > 0 && this.encertada) {
@@ -313,6 +315,14 @@ export default {
         },
         startGame() {
             socket.emit('startGame', true);
+            let objectAntElement = document.getElementById("user0");
+            if (objectAntElement) {
+                let userBombpos = objectAntElement.getBoundingClientRect();
+                let userBombX = userBombpos.x + 100;
+                let userBombY = userBombpos.y;
+                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
+                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
+            }
         },
         getId(index) {
             let size = this.users.length;
