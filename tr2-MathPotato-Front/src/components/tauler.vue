@@ -276,10 +276,10 @@ export default {
         enviarResposta(){
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-            socket.emit('resposta',  resposta );
+            socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
         },
         startGame() {
-            socket.emit('startGame', true);
+            socket.emit('startGame', {gameStarted:true, roomPosition: user[0].roomPosition});
         },
         getId(index) {
             let size = this.users.length;
@@ -308,6 +308,7 @@ export default {
                 case 4:
                     switch (index) {
                         case 0:
+
                             return "topmid";
                         case 1:
                             return "rightmid";
