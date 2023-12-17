@@ -93,19 +93,19 @@ io.on('connection', (socket) => {
             })
             .then(data => {
                 let preguntas = data;
-                gameRooms[room].preguntas = preguntas;
-                console.log("PreguntasAqui" + preguntas);
+                console.log(preguntas.preguntas);
+                room.preguntas = preguntas.preguntas;
+      
             }).then(() => {
-                if (!gameRooms[room].started) {
-                    gameRooms[room].started = true;
+
+
                     newPregunta(room);
-                }
             }
             );
     }
 
     function newPregunta(room) {
-        io.to("gameRoom" + room).emit('pregunta', { "id": gameRooms[room].preguntas[gameRooms[room].pregActual].id, "pregunta": gameRooms[room].preguntas[gameRooms[room].pregActual].pregunta });
+        io.to(room.roomName).emit('pregunta', { "id": room.preguntas[room.pregActual].id_pregunta, "pregunta": room.preguntas[room.pregActual].pregunta });
 
     }
     function getUserWithBomb(room) {
@@ -144,36 +144,27 @@ io.on('connection', (socket) => {
             io.to(data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": false });
 
         }
-        newPregunta(data.room);
+        newPregunta(gameRooms[data.room]);
     });
 
     socket.on('disconnect', () => {
         // let CambiaEsta=
-        let usuarioDesconectadoIndex = -1;
         gameRooms.forEach(room => {
-            usuarioDesconectadoIndex = room.users.findIndex(user => user.id === socket.id);
-            if (usuarioDesconectadoIndex >= 0) {
+            let usuarioDesconectadoIndex = room.users.findIndex(user => user.id === socket.id);
+           
+                if(room.users[usuarioDesconectadoIndex].bomba){
+                    if(usuarioDesconectadoIndex==room.users.length-1){
+                        room.users[0].bomba=true;
+                    } else{
+                        room.users[usuarioDesconectadoIndex+1].bomba=true;
+                    }
+                }
                 let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1)[0];
-                socket.leave('gameRoom' + room);
-                io.to('gameRoom' + room).emit('usersDesconectados', room.users, 'gameRoom' + room);
+                socket.leave(room.roomName);
+                io.to(room.roomName).emit('usersDesconectados', room.users, room.roomName);
                 console.log('Usuario desconectado: ', usuarioDesconectado);
-            }
+            
         });
-
-
-        console.log(gameRooms[room].users);
-        console.log(usuarioDesconectadoIndex);
-
-        if (usuarioDesconectadoIndex >= 0) {
-            let usuarioDesconectado = gameRooms[room].users.splice(gameRooms[room].users.indexOf(usuarioDesconectadoIndex), 1)[0];
-
-
-            socket.leave('gameRoom' + room);
-            io.to('gameRoom' + room).emit('usersDesconectados', gameRooms[room].users, 'gameRoom' + room);
-
-
-            console.log('Usuario desconectado: ', usuarioDesconectado);
-        }
 
 
 

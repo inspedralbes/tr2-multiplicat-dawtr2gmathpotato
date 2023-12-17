@@ -279,7 +279,8 @@ export default {
             socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
         },
         startGame() {
-            socket.emit('startGame', {gameStarted:true, roomPosition: user[0].roomPosition});
+            console.log("startGame");
+            socket.emit('startGame', {gameStarted:true, roomPosition: this.users[0].roomPosition});
         },
         getId(index) {
             let size = this.users.length;
