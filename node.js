@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
     });
     socket.on('login', async (userData) => {
         console.log("heya" + userData);
-        let user = await getUser(userData);
+        await getUser(userData);
     });
     async function getUser(userData) {
         try {
@@ -109,7 +109,6 @@ io.on('connection', (socket) => {
         console.log('preguntasAleatorias', objPreguntes);
         io.emit('preguntas', objPreguntes);
     });
-
 
     socket.on('startGame', (gameStarted) => {
         if (usersConectados.length >= 3 && usersConectados.length <= 6) {

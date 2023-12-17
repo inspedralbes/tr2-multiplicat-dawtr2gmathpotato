@@ -48,12 +48,7 @@ class usuariosController extends Controller
             if (Hash::check($request->contraseña, $usuario->contraseña)) {
                 $token = $usuario->createToken('auth_token')->plainTextToken;
                 
-                return response()->json([
-                    'status' => 1,
-                    'message' => 'Inicio de sesión exitoso',
-                    'usuario' => $usuario,
-                    'token' => $token
-                ]);
+                return response("hola");
             } else {
                 return response()->json([
                     'status' => 0,
