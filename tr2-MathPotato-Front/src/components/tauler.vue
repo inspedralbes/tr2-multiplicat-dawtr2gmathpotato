@@ -7,8 +7,7 @@
                         <div class="vidaContainer" v-for="n in user.life" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
-                        <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
-
+                        <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : '']" :style="{ 'background-color': user.background }">
                     </div>
                     <p>{{ user.username }}</p>
 
@@ -263,6 +262,10 @@
     to {
         transform: scale(1.2);
     }
+}
+
+.userWithBomb{
+    border: 10px solid red;
 }
 </style>
 <script>
