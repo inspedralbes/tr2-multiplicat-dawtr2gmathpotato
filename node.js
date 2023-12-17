@@ -97,8 +97,7 @@ io.on('connection', (socket) => {
                     gameStart = true
                     newPregunta();
                 }
-            }
-            );
+            });
     }
 
     function newPregunta() {
@@ -129,6 +128,17 @@ io.on('connection', (socket) => {
             console.log(userBomba);
             if (userBomba + 1 == usersConectados.length) {
                 userBomba = 0;
+                if (timer > 20) {
+                    console.log("timerAnterior", timerAnterior);
+                    timerAnterior = timer - 5;
+                    console.log("mondongo", timer);
+                } else if (timer > 8) {
+                    timer = timer - 2;
+                    console.log(timer);
+                } else if (timer == 5) {
+                    timer = 5;
+                    console.log(timer);
+                }
             } else {
                 userBomba++;
             }
@@ -154,7 +164,6 @@ io.on('connection', (socket) => {
 
     function iniciarTimer() {
         const size = usersConectados.length;
-
 
         switch (size) {
             case 3:
