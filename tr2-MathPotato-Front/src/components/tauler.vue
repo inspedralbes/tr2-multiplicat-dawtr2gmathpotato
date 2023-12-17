@@ -302,6 +302,7 @@ export default {
             handler(newVal) {
                 console.log(this.encertada);
                 if (newVal && newVal.length > 0 && this.encertada) {
+                    console.log("change bomb");
                     this.changeBomb();
                 }
             }
@@ -316,7 +317,7 @@ export default {
         },
         async startGame() {
             socket.emit('startGame', true);
-            await this.$nextTick(); 
+            await this.$nextTick();
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
                 let userBombpos = objectAntElement.getBoundingClientRect();
@@ -395,48 +396,38 @@ export default {
             };
         },
         async changeBomb() {
-    await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
+            await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
 
-    let size = this.users.length;
-    let usersWithBomb = this.findUsersWithBomb();
-    
-    if (usersWithBomb !== -1) {
-        this.users[usersWithBomb].bomba = false;
-        let newUserBomb = (usersWithBomb) % size;
+            let usersWithBomb = this.findUsersWithBomb();
+            let userWithBomb=document.getElementById("user"+usersWithBomb);
+            console.log(userWithBomb);
+            if (usersWithBomb !== -1) {
+                let userBombpos = userWithBomb.getBoundingClientRect();
+                let objectAntElement = document.getElementById("bombContainer");
 
-        let object = "user" + newUserBomb;
-        let userElement = document.getElementById(object);
 
-        // Verificar si el elemento está presente antes de acceder a sus propiedades
-        if (userElement) {
-            let userBombpos = userElement.getBoundingClientRect();
-            let objectAnt = "user" + usersWithBomb;
-            let objectAntElement = document.getElementById(objectAnt);
-            
-            if (objectAntElement && this.users.length > 2) {
                 let objectAntpos = objectAntElement.getBoundingClientRect();
-                let userBombXAnt = objectAntpos.x + 100;
+                let userBombXAnt = objectAntpos.x;
                 let userBombYAnt = objectAntpos.y;
 
                 document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
                 document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
+
+
+                let userBombX = userBombpos.x + 100;
+                let userBombY = userBombpos.y;
+
+                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
+                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
+
+                document.getElementById("bombContainer").classList.add("moveBomb");
+
+                setTimeout(() => {
+                    document.getElementById("bombContainer").classList.remove("moveBomb");
+                }, 2000);
             }
 
-            let userBombX = userBombpos.x + 100;
-            let userBombY = userBombpos.y;
-
-            document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
-            document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
-
-            this.users[newUserBomb].bomba = true;
-            document.getElementById("bombContainer").classList.add("moveBomb");
-
-            setTimeout(() => {
-                document.getElementById("bombContainer").classList.remove("moveBomb");
-            }, 2000);
-        }
-    }
-},
+        },
 
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
