@@ -4,7 +4,7 @@
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
-                        <div class="vidaContainer" v-for="n in user.life" :key="n">
+                        <div class="vidaContainer" v-for="n in user.lives-1" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
                         <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : '']" :style="{ 'background-color': user.background }">

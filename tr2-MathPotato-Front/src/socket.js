@@ -91,6 +91,11 @@ function getCurrentUser(users) {
         store.setRespostaAnterior(newUsersData.bombChange);
     });
 
+    socket.on("userLost", (UsersData) => {
+        socket.emit('join', {"username":UsersData.usernamem, "image":UsersData.image});
+        
+    });
+
     // socket.on("gameRooms", (gameRooms) => {
     //     const store = useAppStore();
     //     console.log('Salas de juego: ', gameRooms);
