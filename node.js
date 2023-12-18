@@ -7,15 +7,14 @@ import mysql from 'mysql';
 import fetch from 'node-fetch';
 
 const app = express();
-var pregActual = 0;
-var userBomba = 0;
-var preguntas = [];
-var gameStart = false
+var lastRoom = 0;
+var gameRooms = [];
 
 app.use(cors());
 const server = createServer(app);
-const usersConectados = [];
-const objPreguntes = {};
+
+
+
 const URL = "http://127.0.0.1:8000/api/preguntes/random";
 
 const io = new Server(server, {
@@ -42,39 +41,48 @@ io.on('connection', (socket) => {
     console.log("User connected.");
     console.log(socket.id);
 
-    
+    //obtener informacion sobre las salas
+    console.log('Salas: ', io.sockets.adapter.rooms);
 
 
     socket.on('join', (data) => {
-        if (usersConectados.length === 0) {
-           usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png',life:2 });
+
+        if (gameRooms.length == 0) {
+            gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0 });
         } else {
-            usersConectados.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_2.png', life:2 });
+            if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started == true) {
+                lastRoom++;
+                gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0 });
+            }
         }
-        console.log(data);
-        io.emit('usersConnected', usersConectados);
 
-
+        if (gameRooms[gameRooms.length - 1].users.length == 0) {
+            // Si no hay usuarios conectados, se agrega el primer usuario a la sala
+            gameRooms[gameRooms.length - 1].users.push({ username: data, id: socket.id, bomba: true, image: './src/assets/Icon_1.png', roomPosition: lastRoom });
+        } else {
+            // Si ya hay usuarios, se agrega un nuevo usuario a la sala
+            gameRooms[gameRooms.length - 1].users.push({ username: data, id: socket.id, bomba: false, image: './src/assets/Icon_1.png', roomPosition: lastRoom });
+        }
+        socket.join("gameRoom" + lastRoom);
+        console.log(gameRooms[gameRooms.length - 1].users);
+        io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
+        console.log('Salas: ', io.sockets.adapter.rooms);
     });
 
-    socket.on('preguntes', () => {
-        console.log('preguntasAleatorias', objPreguntes);
-        io.emit('preguntas', objPreguntes);
-    })
 
-
-    socket.on('startGame', (gameStarted) => {
-        if (usersConectados.length >= 3 && usersConectados.length <= 6) {
+    socket.on('startGame', (data) => {
+        console.log("aaaaaaaaaaaaa " + data);
+        gameRooms[data.roomPosition].started = true;
+        if (gameRooms[data.roomPosition].users.length >= 3 && gameRooms[data.roomPosition].users.length <= 6) {
             console.log("startGame");
-            getPreguntes();
-            io.emit('gameStarted', gameStarted);
-            
+            getPreguntes(gameRooms[data.roomPosition]);
+            io.to("gameRoom" + data.roomPosition).emit('gameStarted', data.gameStarted);
+            //    CambiaEsta =
         }
     });
 
-    function getPreguntes() {
-
-        fetch('http://127.0.0.1:8000/api/preguntes/random')
+    function getPreguntes(room) {
+        fetch(URL)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -84,80 +92,90 @@ io.on('connection', (socket) => {
                 }
             })
             .then(data => {
-                preguntas = data;
-                console.log(preguntas.preguntas[pregActual].id_pregunta)
-                console.log(preguntas.preguntas[pregActual].pregunta)
-                console.log("PreguntasAqui" + preguntas);
+                let preguntas = data;
+                console.log(preguntas.preguntas);
+                room.preguntas = preguntas.preguntas;
+      
             }).then(() => {
-                if (!gameStart) {
-                    gameStart = true
-                    newPregunta();
-                }
+
+
+                    newPregunta(room);
             }
             );
     }
 
-    function newPregunta() {
-        console.log(preguntas);
-        io.emit('pregunta', { "id": preguntas.preguntas[pregActual].id_pregunta, "pregunta": preguntas.preguntas[pregActual].pregunta });
+    function newPregunta(room) {
+        io.to(room.roomName).emit('pregunta', { "id": room.preguntas[room.pregActual].id_pregunta, "pregunta": room.preguntas[room.pregActual].pregunta });
+
     }
+    function getUserWithBomb(room) {
+        for (let i = 0; i < gameRooms[room].users.length; i++) {
+            if (gameRooms[room].users[i].bomba) {
+                return i;
+            }
+        }
+    }
+    socket.on('resposta', (data) => {
+        // CambiaEsta =
+        console.log("Pregunta: ", gameRooms[data.room].preguntas[gameRooms[data.room].pregActual].pregunta);
 
-    socket.on('resposta', (resposta) => {
-        console.log("Pregunta: ", preguntas.preguntas[pregActual].pregunta);
-
-        //console.log("La pregunta es: ", objPreguntes[pregActual].pregunta); //FUNCIONA
-        
-        const resultatPregunta = eval(preguntas.preguntas[pregActual].pregunta);
+        const resultatPregunta = eval(gameRooms[data.room].preguntas[gameRooms[data.room].pregActual].pregunta);
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
-        console.log(resposta);
+        console.log(data.resposta);
+        let userWithBomb = getUserWithBomb(data.room);
+        if (resultatPregunta == data.resposta) {
+            console.log("respuesta correcta");
+            gameRooms[data.room].pregActual++;
+            gameRooms[data.room].users[userWithBomb].bomba = false;
 
-        if (resultatPregunta == resposta) {
-    
-            pregActual++;
-            usersConectados[userBomba].bomba = false;
-            userBomba = (userBomba + 1) % usersConectados.length;
-            usersConectados[userBomba].bomba = true;
+            console.log(gameRooms[data.room].users[userWithBomb].bomba);
+            if (userWithBomb == gameRooms[data.room].users.length - 1) {
+                gameRooms[data.room].users[0].bomba = true;
+            } else {
+                gameRooms[data.room].users[userWithBomb + 1].bomba = true;
+            }
 
-            console.log(userBomba);
-            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":true});
-            newPregunta();
+            io.to("gameRoom" + data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
+
         } else {
             console.log("resposta incorrecta!");
-            pregActual++;
-            usersConectados[userBomba].bomba = true;
-            io.emit('changeBomb', {"arrayUsers":usersConectados, "bombChange":false});
-            newPregunta();
+            gameRooms[data.room].pregActual++;
+            gameRooms[data.room].users[userWithBomb].bomba = true;
+            io.to(data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": false });
 
         }
+        newPregunta(gameRooms[data.room]);
     });
 
     socket.on('disconnect', () => {
-        const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
+        // let CambiaEsta=
+        gameRooms.forEach(room => {
+            let usuarioDesconectadoIndex = room.users.findIndex(user => user.id === socket.id);
+            console.log(usuarioDesconectadoIndex);
+            if (usuarioDesconectadoIndex !== -1){
+                if(room.users[usuarioDesconectadoIndex].bomba){
+                    if(usuarioDesconectadoIndex==room.users.length-1){
+                        room.users[0].bomba=true;
+                    } else{
+                        room.users[usuarioDesconectadoIndex+1].bomba=true;
+                    }
+                }
+                let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
+                socket.leave(room.roomName);
+                io.to(room.roomName).emit('usersDesconectados', room.users, room.roomName);
+                console.log('Usuario desconectado: ', usuarioDesconectado);
+            
+            }
+        });
 
-        console.log(usersConectados);
-        console.log(usuarioDesconectadoIndex);
 
-        if (usuarioDesconectadoIndex) {
-            usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
 
-            io.emit('usersDesconectados', usersConectados);
-        }
-        
-        
-        console.log('Usuario desconectado');
     });
     socket.on('login', (data) => { 
         console.log(data);
     });
-    socket.on('disconnect', () => {
-        io.emit('usersDesconectados', usersConectados);
-        
-    });
 
-    console.log('preguntasAleatorias', objPreguntes);
     // socket.emit("username");
-
-    socket.emit('preguntas', objPreguntes[pregActual]); //Primera pregunta
 
 });
 // io.emit('arrayUsers', usersConectados);
