@@ -28,7 +28,7 @@ class UsuarisController extends Controller
             'status' => 1,
             'message' => 'Usuari creat correctament'
         ]);
-        
+
     }
     public function login(Request $request){
         $request->validate([
@@ -58,7 +58,7 @@ class UsuarisController extends Controller
         }
     }
     public function logout(){
-       
+
     }
     public function PerfilUsuari( ){
     }

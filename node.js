@@ -66,37 +66,51 @@ io.on('connection', (socket) => {
         }).then(response => {
             if (response.ok) {
                 if (usersConectados.length === 0) {
-                    usersConectados.push({ username: userData.nombre_usuario, id: socket.id, bomba: true, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
+                    usersConectados.push({ username: userData.username, id: socket.id, bomba: true, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
                 } else {
-                    usersConectados.push({ username: userData.nombre_usuario, id: socket.id, bomba: false, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
+                    usersConectados.push({ username: userData.username, id: socket.id, bomba: false, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
                 }
                 io.emit('usersConnected', usersConectados);
+                return response.json(); 
             } else {
                 console.log(response);
                 throw new Error('Network response was not ok.');
+                
             }
-        }).then(data => {
-            console.log(data);
+        }).then(userData => {
+            console.log("aaaaaaaaaaaaaaaaaaaaa");
+            console.log(userData);
         }).catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
         });
     });
-    socket.on('login', async (userData) => {
-        console.log("heya" + userData);
-        await getUser(userData);
+    socket.on('login', async (data) => {
+        // console.log(data);
+        await getUser(data);
     });
-    async function getUser(userData) {
+    async function getUser(data) {
         try {
+            console.log("data to send...",data)
             const response = await fetch('http://localhost:8000/api/login', {
                 method: 'POST',
-                body: JSON.stringify(userData),
+                body: JSON.stringify(data),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            if (response.ok) {
-                const data = await response.json();
-                return data;
+            // console.log("response..??", response);
+            if (response) {
+                
+                const responseData = await response.json();
+                console.log("response.ok....",responseData);
+
+                if (usersConectados.length === 0) {
+                    usersConectados.push({ username: responseData.username, id: socket.id, bomba: true, image: './src/assets/Icon_' + responseData.foto_perfil + '.png' });
+                }else{
+                    usersConectados.push({ username: responseData.username, id: socket.id, bomba: true, image: './src/assets/Icon_' + responseData.foto_perfil + '.png' });
+                }
+                io.emit('usersConnected', usersConectados);
+                return responseData;
             } else {
                 console.log(response);
                 throw new Error('Network response was not ok.');

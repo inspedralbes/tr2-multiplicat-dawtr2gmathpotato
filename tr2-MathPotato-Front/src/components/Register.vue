@@ -90,10 +90,10 @@ export default {
         },
         register() {
             let user = {
-                "nombre_usuario": this.username,
+                "username": this.username,
                 "email": this.email,
-                "contraseña": this.password,
-                "contraseña_confirmation": this.passwordConfirmation,
+                "password": this.password,
+                "password_confirmation": this.passwordConfirmation,
                 "foto_perfil": this.imatgeSeleccionada
             };
 
