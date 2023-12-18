@@ -308,6 +308,7 @@ export default {
                     console.log("change bomb");
                     this.changeBomb();
                 }
+                console.log(newVal);
             }
         }
     },
@@ -315,11 +316,11 @@ export default {
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-            socket.emit('resposta', resposta);
+socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
             this.respuesta = "";
         },
         async startGame() {
-            socket.emit('startGame', true);
+            socket.emit('startGame', {gameStarted:true, roomPosition: this.users[0].roomPosition});
             await this.$nextTick();
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
@@ -332,6 +333,7 @@ export default {
         },
         getId(index) {
             let size = this.users.length;
+            // console.log(size);
             switch (size) {
                 case 1:
                     return "topmid";
@@ -356,6 +358,7 @@ export default {
                 case 4:
                     switch (index) {
                         case 0:
+
                             return "topmid";
                         case 1:
                             return "rightmid";
@@ -434,13 +437,13 @@ export default {
 
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
-            //return this.users.filter(user => user.bomba === true);
+            //return this.users.users.filter(user => user.bomba === true);
         },
     },
     mounted() {
         console.log(this.users);
         return this.users.findIndex(user => user.bomba === true);
-        //return this.users.filter(user => user.bomba === true);
+        //return this.users.users.filter(user => user.bomba === true);
     }
 }
 </script>
