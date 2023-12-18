@@ -151,7 +151,8 @@ io.on('connection', (socket) => {
         // let CambiaEsta=
         gameRooms.forEach(room => {
             let usuarioDesconectadoIndex = room.users.findIndex(user => user.id === socket.id);
-           
+            console.log(usuarioDesconectadoIndex);
+            if (usuarioDesconectadoIndex !== -1){
                 if(room.users[usuarioDesconectadoIndex].bomba){
                     if(usuarioDesconectadoIndex==room.users.length-1){
                         room.users[0].bomba=true;
@@ -159,11 +160,12 @@ io.on('connection', (socket) => {
                         room.users[usuarioDesconectadoIndex+1].bomba=true;
                     }
                 }
-                let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1)[0];
+                let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
                 socket.leave(room.roomName);
                 io.to(room.roomName).emit('usersDesconectados', room.users, room.roomName);
                 console.log('Usuario desconectado: ', usuarioDesconectado);
             
+            }
         });
 
 
@@ -172,15 +174,8 @@ io.on('connection', (socket) => {
     socket.on('login', (data) => { 
         console.log(data);
     });
-    socket.on('disconnect', () => {
-        io.emit('usersDesconectados', usersConectados);
-        
-    });
 
-    console.log('preguntasAleatorias', objPreguntes);
     // socket.emit("username");
-
-    socket.emit('preguntas', objPreguntes[pregActual]); //Primera pregunta
 
 });
 // io.emit('arrayUsers', usersConectados);

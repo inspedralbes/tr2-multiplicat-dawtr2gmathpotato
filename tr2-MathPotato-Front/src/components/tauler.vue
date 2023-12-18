@@ -23,7 +23,6 @@
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    <Button @click="changeBomb" id="buttonC">Change bomb</Button>
                 </div>
             </div>
         </div>
