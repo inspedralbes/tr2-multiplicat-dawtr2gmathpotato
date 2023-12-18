@@ -37,11 +37,6 @@ const router = createRouter({
       name: 'landingPageView',
       component: () => import('../components/LandingPageView.vue')
 
-    },
-    {
-      path: '/rooms',
-      name: 'roomsView',
-      component: () => import('../components/roomsView.vue')
     }
 
   ]

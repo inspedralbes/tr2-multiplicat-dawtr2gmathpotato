@@ -7,7 +7,8 @@
                         <div class="vidaContainer" v-for="n in user.life" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
-                        <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : '']" :style="{ 'background-color': user.background }">
+                        <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
+                       
                     </div>
                     <p class="name">{{ user.username }}</p>
 
@@ -38,7 +39,7 @@
 }
 
 .hidden {
-    display: none;
+    display: hidden;
 }
 
 .name {
@@ -287,10 +288,6 @@
         transform: scale(1.2);
     }
 }
-
-.userWithBomb{
-    border: 10px solid red;
-}
 </style>
 <script>
 import { useAppStore } from '../stores/guestStore.js';
@@ -318,7 +315,7 @@ export default {
             let store = useAppStore();
             return store.getGameStarted();
         },
-        message() {
+        message(){
             let store = useAppStore();
             return store.getPregunta();
         }
@@ -326,13 +323,12 @@ export default {
     },
     watch: {
         users: {
+            immediate: true, // Ejecutar al inicio
             handler(newVal) {
                 console.log(this.encertada);
                 if (newVal && newVal.length > 0 && this.encertada) {
-                    console.log("change bomb");
                     this.changeBomb();
                 }
-                console.log(newVal);
             }
         }
     },
@@ -340,24 +336,14 @@ export default {
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
+            socket.emit('resposta', resposta);
             this.respuesta = "";
         },
-        async startGame() {
-            socket.emit('startGame', {gameStarted:true, roomPosition: this.users[0].roomPosition});
-            await this.$nextTick();
-            let objectAntElement = document.getElementById("user0");
-            if (objectAntElement) {
-                let userBombpos = objectAntElement.getBoundingClientRect();
-                let userBombX = userBombpos.x + 100;
-                let userBombY = userBombpos.y;
-                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
-                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
-            }
+        startGame() {
+            socket.emit('startGame', true);
         },
         getId(index) {
             let size = this.users.length;
-            // console.log(size);
             switch (size) {
                 case 1:
                     return "topmid";
@@ -382,7 +368,6 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                 case 4:
                     switch (index) {
                         case 0:
-
                             return "topmid";
                         case 1:
                             return "rightmid";
@@ -428,46 +413,53 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
         async changeBomb() {
             await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
 
+            let size = this.users.length;
             let usersWithBomb = this.findUsersWithBomb();
-            let userWithBomb=document.getElementById("user"+usersWithBomb);
-            console.log(userWithBomb);
-            if (usersWithBomb !== -1) {
-                let userBombpos = userWithBomb.getBoundingClientRect();
-                let objectAntElement = document.getElementById("bombContainer");
+            console.log(usersWithBomb);
+            this.users[usersWithBomb].bomba = false;
+            let newUserBomb = usersWithBomb + 1;
+            if (newUserBomb >= size) {
+                newUserBomb = 0;
+            }
+            let object = "user" + (newUserBomb);
+            let userElement = document.getElementById(object);
 
-
-                let objectAntpos = objectAntElement.getBoundingClientRect();
-                let userBombXAnt = objectAntpos.x;
-                let userBombYAnt = objectAntpos.y;
-
-                document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
-                document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
-
+            // Verificar si el elemento está presente antes de acceder a sus propiedades
+            if (userElement) {
+                let userBombpos = userElement.getBoundingClientRect();
+                let objectAnt = "user" + (usersWithBomb);
+                let objectAntElement = document.getElementById(objectAnt);
+                if (objectAntElement) {
+                    let objectAntpos = objectAntElement.getBoundingClientRect();
+                    let userBombXAnt = objectAntpos.x + 100;
+                    let userBombYAnt = objectAntpos.y;
+                    if (this.users.length > 2) {
+                        document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
+                        document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
+                    }
+                }
 
                 let userBombX = userBombpos.x + 100;
                 let userBombY = userBombpos.y;
-
                 document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
                 document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
 
+                this.users[newUserBomb].bomba = true;
                 document.getElementById("bombContainer").classList.add("moveBomb");
-
                 setTimeout(() => {
                     document.getElementById("bombContainer").classList.remove("moveBomb");
                 }, 2000);
             }
-
         },
-
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
-            //return this.users.users.filter(user => user.bomba === true);
+            //return this.users.filter(user => user.bomba === true);
         },
     },
     mounted() {
         console.log(this.users);
         return this.users.findIndex(user => user.bomba === true);
-        //return this.users.users.filter(user => user.bomba === true);
+        //return this.users.filter(user => user.bomba === true);
     }
 }
 </script>

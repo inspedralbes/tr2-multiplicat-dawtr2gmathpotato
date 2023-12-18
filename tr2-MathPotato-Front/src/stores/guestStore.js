@@ -2,17 +2,6 @@ import { defineStore } from 'pinia';
 
 export const useAppStore = defineStore('app', {
     state: () => ({
-        infoGame: {            
-            rooms: {
-                gameRooms: [
-                    {
-                         users: [
-                            {username: '', id: '', bomba: false, image: './assets/Icon_2.png'}
-                        ]
-                    },
-                ],   
-                }
-            }, 
         guestInfo: {
             username: '',
             id: '',
@@ -29,48 +18,19 @@ export const useAppStore = defineStore('app', {
 
     }), 
     actions: {
-        setRoomName(roomGame){
-            this.infoGame.rooms.gameRooms[0].roomName = roomGame;
-            console.log(this.infoGame.rooms.gameRooms[0].roomName);
-        },
-        setGameRooms(gameRooms){
-            this.infoGame.rooms.gameRooms = gameRooms;
-            console.log(this.infoGame.rooms.gameRooms);
-        },
-        getGameRooms(){
-            return this.infoGame.rooms.gameRooms;
-        },
-        getRoomName(){
-            return this.infoGame.rooms.gameRooms[0].roomName;
-        },
-        setUsersInRoom(users){
-            this.infoGame.rooms.gameRooms[0].users = users;
-            console.log(this.infoGame.rooms.gameRooms[0].users);
-        },
-        getUsersInRoom(){
-            return this.infoGame.rooms.gameRooms[0].users;
-        },
-        updateUsersOnDisconnectInRoom({roomName, users }) {
-            if(this.infoGame.rooms.hasOwnProperty(roomName)){
-                this.infoGame.rooms[roomName].users = users;
-                console.log('Usuarios en la sala ${roomName} actualizados: ', users);
-            }
-        },
-        setUsers(users){
-            this.users = users;
+        setUsers(items){
+            this.users = items;
             console.log(this.users);
-        },     
+
+        },
         getUsers(){
             return this.users;
-        },    
-        updateUsersOnDisconnect(users) {
-            this.setUsers(users);
-        },    
+        },
         setGuestInfo(username, id) {
             this.guestInfo.username = username;
             this.guestInfo.id = id;
 
-            console.log('*infoGuest*');
+            console.log('infoGuest');
             console.log(this.guestInfo.username);
             console.log(this.guestInfo.id);
             
@@ -82,7 +42,9 @@ export const useAppStore = defineStore('app', {
             this.guestInfo.username = '';
             this.guestInfo.id = '';
         }, 
-        
+        updateUsersOnDisconnect(users) {
+            this.setUsers(users);
+        },
         setPregunta(pregunta){
             this.pregunta.id_pregunta=pregunta.id_pregunta;
             this.pregunta.pregunta=pregunta.pregunta
