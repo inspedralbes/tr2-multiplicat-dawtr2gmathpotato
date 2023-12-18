@@ -9,20 +9,21 @@
                             <img src="@/assets/potatHeart.png">
                         </div>
                     </div>
-                    <p>{{ user.username }}</p>
-                    
+                    <p class="name">{{ user.username }}</p>
+
                 </div>
             </div>
-            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt="" class="bomb" id="bomb"></div>
-            <div id="middle"> 
-                <Button @click="startGame"  id="startGameButton" :disabled="users.length <= 2" v-if="!gameStarted">START!</Button>
-                
-                <div v-if="gameStarted" class="gameContainer" >
+            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
+                    class="bomb" id="bomb"></div>
+            <div id="middle">
+                <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
+                    v-if="!gameStarted">START!</Button>
+
+                <div v-if="gameStarted" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    <Button @click="changeBomb" id="buttonC" >Change bomb</Button>
-                </div>               
+                </div>
             </div>
         </div>
     </div>
@@ -35,9 +36,15 @@
     --xPosition: 0;
     --yPosition: 0;
 }
+
 .hidden {
     display: hidden;
 }
+
+.name {
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
 #background {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
@@ -46,12 +53,34 @@
     background-size: cover;
     background-position: center;
 }
-
-.gameContainer{
+.gameContainer>h3{
+    color: white;
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+.gameContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    background-image: url("../assets/backgroundPregunta.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    border-radius: 20px;
+    width: 90%;
+}
+.gameContainer>input{
+    width: 80%;
+    height: 5vh;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+
+    font-size: 1.5vw;
+    font-weight: bold;
+    color: black;
+
+
 }
 .moveBomb {
     animation-name: bombMovement;
@@ -65,7 +94,7 @@
     position: absolute;
     top: var(--yPosition);
     left: var(--xPosition);
-    
+
 }
 
 @keyframes bombMovement {
@@ -99,15 +128,18 @@
     color: white;
 
 }
+
 .imageContainer {
     display: flex;
-    
+
 }
+
 .vidaContainer img {
     width: 40px;
     height: 40px;
     margin-top: 5px;
 }
+
 #grid {
     background-image: url("../assets/table.png");
     background-repeat: no-repeat;
@@ -123,126 +155,126 @@
 
 
 
-    #middle {
-        grid-area: middle;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
+#middle {
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
 
-        font-weight: bold;
+    font-weight: bold;
 
+
+}
+
+
+#topleft {
+    grid-area: topleft;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#topmid {
+    grid-area: topmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#topright {
+    grid-area: topright;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#leftmid {
+    grid-area: leftmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#rightmid {
+    grid-area: rightmid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottomleft {
+    grid-area: bottomleft;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottommid {
+    grid-area: bottommid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+#bottomright {
+    grid-area: bottomright;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+}
+
+.bomb {
+    width: 10vw;
+    animation-name: hunch;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    position: absolute;
+}
+
+@keyframes hunch {
+    from {
+        transform: scale(1);
     }
 
-
-    #topleft {
-        grid-area: topleft;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
+    to {
+        transform: scale(1.2);
     }
-
-    #topmid {
-        grid-area: topmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #topright {
-        grid-area: topright;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #leftmid {
-        grid-area: leftmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #rightmid {
-        grid-area: rightmid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottomleft {
-        grid-area: bottomleft;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottommid {
-        grid-area: bottommid;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    #bottomright {
-        grid-area: bottomright;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 2vw;
-        font-weight: bold;
-        color: white;
-    }
-
-    .bomb {
-        width: 10vw;
-        animation-name: hunch;
-        animation-duration: 1s;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-        position: absolute;
-    }
-
-    @keyframes hunch {
-        from {
-            transform: scale(1);
-        }
-
-        to {
-            transform: scale(1.2);
-        }
-    }
-
+}
 </style>
 <script>
 import { useAppStore } from '../stores/guestStore.js';
@@ -250,16 +282,16 @@ import { socket } from '../socket';
 import { useSSRContext, useTransitionState } from 'vue';
 
 export default {
-    data() {       
+    data() {
         return {
             gameStarted: false,
             pregunta: {},
             respuesta: "",
-           
+
         };
     },
     computed: {
-        encertada(){
+        encertada() {
             let store = useAppStore();
             return store.getRespostaAnterior();
         },
@@ -267,12 +299,12 @@ export default {
             let store = useAppStore();
             return store.getUsers();
         },
-        
-        message(){
+
+        message() {
             let store = useAppStore();
             return store.getPregunta();
-        }       
-        
+        }
+
     },
     watch: {
         users: {
@@ -286,10 +318,10 @@ export default {
         }
     },
     methods: {
-        enviarResposta(){
+        enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-            socket.emit('resposta',  resposta );
+            socket.emit('resposta', resposta);
             this.respuesta = "";
         },
         startGame() {
@@ -388,11 +420,11 @@ export default {
                     let objectAntpos = objectAntElement.getBoundingClientRect();
                     let userBombXAnt = objectAntpos.x + 100;
                     let userBombYAnt = objectAntpos.y;
-                    if(this.users.length>2){
+                    if (this.users.length > 2) {
                         document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
                         document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
                     }
-                } 
+                }
 
                 let userBombX = userBombpos.x + 100;
                 let userBombY = userBombpos.y;
