@@ -194,6 +194,7 @@ io.on('connection', (socket) => {
         } else {
             timer = timerAnterior;
             io.to("gameRoom" + lastRoom).emit('timer', timer);
+            startTimer();
         }
     }
 
