@@ -56,6 +56,7 @@
 .gameContainer>h3{
     color: white;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    
 }
 .gameContainer {
     display: flex;
@@ -79,6 +80,7 @@
     font-size: 1.5vw;
     font-weight: bold;
     color: black;
+    filter: brightness(1);
 
 
 }
