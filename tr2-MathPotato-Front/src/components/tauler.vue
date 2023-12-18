@@ -10,8 +10,8 @@
                         <img :src="user.image" alt="image" class="icon" :style="{ 'background-color': user.background }">
                        
                     </div>
-                    <p>{{ user.username }}</p>
-                    
+                    <p class="name">{{ user.username }}</p>
+
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
@@ -24,7 +24,6 @@
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    <Button @click="changeBomb" id="buttonC">Change bomb</Button>
                 </div>
             </div>
         </div>
@@ -43,6 +42,10 @@
     display: hidden;
 }
 
+.name {
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
 #background {
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
@@ -51,11 +54,33 @@
     background-size: cover;
     background-position: center;
 }
-
+.gameContainer>h3{
+    color: white;
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
 .gameContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-image: url("../assets/backgroundPregunta.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    border-radius: 20px;
+    width: 90%;
+}
+.gameContainer>input{
+    width: 80%;
+    height: 5vh;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+
+    font-size: 1.5vw;
+    font-weight: bold;
+    color: black;
+
 
 }
 
@@ -105,15 +130,18 @@
     color: white;
 
 }
+
 .imageContainer {
     display: flex;
-    
+
 }
+
 .vidaContainer img {
     width: 40px;
     height: 40px;
     margin-top: 5px;
 }
+
 #grid {
     background-image: url("../assets/table.png");
     background-repeat: no-repeat;
