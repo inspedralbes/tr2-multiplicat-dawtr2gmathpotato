@@ -298,6 +298,10 @@ export default {
         message() {
             let store = useAppStore();
             return store.getPregunta();
+        },
+        gameStarted() {
+            let store = useAppStore();
+            return store.getGameStarted();
         }
 
     },

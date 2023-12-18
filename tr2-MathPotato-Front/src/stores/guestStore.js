@@ -25,13 +25,21 @@ export const useAppStore = defineStore('app', {
             pregunta:""
         },
         respostaAnterior: true,
-        timer: 0
+        timer: 0,
+        gameStarted: false,
 
     }), 
     actions: {
         setRoomName(roomGame){
             this.infoGame.rooms.gameRooms[0].roomName = roomGame;
             console.log(this.infoGame.rooms.gameRooms[0].roomName);
+        },
+        setGameStarted(gameStarted){
+            this.gameStarted = gameStarted;
+        
+        },
+        getGameStarted(){
+            return this.gameStarted;
         },
         setGameRooms(gameRooms){
             this.infoGame.rooms.gameRooms = gameRooms;

@@ -51,11 +51,11 @@ io.on('connection', (socket) => {
     socket.on('join', (data) => {
 
         if (gameRooms.length == 0) {
-            gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0 });
+            gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0, timer: 0, timerAnterior: 0 });
         } else {
             if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started == true) {
                 lastRoom++;
-                gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0 });
+                gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0, timer: 0, timerAnterior: 0 });
             }
         }
 
@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
         if (gameRooms[data.roomPosition].users.length >= 3 && gameRooms[data.roomPosition].users.length <= 6) {
             console.log("startGame");
             getPreguntes(gameRooms[data.roomPosition]);
-            iniciarTimer();
+            iniciarTimer(data.roomPosition);
             startTimer();
             io.to("gameRoom" + data.roomPosition).emit('gameStarted', data.gameStarted);
             //    CambiaEsta =
@@ -100,11 +100,11 @@ io.on('connection', (socket) => {
                 let preguntas = data;
                 console.log(preguntas.preguntas);
                 room.preguntas = preguntas.preguntas;
-      
+
             }).then(() => {
 
 
-                    newPregunta(room);
+                newPregunta(room);
             }
             );
     }
@@ -162,8 +162,8 @@ io.on('connection', (socket) => {
     });
 
 
-    function iniciarTimer() {
-        const size = usersConectados.length;
+    function iniciarTimer(roomPosition) {
+        const size = gameRooms[roomPosition].users.length;
 
         switch (size) {
             case 3:
@@ -187,13 +187,13 @@ io.on('connection', (socket) => {
         if (timer > 0) {
             setTimeout(() => {
                 timer--;
-                io.emit('timer', timer);
+                io.to("gameRoom" + lastRoom).emit('timer', timer);
                 console.log("tiempo --> ", timer);
                 startTimer();
             }, 1000);
         } else {
             timer = timerAnterior;
-            io.emit('timer', timer);
+            io.to("gameRoom" + lastRoom).emit('timer', timer);
         }
     }
 
@@ -202,26 +202,26 @@ io.on('connection', (socket) => {
         gameRooms.forEach(room => {
             let usuarioDesconectadoIndex = room.users.findIndex(user => user.id === socket.id);
             console.log(usuarioDesconectadoIndex);
-            if (usuarioDesconectadoIndex !== -1){
-                if(room.users[usuarioDesconectadoIndex].bomba){
-                    if(usuarioDesconectadoIndex==room.users.length-1){
-                        room.users[0].bomba=true;
-                    } else{
-                        room.users[usuarioDesconectadoIndex+1].bomba=true;
+            if (usuarioDesconectadoIndex !== -1) {
+                if (room.users[usuarioDesconectadoIndex].bomba) {
+                    if (usuarioDesconectadoIndex == room.users.length - 1) {
+                        room.users[0].bomba = true;
+                    } else {
+                        room.users[usuarioDesconectadoIndex + 1].bomba = true;
                     }
                 }
                 let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
                 socket.leave(room.roomName);
                 io.to(room.roomName).emit('usersDesconectados', room.users, room.roomName);
                 console.log('Usuario desconectado: ', usuarioDesconectado);
-            
+
             }
         });
 
 
 
     });
-    socket.on('login', (data) => { 
+    socket.on('login', (data) => {
         console.log(data);
     });
 
