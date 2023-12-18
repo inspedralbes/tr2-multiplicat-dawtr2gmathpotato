@@ -21,11 +21,11 @@ export const useAppStore = defineStore('app', {
         },
         users:[],
         pregunta: {
-            id_pregunta:"",
+            id_pregunta:"", 
             pregunta:""
         },
         respostaAnterior: true,
-        gameStarted: false
+        timer: 0
 
     }), 
     actions: {
@@ -96,12 +96,11 @@ export const useAppStore = defineStore('app', {
         getRespostaAnterior(){
             return this.respostaAnterior;
         },
-        setGameStarted(gameStarted){
-            console.log("gameStarted");
-            this.gameStarted = gameStarted;
+        setTimer(timerValue){
+            this.timer = timerValue;
         },
-        getGameStarted(){
-            return this.gameStarted;
+        getTimer(){
+            return this.timer;
         }
     }
 });

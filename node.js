@@ -5,11 +5,14 @@ import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
 import fetch from 'node-fetch';
+import { Console, clear, time } from 'node:console';
+import { start } from 'node:repl';
 
 const app = express();
 var lastRoom = 0;
 var gameRooms = [];
-
+var timer = 0;
+var timerAnterior = 0;
 app.use(cors());
 const server = createServer(app);
 
@@ -76,6 +79,8 @@ io.on('connection', (socket) => {
         if (gameRooms[data.roomPosition].users.length >= 3 && gameRooms[data.roomPosition].users.length <= 6) {
             console.log("startGame");
             getPreguntes(gameRooms[data.roomPosition]);
+            iniciarTimer();
+            startTimer();
             io.to("gameRoom" + data.roomPosition).emit('gameStarted', data.gameStarted);
             //    CambiaEsta =
         }
@@ -131,6 +136,13 @@ io.on('connection', (socket) => {
             console.log(gameRooms[data.room].users[userWithBomb].bomba);
             if (userWithBomb == gameRooms[data.room].users.length - 1) {
                 gameRooms[data.room].users[0].bomba = true;
+                if (timerAnterior > 20) {
+                    timerAnterior = timerAnterior - 5;
+                } else {
+                    if (timerAnterior > 5) {
+                        timerAnterior = timerAnterior - 2;
+                    }
+                }
             } else {
                 gameRooms[data.room].users[userWithBomb + 1].bomba = true;
             }
@@ -143,9 +155,47 @@ io.on('connection', (socket) => {
             gameRooms[data.room].users[userWithBomb].bomba = true;
             io.to(data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": false });
 
+            newPregunta();
         }
         newPregunta(gameRooms[data.room]);
+        timer = timerAnterior;
     });
+
+
+    function iniciarTimer() {
+        const size = usersConectados.length;
+
+        switch (size) {
+            case 3:
+                timer = 31;
+                break;
+            case 4:
+                timer = 36;
+                break;
+            case 5:
+            case 6:
+                timer = 41;
+                break;
+            default:
+                timer = 0;
+                break;
+        }
+        timerAnterior = timer;
+    }
+
+    function startTimer() {
+        if (timer > 0) {
+            setTimeout(() => {
+                timer--;
+                io.emit('timer', timer);
+                console.log("tiempo --> ", timer);
+                startTimer();
+            }, 1000);
+        } else {
+            timer = timerAnterior;
+            io.emit('timer', timer);
+        }
+    }
 
     socket.on('disconnect', () => {
         // let CambiaEsta=
