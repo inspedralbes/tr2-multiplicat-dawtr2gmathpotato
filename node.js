@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
-import { clear } from 'node:console';
+import { Console, clear, time } from 'node:console';
 import { start } from 'node:repl';
 
 // import fetch from 'node-fetch';
@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
 
         console.log(preguntas);
         io.emit('pregunta', { "id": preguntas.preguntas[pregActual].id_pregunta, "pregunta": preguntas.preguntas[pregActual].pregunta });
-        startTimer();
+
     }
 
     socket.on('resposta', (resposta) => {
@@ -126,27 +126,26 @@ io.on('connection', (socket) => {
 
             console.log(usersConectados[userBomba]);
             console.log(userBomba);
+            console.log("timer inicial --> ", timer);
             if (userBomba + 1 == usersConectados.length) {
                 userBomba = 0;
-                if (timer > 20) {
-                    console.log("timerAnterior", timerAnterior);
-                    timerAnterior = timer - 5;
-                    console.log("mondongo", timer);
-                } else if (timer > 8) {
-                    timer = timer - 2;
-                    console.log(timer);
-                } else if (timer == 5) {
-                    timer = 5;
-                    console.log(timer);
+                if (timerAnterior > 20) {
+                    timerAnterior = timerAnterior - 5;
+                } else {
+                    if (timerAnterior > 5) {
+                        timerAnterior = timerAnterior - 2;
+                    }
                 }
+
             } else {
                 userBomba++;
             }
             usersConectados[userBomba].bomba = true;
             console.log(userBomba);
             socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": true });
-            clearInterval(timerInterval);
-            startTimer();
+
+
+
             newPregunta();
 
         } else {
@@ -154,58 +153,48 @@ io.on('connection', (socket) => {
             pregActual++;
             usersConectados[userBomba].bomba = true;
             socket.emit('changeBomb', { "arrayUsers": usersConectados, "bombChange": false });
-            clearInterval(timerInterval);
-            startTimer();
+
             newPregunta();
         }
+        timer = timerAnterior;
+       
     });
 
-    let timerInterval;
 
     function iniciarTimer() {
         const size = usersConectados.length;
 
         switch (size) {
             case 3:
-                timer = 30;
+                timer = 31;
                 break;
             case 4:
-                timer = 35;
+                timer = 36;
                 break;
             case 5:
             case 6:
-                timer = 40;
+                timer = 41;
                 break;
             default:
                 timer = 0;
                 break;
         }
-        return timer;
+        timerAnterior = timer;
     }
 
     function startTimer() {
-        clearInterval(timerInterval);
-        let tiempo = iniciarTimer();
-
-        if (tiempo > 0) {
-            timerInterval = setInterval(function () {
-                if (tiempo == 0) {
-                    pregActual++;
-                    clearInterval(timerInterval);
-                    newPregunta();
-                    console.log("Timer finalizado");
-                } else {
-                    tiempo--;
-                    console.log("timer", tiempo);
-                    io.emit('timer', tiempo);
-                }
+        if (timer > 0) {
+            setTimeout(() => {
+                timer--;
+                io.emit('timer', timer);
+                console.log("tiempo --> ", timer);
+                startTimer();
             }, 1000);
         } else {
-            console.log("Tiempo no válido para iniciar el temporizador.");
+            timer = timerAnterior;
+            io.emit('timer', timer);
         }
     }
-
-    socket.on('startTimer', startTimer);
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
@@ -217,7 +206,6 @@ io.on('connection', (socket) => {
             usersConectados.splice(usersConectados.indexOf(usuarioDesconectadoIndex), 1);
 
             io.emit('usersDesconectados', usersConectados);
-            clearInterval(timerInterval);
         }
         console.log('Usuario desconectado');
     });
