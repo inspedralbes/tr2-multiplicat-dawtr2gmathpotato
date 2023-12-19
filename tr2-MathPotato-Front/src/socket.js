@@ -109,7 +109,7 @@ function getCurrentUser(users) {
         store.setGameStarted(dataPartida.gameStarted);
         store.setTimer(dataPartida.timer);
         // store.setGuestInfo({ lives: 0});
-        socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
+        
     });
 // });
 

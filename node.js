@@ -230,7 +230,7 @@ io.on('connection', (socket) => {
                 gameRooms[roomPosition].timer--;
                 io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
                 console.log("tiempo --> ", gameRooms[roomPosition].timer);
-                startTimer(roomPosition);
+                
                 
                 if(gameRooms[roomPosition].users.length==1){
                     // console.log("game finished!!!!!!!!!");
@@ -238,6 +238,8 @@ io.on('connection', (socket) => {
                     gameRooms[roomPosition].gameStarted=false;
                     gameRooms[roomPosition].timer = 0;
                     io.to(gameRooms[roomPosition].roomName).emit('finishGame'), ({ gameStarted: false, timer: 0});   
+                }else{
+                    startTimer(roomPosition);
                 }
             }, 1000);
         } else {
@@ -269,12 +271,14 @@ io.on('connection', (socket) => {
                     
                     // console.log("game over");
                     // io.to(gameRooms[roomPosition].roomName).emit('gameOver', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
+                } else{
+                    startTimer(roomPosition);
                 }
             }
             io.to(gameRooms[roomPosition].roomName).emit('changeBomb', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
             gameRooms[roomPosition].pregActual++;
             newPregunta(gameRooms[roomPosition]);
-            startTimer(roomPosition);
+            
         }
     }
 

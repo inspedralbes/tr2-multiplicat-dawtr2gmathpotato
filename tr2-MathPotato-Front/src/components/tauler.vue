@@ -353,9 +353,7 @@ export default {
         // },
     },
     methods: {
-        didStart(){
-            console.log(this.gameStarted);
-        },
+        
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
@@ -485,6 +483,7 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
     },
     mounted() {
         return this.users.findIndex(user => user.bomba === true);
+        
         //return this.users.users.filter(user => user.bomba === true);
         
 
