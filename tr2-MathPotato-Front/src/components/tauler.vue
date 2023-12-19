@@ -298,7 +298,7 @@
 <script>
 import { useAppStore } from '../stores/guestStore.js';
 import { socket } from '../socket';
-import { useSSRContext, useTransitionState } from 'vue';
+// import { useSSRContext, useTransitionState } from 'vue';
 
 export default {
     data() {
@@ -480,98 +480,90 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
 }
 
 import $ from 'jquery';
-import { redirect } from 'express/lib/response';
 
-	$.fn.boom = function(opts){
-        debugger;
-		var defaultOptions = {
-			img_url: '',
-			piece_size: 20,
-			gravity: false,
-			duration: 1000
-		}
+$.fn.boom = function(opts) {
+    debugger;
+    var defaultOptions = {
+        img_url: '',
+        piece_size: 16,
+        gravity: false,
+        duration: 1000
+    };
 
-		var opts = $.extend({}, defaultOptions, opts);
+    var opts = $.extend({}, defaultOptions, opts);
 
-		var $target = this,
-			imgUrl = opts.img_url || '',
-			pieceSize = opts.piece_size,
-			gravity = opts.gravity,
-			duration = opts.duration;
+    var $target = this,
+        imgUrl = opts.img_url || '',
+        pieceSize = opts.piece_size,
+        gravity = opts.gravity,
+        duration = opts.duration;
 
-		var sx,
-			sy,
-			count = 0;
+    var sx,
+        sy;
 
-		var n = $target.width() / pieceSize,
-			m = $target.height() / pieceSize;
+    var n = $target.width() / pieceSize,
+        m = $target.height() / pieceSize;
 
-		try {
-			if (imgUrl === '') throw new Error('empty image url');
-			$target.css({
-				position: 'relative',
-				persperctive: 0,
-				background: 'url('+imgUrl+') no-repeat',
-				cursor: 'pointer',
-				hidden: true
-			})
-			
-		} catch(e) {
-			console.error(e.message)
-		}
+    try {
+        if (imgUrl === '') throw new Error('empty image url');
+        $target.css({
+            position: 'relative',
+            perspective: 0,
+            background: 'url(' + imgUrl + ') no-repeat',
+            cursor: 'pointer',
+            hidden: true
+        });
 
+    } catch (e) {
+        console.error(e.message);
+    }
 
-		function makeSprite(x, y) {
-			$target.children('img').remove();
-			for (let i = 0; i < m; i++) {
-				for (let j = 0; j < n; j++) {
-					var newSprite = document.createElement('div');
-					$(newSprite).attr('id', i + '-' + j);
-					$(newSprite).css({
-						width: pieceSize,
-						height: pieceSize,
-						position: 'absolute',
-						//background: 'url('+imgUrl+') no-repeat',
-                        "background-color": red,
-						top: i * pieceSize,
-						left: j * pieceSize,
-						backgroundPosition: -j*pieceSize + 'px ' + (-i*pieceSize) + 'px',
-					})
-					$target.append(newSprite)
-				}
-			}
+    function makeSprite(x, y) {
+        $target.children('img').remove();
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                var newSprite = document.createElement('div');
+                $(newSprite).attr('id', i + '-' + j);
+                $(newSprite).css({
+                    width: pieceSize,
+                    height: pieceSize,
+                    position: 'absolute',
+                    "background-color": "orange",
+                    top: i * pieceSize,
+                    left: j * pieceSize,
+                    borderRadius: '50%', // Hacer que el elemento sea redondo
+                    backgroundPosition: -j * pieceSize + 'px ' + (-i * pieceSize) + 'px',
+                });
+                $target.append(newSprite);
+            }
+        }
 
-			$target.css({
-				background: ''
-			})
-			$('body').css({
-				overflow: 'hidden'
-			})
+        $target.css({
+            background: ''
+        });
+        $('body').css({
+            overflow: 'hidden'
+        });
 
-			for (let i = 0; i < m; i++) {
-				for (let j = 0; j < n; j++) {
-					sx = j * pieceSize < x ? -1 * Math.random() * duration : Math.random() * duration;
-					sy = Math.abs(sx * (i*pieceSize-y)/(j*pieceSize-x));
-					sy = i * pieceSize < y ? -sy : sy;
-					if (!gravity) {
-						$('#'+i+'-'+j).animate({
-							top: '+='+sy,
-							left: '+='+sx,
-							opacity: 0
-						}, Math.random()*duration+duration)
-					}
-				}
-			}	
-			
-			
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                sx = j * pieceSize < x ? -1 * Math.random() * duration : Math.random() * duration;
+                sy = Math.abs(sx * (i * pieceSize - y) / (j * pieceSize - x));
+                sy = i * pieceSize < y ? -sy : sy;
+                if (!gravity) {
+                    $('#' + i + '-' + j).animate({
+                        top: '+=' + sy,
+                        left: '+=' + sx,
+                        opacity: 0
+                    }, Math.random() * duration + duration);
+                }
+            }
+        }
+    }
+    makeSprite(100, 100);
 
-		}
-
-
-		makeSprite(100,100)
-
-		return $target;
-	}
+    return $target;
+};
 
 
 </script>
