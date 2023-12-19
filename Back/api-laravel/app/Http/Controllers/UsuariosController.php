@@ -11,7 +11,6 @@ class usuariosController extends Controller
 {
     public function register(Request $request) {
 
-
             $request->validate([
                 'username' => 'required|string|max:50',
                 'email' => 'required|string|email|unique:usuarios',

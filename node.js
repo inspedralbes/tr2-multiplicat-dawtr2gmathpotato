@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
         });
     });
     socket.on('login', async (data) => {
-        // console.log(data);
+        console.log(data);
         await getUser(data);
     });
     async function getUser(data) {
