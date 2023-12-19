@@ -13,8 +13,8 @@
 
                 </div>
             </div>
-            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
-                    class="bomb" id="bomb"><span class="bombCounter">{{ contador }}</span></div>
+            <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><div id="wrapper"><img src="../assets/LePotata.png" alt=""
+                    class="bomb" id="bomb"></div><span class="bombCounter">{{ contador }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
                     v-if="!gameStarted">START!</Button>
@@ -23,6 +23,7 @@
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
+                    <Button @click="explotar" icon="pi pi-check" aria-label="Submit" />
                 </div>
             </div>
         </div>
@@ -263,7 +264,7 @@
     animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-direction: alternate;
-    position: absolute;
+    position: relative;
 }
 
 .bombCounter {
@@ -339,6 +340,11 @@ export default {
         }
     },
     methods: {
+        explotar(){
+            $('#wrapper').boom({
+            img_url: document.getElementById("bomb").src
+        })
+        },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
@@ -472,4 +478,100 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
         //return this.users.users.filter(user => user.bomba === true);
     }
 }
+
+import $ from 'jquery';
+import { redirect } from 'express/lib/response';
+
+	$.fn.boom = function(opts){
+        debugger;
+		var defaultOptions = {
+			img_url: '',
+			piece_size: 20,
+			gravity: false,
+			duration: 1000
+		}
+
+		var opts = $.extend({}, defaultOptions, opts);
+
+		var $target = this,
+			imgUrl = opts.img_url || '',
+			pieceSize = opts.piece_size,
+			gravity = opts.gravity,
+			duration = opts.duration;
+
+		var sx,
+			sy,
+			count = 0;
+
+		var n = $target.width() / pieceSize,
+			m = $target.height() / pieceSize;
+
+		try {
+			if (imgUrl === '') throw new Error('empty image url');
+			$target.css({
+				position: 'relative',
+				persperctive: 0,
+				background: 'url('+imgUrl+') no-repeat',
+				cursor: 'pointer',
+				hidden: true
+			})
+			
+		} catch(e) {
+			console.error(e.message)
+		}
+
+
+		function makeSprite(x, y) {
+			$target.children('img').remove();
+			for (let i = 0; i < m; i++) {
+				for (let j = 0; j < n; j++) {
+					var newSprite = document.createElement('div');
+					$(newSprite).attr('id', i + '-' + j);
+					$(newSprite).css({
+						width: pieceSize,
+						height: pieceSize,
+						position: 'absolute',
+						//background: 'url('+imgUrl+') no-repeat',
+                        "background-color": red,
+						top: i * pieceSize,
+						left: j * pieceSize,
+						backgroundPosition: -j*pieceSize + 'px ' + (-i*pieceSize) + 'px',
+					})
+					$target.append(newSprite)
+				}
+			}
+
+			$target.css({
+				background: ''
+			})
+			$('body').css({
+				overflow: 'hidden'
+			})
+
+			for (let i = 0; i < m; i++) {
+				for (let j = 0; j < n; j++) {
+					sx = j * pieceSize < x ? -1 * Math.random() * duration : Math.random() * duration;
+					sy = Math.abs(sx * (i*pieceSize-y)/(j*pieceSize-x));
+					sy = i * pieceSize < y ? -sy : sy;
+					if (!gravity) {
+						$('#'+i+'-'+j).animate({
+							top: '+='+sy,
+							left: '+='+sx,
+							opacity: 0
+						}, Math.random()*duration+duration)
+					}
+				}
+			}	
+			
+			
+
+		}
+
+
+		makeSprite(100,100)
+
+		return $target;
+	}
+
+
 </script>

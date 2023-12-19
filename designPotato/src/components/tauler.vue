@@ -19,6 +19,7 @@
     <div id="middle">
         <h1></h1>
         <button @click="changeBomb()" id="buttonC">Change bomb</button>
+        <button @click="explosionBomb()" id="buttonD">Explosion</button>
     </div>
 </template>
 <style scoped>
@@ -383,6 +384,11 @@ export default {
                 document.getElementById("bombContainer").classList.remove("moveBomb");
             }, 1000);
         },
+
+        explosionBomb(){
+            alert("hola");
+        },
+
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
             //return this.users.filter(user => user.bomba === true);
