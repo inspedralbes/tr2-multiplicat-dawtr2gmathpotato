@@ -519,7 +519,8 @@ $.fn.boom = function(opts) {
     }
 
     function makeSprite(x, y) {
-    $target.children('img').remove();
+    // $target.children('img').remove(); //se oculta la imagen
+    $target.children('img').hide(); 
     for (let i = 0; i < m; i++) {
         for (let j = 0; j < n; j++) {
             for (let k = 0; k < 4; k++) {  // Dividir cada pelota en 4 pedazos
@@ -528,6 +529,7 @@ $.fn.boom = function(opts) {
                 var offsetY = pieceSize / 2 * Math.floor(k / 2);  // Ajustar la posición y de los pedazos
                 $(newPiece).attr('id', i + '-' + j + '-' + k);
                 $(newPiece).css({
+                    hidden: true,
                     width: pieceSize / 2,
                     height: pieceSize / 2,
                     position: 'absolute',
@@ -537,11 +539,17 @@ $.fn.boom = function(opts) {
                     background: j >= n / 2 ? 'linear-gradient(45deg, #f14b1e, #f1393e)' : 'linear-gradient(45deg, #f5912d, #f4b735)', // Colores diferentes para la derecha y el resto
                     backgroundPosition: (-j * pieceSize + offsetX) + 'px ' + (-i * pieceSize + offsetY) + 'px',
                 });
+
                 $target.append(newPiece);
+
             }
+
         }
     }
-
+    $target.css({
+        hidden: false
+    });
+    
     $target.css({
         background: ''
     });
@@ -567,9 +575,22 @@ $.fn.boom = function(opts) {
     }
 }
 
-makeSprite(100, 100);
+setTimeout(function () {
+        // Restaurar la visibilidad de la imagen completa
+        $target.children('img').show();
+
+        // Restaurar la visibilidad de cada fragmento individual
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                for (let k = 0; k < 4; k++) {
+                    $('#' + i + '-' + j + '-' + k).show();
+                }
+            }
+        }
+    }, 1000); // Esperar 1 segundo después de la explosión para restaurar la visibilidad
+    
+    makeSprite(100, 100);
     return $target;
 };
-
 
 </script>
