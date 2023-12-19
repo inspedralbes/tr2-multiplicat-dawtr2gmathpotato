@@ -11,8 +11,6 @@ import { start } from 'node:repl';
 const app = express();
 var lastRoom = 0;
 var gameRooms = [];
-var timer = 0;
-var timerAnterior = 0;
 app.use(cors());
 const server = createServer(app);
 
@@ -51,7 +49,7 @@ io.on('connection', (socket) => {
         if (gameRooms.length == 0) {
             gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0, timer: 0, timerAnterior: 0 });
         } else {
-            if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started == true) {
+            if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started === true) {
                 lastRoom++;
                 gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0, timer: 0, timerAnterior: 0 });
             }
@@ -78,7 +76,7 @@ io.on('connection', (socket) => {
             console.log("startGame");
             getPreguntes(gameRooms[data.roomPosition]);
             iniciarTimer(data.roomPosition);
-            startTimer();
+            startTimer(data.roomPosition);
             io.to("gameRoom" + data.roomPosition).emit('gameStarted', data.gameStarted);
             //    CambiaEsta =
         }
@@ -110,7 +108,6 @@ io.on('connection', (socket) => {
     function newPregunta(room) {
         console.log("pregunta actual: ", room.pregActual);
         io.to(room.roomName).emit('pregunta', { "id": room.preguntas[room.pregActual].id_pregunta, "pregunta": room.preguntas[room.pregActual].pregunta });
-        room.pregActual++;
     }
     function getUserWithBomb(room) {
         for (let i = 0; i < gameRooms[room].users.length; i++) {
@@ -136,27 +133,29 @@ io.on('connection', (socket) => {
                 console.log(gameRooms[data.room].users[userWithBomb].bomba);
                 if (userWithBomb == gameRooms[data.room].users.length - 1) {
                     gameRooms[data.room].users[0].bomba = true;
-                    if (timerAnterior > 20) {
-                        timerAnterior = timerAnterior - 5;
+                    if (gameRooms[data.room].timerAnterior > 20) {
+                        gameRooms[data.room].timerAnterior = gameRooms[data.room].timerAnterior - 5;
                     } else {
-                        if (timerAnterior > 5) {
-                            timerAnterior = timerAnterior - 2;
+                        if (gameRooms[data.room].timerAnterior > 5) {
+                            gameRooms[data.room].timerAnterior = gameRooms[data.room].timerAnterior - 2;
                         }
                     }
                 } else {
                     gameRooms[data.room].users[userWithBomb + 1].bomba = true;
                 }
-
+                gameRooms[data.room].timer = gameRooms[data.room].timerAnterior;
                 io.to("gameRoom" + data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
+                
             } else {
                 console.log("resposta correcta!");
                 gameRooms[data.room].pregActual++;
                 gameRooms[data.room].users[userWithBomb].bomba = true;
-                gameRooms[data.room].users[userWithBomb].timer -= 10;
+                gameRooms[data.room].timer -= 10;
                 io.to("gameRoom" + data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
             }
         } else {
             if (gameRooms[data.room].users[userWithBomb].id == socket.id) {
+                gameRooms[data.room].timer = gameRooms[data.room].timerAnterior;
                 console.log("resposta incorrecta!");
                 gameRooms[data.room].pregActual++;
                 gameRooms[data.room].users[userWithBomb].bomba = true;
@@ -191,7 +190,7 @@ io.on('connection', (socket) => {
             }
         }
         newPregunta(gameRooms[data.room]);
-        timer = timerAnterior;
+        
     });
 
 
@@ -200,42 +199,55 @@ io.on('connection', (socket) => {
 
         switch (size) {
             case 3:
-                timer = 31;
+                gameRooms[roomPosition].timer = 31;
                 break;
             case 4:
-                timer = 36;
+                gameRooms[roomPosition].timer = 36;
                 break;
             case 5:
             case 6:
-                timer = 41;
+                gameRooms[roomPosition].timer = 41;
                 break;
             default:
-                timer = 0;
+                gameRooms[roomPosition].timer = 0;
                 break;
         }
-        timerAnterior = timer;
+        gameRooms[roomPosition].timerAnterior =  gameRooms[roomPosition].timer;
     }
 
-    function startTimer() {
-        if (timer > 0) {
+    function startTimer(roomPosition) {
+        if (gameRooms[roomPosition].timer > 0) {
             setTimeout(() => {
-                timer--;
-                io.to("gameRoom" + lastRoom).emit('timer', timer);
-                console.log("tiempo --> ", timer);
-                startTimer();
+                gameRooms[roomPosition].timer--;
+                io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
+                console.log("tiempo --> ", gameRooms[roomPosition].timer);
+                startTimer(roomPosition);
             }, 1000);
         } else {
             console.log("timer acabado");
-            timer = timerAnterior - 1;
-            io.to("gameRoom" + lastRoom).emit('timer', timer);
-            let userWithBomb = getUserWithBomb(lastRoom);
-            if (userWithBomb == gameRooms[lastRoom].users.length - 1) {
-                gameRooms[lastRoom].users[0].bomba = true;
-            } else {
-                gameRooms[lastRoom].users[userWithBomb + 1].bomba = true;
+            gameRooms[roomPosition].timer = gameRooms[roomPosition].timerAnterior - 1;
+            io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
+            let userWithBomb = getUserWithBomb(roomPosition);
+            gameRooms[roomPosition].users[userWithBomb].lives--;
+            if (gameRooms[roomPosition].users[userWithBomb].lives==0){
+                if (userWithBomb == gameRooms[roomPosition].users.length - 1) {
+                    gameRooms[roomPosition].users[0].bomba = true;
+                }
+                else {
+                    gameRooms[roomPosition].users[userWithBomb + 1].bomba = true;
+                }
+                let my_socket = io.sockets.sockets.get(gameRooms[roomPosition].users[userWithBomb].id);
+                my_socket.leave(gameRooms[roomPosition].roomName);
+                my_socket.emit('userLost', gameRooms[roomPosition].users[userWithBomb]);
+                gameRooms[roomPosition].users.splice(userWithBomb, 1);
+                if (gameRooms[roomPosition].users.length == 1) {
+                    io.to(gameRooms[roomPosition].roomName).emit('gameOver', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
+                }
             }
-            newPregunta(gameRooms[lastRoom]);
-            startTimer();
+            io.to(gameRooms[roomPosition].roomName).emit('changeBomb', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
+            gameRooms[roomPosition].pregActual++;
+            newPregunta(gameRooms[roomPosition]);
+            startTimer(roomPosition);
         }
     }
 

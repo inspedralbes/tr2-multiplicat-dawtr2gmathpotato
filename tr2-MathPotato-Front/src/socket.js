@@ -92,7 +92,7 @@ function getCurrentUser(users) {
     });
 
     socket.on("userLost", (UsersData) => {
-        socket.emit('join', {"username":UsersData.usernamem, "image":UsersData.image});
+        socket.emit('join', {"username":UsersData.username, "image":UsersData.image});
         
     });
 
