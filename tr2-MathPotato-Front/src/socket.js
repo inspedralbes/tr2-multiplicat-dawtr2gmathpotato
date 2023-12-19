@@ -92,9 +92,10 @@ function getCurrentUser(users) {
     });
 
     socket.on("userLost", (UsersData) => {
+        const store = useAppStore();
         socket.emit('join', {"username":UsersData.username, "image":UsersData.image});
-        
-    });
+        store.setGameStarted(false);
+        });
 
     // socket.on("gameRooms", (gameRooms) => {
     //     const store = useAppStore();

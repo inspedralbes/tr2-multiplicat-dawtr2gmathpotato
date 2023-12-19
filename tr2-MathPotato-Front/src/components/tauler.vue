@@ -17,9 +17,9 @@
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                    v-if="!gameStarted">START!</Button>
+                :class="[gameStarted ? 'hidden' : '']">START!</Button>
 
-                <div v-if="gameStarted" class="gameContainer">
+                <div :class="[gameStarted ? '' : 'hidden']"  class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
@@ -302,7 +302,6 @@ import { useSSRContext, useTransitionState } from 'vue';
 export default {
     data() {
         return {
-            gameStarted: false,
             pregunta: {},
             respuesta: "",
             timer: 0,
@@ -330,7 +329,6 @@ export default {
             let store = useAppStore();
             return store.getGameStarted();
         }
-
     },
     watch: {
         users: {
@@ -345,6 +343,9 @@ export default {
         }
     },
     methods: {
+        didStart(){
+            console.log(this.gameStarted);
+        },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
@@ -473,9 +474,11 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
         },
     },
     mounted() {
-        console.log(this.users);
         return this.users.findIndex(user => user.bomba === true);
         //return this.users.users.filter(user => user.bomba === true);
+        
+
     }
 }
+
 </script>
