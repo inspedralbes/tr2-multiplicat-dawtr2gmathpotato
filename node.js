@@ -196,6 +196,23 @@ io.on('connection', (socket) => {
 
         }
     });
+    async function fetchRanking() {
+        try {
+            const response = await fetch('http://localhost:8000/api/ranking');
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const data = await response.json();
+            
+            console.log(data);
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+        }
+    }
+    
+    fetchRanking();
 
     socket.on('disconnect', () => {
         const usuarioDesconectadoIndex = usersConectados.findIndex(user => user.id === socket.id);
