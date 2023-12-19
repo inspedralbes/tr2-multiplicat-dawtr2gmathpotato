@@ -519,39 +519,44 @@ $.fn.boom = function(opts) {
     }
 
     function makeSprite(x, y) {
-        $target.children('img').remove();
-        for (let i = 0; i < m; i++) {
-            for (let j = 0; j < n; j++) {
-                var newSprite = document.createElement('div');
-                $(newSprite).attr('id', i + '-' + j);
-                $(newSprite).css({
-                    width: pieceSize,
-                    height: pieceSize,
+    $target.children('img').remove();
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            for (let k = 0; k < 4; k++) {  // Dividir cada pelota en 4 pedazos
+                var newPiece = document.createElement('div');
+                var offsetX = pieceSize / 2 * (k % 2);  // Ajustar la posición x de los pedazos
+                var offsetY = pieceSize / 2 * Math.floor(k / 2);  // Ajustar la posición y de los pedazos
+                $(newPiece).attr('id', i + '-' + j + '-' + k);
+                $(newPiece).css({
+                    width: pieceSize / 2,
+                    height: pieceSize / 2,
                     position: 'absolute',
-                    "background-color": "orange",
-                    top: i * pieceSize,
-                    left: j * pieceSize,
+                    top: i * pieceSize + offsetY,
+                    left: j * pieceSize + offsetX,
                     borderRadius: '50%', // Hacer que el elemento sea redondo
-                    backgroundPosition: -j * pieceSize + 'px ' + (-i * pieceSize) + 'px',
+                    background: j >= n / 2 ? 'linear-gradient(45deg, #f14b1e, #f1393e)' : 'linear-gradient(45deg, #f5912d, #f4b735)', // Colores diferentes para la derecha y el resto
+                    backgroundPosition: (-j * pieceSize + offsetX) + 'px ' + (-i * pieceSize + offsetY) + 'px',
                 });
-                $target.append(newSprite);
+                $target.append(newPiece);
             }
         }
+    }
 
-        $target.css({
-            background: ''
-        });
-        $('body').css({
-            overflow: 'hidden'
-        });
+    $target.css({
+        background: ''
+    });
+    $('body').css({
+        overflow: 'hidden'
+    });
 
-        for (let i = 0; i < m; i++) {
-            for (let j = 0; j < n; j++) {
-                sx = j * pieceSize < x ? -1 * Math.random() * duration : Math.random() * duration;
-                sy = Math.abs(sx * (i * pieceSize - y) / (j * pieceSize - x));
-                sy = i * pieceSize < y ? -sy : sy;
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            for (let k = 0; k < 4; k++) {
+                sx = (j * pieceSize + pieceSize / 2 * (k % 2)) < x ? -1 * Math.random() * duration : Math.random() * duration;
+                sy = Math.abs(sx * ((i * pieceSize + pieceSize / 2 * Math.floor(k / 2)) - y) / ((j * pieceSize + pieceSize / 2 * (k % 2)) - x));
+                sy = (i * pieceSize + pieceSize / 2 * Math.floor(k / 2)) < y ? -sy : sy;
                 if (!gravity) {
-                    $('#' + i + '-' + j).animate({
+                    $('#' + i + '-' + j + '-' + k).animate({
                         top: '+=' + sy,
                         left: '+=' + sx,
                         opacity: 0
@@ -560,8 +565,9 @@ $.fn.boom = function(opts) {
             }
         }
     }
-    makeSprite(100, 100);
+}
 
+makeSprite(100, 100);
     return $target;
 };
 
