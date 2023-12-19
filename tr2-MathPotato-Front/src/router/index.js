@@ -5,7 +5,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/guest',
+      path: '/',
       name: 'guest',
       component: () => import('../components/GuestView.vue') 
     },
@@ -43,6 +43,7 @@ const router = createRouter({
       name: 'roomsView',
       component: () => import('../components/roomsView.vue')
     }
+
 
   ]
 })

@@ -22,17 +22,25 @@ export const useAppStore = defineStore('app', {
         },
         users:[],
         pregunta: {
-            id_pregunta:"",
+            id_pregunta:"", 
             pregunta:""
         },
         respostaAnterior: true,
-        gameStarted: false
+        timer: 0,
+        gameStarted: false,
 
     }), 
     actions: {
         setRoomName(roomGame){
             this.infoGame.rooms.gameRooms[0].roomName = roomGame;
             console.log(this.infoGame.rooms.gameRooms[0].roomName);
+        },
+        setGameStarted(gameStarted){
+            this.gameStarted = gameStarted;
+        
+        },
+        getGameStarted(){
+            return this.gameStarted;
         },
         setGameRooms(gameRooms){
             this.infoGame.rooms.gameRooms = gameRooms;
@@ -97,12 +105,11 @@ export const useAppStore = defineStore('app', {
         getRespostaAnterior(){
             return this.respostaAnterior;
         },
-        setGameStarted(gameStarted){
-            console.log("gameStarted");
-            this.gameStarted = gameStarted;
+        setTimer(timerValue){
+            this.timer = timerValue;
         },
-        getGameStarted(){
-            return this.gameStarted;
+        getTimer(){
+            return this.timer;
         }
     }
 });
