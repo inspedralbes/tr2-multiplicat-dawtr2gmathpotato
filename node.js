@@ -131,7 +131,6 @@ io.on('connection', (socket) => {
 
         }
     });
-    
     function getPreguntes() {
 
         fetch(URL)
