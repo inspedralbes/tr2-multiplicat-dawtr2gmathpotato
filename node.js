@@ -110,7 +110,10 @@ io.on('connection', (socket) => {
     function newPregunta(room) {
         console.log("pregunta actual: ", room.pregActual);
         io.to(room.roomName).emit('pregunta', { "id": room.preguntas[room.pregActual].id_pregunta, "pregunta": room.preguntas[room.pregActual].pregunta });
-        room.pregActual++;
+        if (room.timer == 0) {
+            room.pregActual++;
+            io.to(room.roomName).emit('pregunta', { "id": room.preguntas[room.pregActual].id_pregunta, "pregunta": room.preguntas[room.pregActual].pregunta });
+        }
     }
     function getUserWithBomb(room) {
         for (let i = 0; i < gameRooms[room].users.length; i++) {
