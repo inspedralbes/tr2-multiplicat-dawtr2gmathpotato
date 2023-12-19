@@ -10,8 +10,12 @@ use Illuminate\Support\Facades\Hash;
 class usuariosController extends Controller
 {
     public function register(Request $request) {
+<<<<<<< HEAD
         
             
+=======
+
+>>>>>>> Register&LoginWorking
             $request->validate([
                 'nombre_usuario' => 'required|string|max:50',
                 'email' => 'required|string|email|unique:usuarios',

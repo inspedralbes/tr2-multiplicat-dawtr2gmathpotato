@@ -6,11 +6,12 @@
         <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
         
         <span class="p-float-label">
-            <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
+            <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" @keyup.enter="onSubmit()"/>
             <label for="value">Name</label>
         </span>
         <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
-        <Button @click="onSubmit()" label="Submit" />
+
+        <Button @click="onSubmit()"  label="Submit" />
         <Toast />
 
         </div>
