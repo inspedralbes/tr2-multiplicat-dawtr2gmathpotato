@@ -35,6 +35,13 @@ export const useAppStore = defineStore('app', {
             console.log(this.guestInfo.id);
             
         },
+        setUserLogged() {
+            this.userInfo.username = this.guestInfo.username;
+            this.userInfo.image = this.guestInfo.image;
+        },
+        getUserLogged(){
+
+        },
         getGuestInfo() {
             return this.guestInfo;
         },

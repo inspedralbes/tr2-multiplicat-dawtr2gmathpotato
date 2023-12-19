@@ -45,7 +45,7 @@ export default {
         },
         Login(){
             socket.emit('login', {email:this.email, password:this.password});
-            this.$router.push({ path: '/play' });
+            this.$router.push({ path: '/homeroom' });
         }
     },
     //     mounted() {

@@ -37,6 +37,11 @@ const router = createRouter({
       name: 'landingPageView',
       component: () => import('../components/LandingPageView.vue')
 
+    },
+    {
+      path: '/homeroom',
+      name: 'homeroom',
+      component: () => import('../components/HomeRoom.vue')
     }
 
   ]
