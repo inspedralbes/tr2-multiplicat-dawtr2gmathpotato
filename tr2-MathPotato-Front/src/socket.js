@@ -98,7 +98,3 @@ function getCurrentUser(users) {
     // });
 // });
 
-socket.on('timer', (timerValue) => {
-    const store = useAppStore();
-    store.setTimer(timerValue);
-});
