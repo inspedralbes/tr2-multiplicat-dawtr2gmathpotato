@@ -78,7 +78,6 @@ io.on('connection', (socket) => {
                 
             }
         }).then(userData => {
-            console.log("aaaaaaaaaaaaaaaaaaaaa");
             console.log(userData);
         }).catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
@@ -132,7 +131,7 @@ io.on('connection', (socket) => {
 
         }
     });
-
+    
     function getPreguntes() {
 
         fetch(URL)

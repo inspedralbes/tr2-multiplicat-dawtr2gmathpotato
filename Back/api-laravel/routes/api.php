@@ -8,15 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [UsuariosController::class, 'register']);
 Route::post('/login', [UsuariosController::class, 'login']);
+Route::post('/logout', [UsuariosController::class, 'logout'])->middleware('auth');
+Route::get('/ranking', [UsuariosController::class, 'ranking']);
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('logout', [UsuariosController::class, 'logout']);
-    Route::get('PerfilUsuari', [UsuariosController::class, 'PerfilUsuari']);
-});
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 
 // Route::resource('preguntes', PreguntesController::class);
