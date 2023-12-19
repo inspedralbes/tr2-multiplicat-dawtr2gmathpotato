@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
-                    class="bomb" id="bomb"><span class="bombCounter">{{ contador }}</span></div>
+                    class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
                     v-if="!gameStarted">START!</Button>
@@ -87,7 +87,7 @@
 
 .moveBomb {
     animation-name: bombMovement;
-    animation-duration: 2s;
+    animation-duration: 0.8s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-direction: alternate;
@@ -268,8 +268,8 @@
 
 .bombCounter {
     position: absolute;
-    top: 56%;
-    left: 45%;
+    top: 6vw;
+    left: 9.3vh;
     animation-name: hunch;
     animation-duration: 1s;
     animation-iteration-count: infinite;
@@ -302,8 +302,10 @@ import { useSSRContext, useTransitionState } from 'vue';
 export default {
     data() {
         return {
+            gameStarted: false,
             pregunta: {},
             respuesta: "",
+            timer: 0,
 
         };
     },
@@ -316,13 +318,17 @@ export default {
             let store = useAppStore();
             return store.getUsers();
         },
-        gameStarted() {
+        timer() {
             let store = useAppStore();
-            return store.getGameStarted();
+            return store.getTimer();
         },
         message() {
             let store = useAppStore();
             return store.getPregunta();
+        },
+        gameStarted() {
+            let store = useAppStore();
+            return store.getGameStarted();
         }
 
     },
@@ -456,7 +462,7 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
 
                 setTimeout(() => {
                     document.getElementById("bombContainer").classList.remove("moveBomb");
-                }, 2000);
+                }, 800);
             }
 
         },

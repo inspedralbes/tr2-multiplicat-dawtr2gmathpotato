@@ -14,7 +14,6 @@ import 'primeicons/primeicons.css'
 //import components
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
-import AnimateOnScroll from 'primevue/animateonscroll';
 
 import App from './App.vue'
 import router from './router'
@@ -31,6 +30,5 @@ app.use(PrimeVue);
 
 app.component('InputText', InputText);
 app.component('Button', Button);
-app.directive('animateonscroll', AnimateOnScroll);
 
 app.mount('#app')
