@@ -23,6 +23,7 @@
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
+                    
                 </div>
             </div>
         </div>
@@ -328,7 +329,9 @@ export default {
         gameStarted() {
             let store = useAppStore();
             return store.getGameStarted();
-        }
+        },
+        
+        
     },
     watch: {
         users: {
@@ -340,7 +343,14 @@ export default {
                 }
                 console.log(newVal);
             }
-        }
+        },
+        // gameWinner(newVal) {
+        //     // Cambiar gameStarted a false cuando gameWinner sea true
+        //     if (newVal) {
+        //         let store = useAppStore();
+        //         store.setGameStarted(false);
+        //     }
+        // },
     },
     methods: {
         didStart(){

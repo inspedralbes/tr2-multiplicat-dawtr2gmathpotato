@@ -102,9 +102,20 @@ function getCurrentUser(users) {
     //     console.log('Salas de juego: ', gameRooms);
     //     store.setGameRooms(gameRooms);
     // });
+
+    socket.on("finishGame", (dataPartida) => {
+        console.log('El juego ha terminado! ', dataPartida);
+        const store = useAppStore();
+        store.setGameStarted(dataPartida.gameStarted);
+        store.setTimer(dataPartida.timer);
+        // store.setGuestInfo({ lives: 0});
+        socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
+    });
 // });
 
 socket.on('timer', (timerValue) => {
     const store = useAppStore();
     store.setTimer(timerValue);
 });
+
+

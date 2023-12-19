@@ -28,6 +28,7 @@ export const useAppStore = defineStore('app', {
         respostaAnterior: true,
         timer: 0,
         gameStarted: false,
+        gameWinner: false,
 
     }), 
     actions: {
@@ -110,6 +111,12 @@ export const useAppStore = defineStore('app', {
         },
         getTimer(){
             return this.timer;
-        }
+        },
+        // setGameWinner(gameWinner){
+        //     this.gameWinner = gameWinner;
+        // },
+        // getGameWinner(){
+        //     return this.gameWinner;
+        // },
     }
 });

@@ -82,6 +82,15 @@ io.on('connection', (socket) => {
         }
     });
 
+    // socket.on('finishGame', (data) => {
+    //     console.log("finishGame");
+    //     gameRooms[data.roomPosition].users[0].bomba = false;
+    //     gameRooms[data.roomPosition].gameStarted = false;
+    //     gameRooms[data.roomPosition].timer = 0;
+    //     console.log("game over");
+    //     io.to("gameRoom" + data.roomPosition).emit('gameOver', { "arrayUsers": gameRooms[data.roomPosition].users, "bombChange": true });
+    // });
+
     function getPreguntes(room) {
         fetch(URL)
             .then(response => {
@@ -130,7 +139,7 @@ io.on('connection', (socket) => {
                 gameRooms[data.room].pregActual++;
                 gameRooms[data.room].users[userWithBomb].bomba = false;
 
-                console.log(gameRooms[data.room].users[userWithBomb].bomba);
+                console.log("user bomba: "+gameRooms[data.room].users[userWithBomb].bomba);
                 if (userWithBomb == gameRooms[data.room].users.length - 1) {
                     gameRooms[data.room].users[0].bomba = true;
                     if (gameRooms[data.room].timerAnterior > 20) {
@@ -160,7 +169,7 @@ io.on('connection', (socket) => {
                 gameRooms[data.room].pregActual++;
                 gameRooms[data.room].users[userWithBomb].bomba = true;
                 gameRooms[data.room].users[userWithBomb].lives--;
-                console.log(gameRooms[data.room].users[userWithBomb].lives);
+                console.log("lives restantes -> " +gameRooms[data.room].users[userWithBomb].lives);
 
                 if (gameRooms[data.room].users[userWithBomb].lives == 0) {
                     
@@ -222,8 +231,17 @@ io.on('connection', (socket) => {
                 io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
                 console.log("tiempo --> ", gameRooms[roomPosition].timer);
                 startTimer(roomPosition);
+                
+                if(gameRooms[roomPosition].users.length==1){
+                    // console.log("game finished!!!!!!!!!");
+                    // gameRooms[roomPosition].timer=0;
+                    gameRooms[roomPosition].gameStarted=false;
+                    gameRooms[roomPosition].timer = 0;
+                    io.to(gameRooms[roomPosition].roomName).emit('finishGame'), ({ gameStarted: false, timer: 0});   
+                }
             }, 1000);
         } else {
+
             console.log("timer acabado");
             gameRooms[roomPosition].timer = gameRooms[roomPosition].timerAnterior - 1;
             io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
@@ -240,8 +258,17 @@ io.on('connection', (socket) => {
                 my_socket.leave(gameRooms[roomPosition].roomName);
                 my_socket.emit('userLost', gameRooms[roomPosition].users[userWithBomb]);
                 gameRooms[roomPosition].users.splice(userWithBomb, 1);
+
                 if (gameRooms[roomPosition].users.length == 1) {
-                    io.to(gameRooms[roomPosition].roomName).emit('gameOver', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
+                    gameRooms[roomPosition].gameStarted=false;
+                    // gameRooms[roomPosition].lives=0;
+                    gameRooms[roomPosition].timer = 0;
+                    io.to(gameRooms[roomPosition].roomName).emit('finishGame', ({ gameStarted: false, timer: 0}));
+
+                    // gameRooms[roomPosition].users[0].bomba = false;
+                    
+                    // console.log("game over");
+                    // io.to(gameRooms[roomPosition].roomName).emit('gameOver', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
                 }
             }
             io.to(gameRooms[roomPosition].roomName).emit('changeBomb', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
