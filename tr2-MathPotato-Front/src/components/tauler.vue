@@ -499,7 +499,8 @@ $.fn.boom = function(opts) {
         duration = opts.duration;
 
     var sx,
-        sy;
+        sy,
+        count = 0;
 
     var n = $target.width() / pieceSize,
         m = $target.height() / pieceSize;
@@ -519,75 +520,75 @@ $.fn.boom = function(opts) {
     }
 
     function makeSprite(x, y) {
-    // $target.children('img').remove(); //se oculta la imagen
-    $target.children('img').hide(); 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            for (let k = 0; k < 4; k++) {  // Dividir cada pelota en 4 pedazos
-                var newPiece = document.createElement('div');
-                var offsetX = pieceSize / 2 * (k % 2);  // Ajustar la posición x de los pedazos
-                var offsetY = pieceSize / 2 * Math.floor(k / 2);  // Ajustar la posición y de los pedazos
-                $(newPiece).attr('id', i + '-' + j + '-' + k);
-                $(newPiece).css({
-                    hidden: true,
-                    width: pieceSize / 2,
-                    height: pieceSize / 2,
-                    position: 'absolute',
-                    top: i * pieceSize + offsetY,
-                    left: j * pieceSize + offsetX,
-                    borderRadius: '50%', // Hacer que el elemento sea redondo
-                    background: j >= n / 2 ? 'linear-gradient(45deg, #f14b1e, #f1393e)' : 'linear-gradient(45deg, #f5912d, #f4b735)', // Colores diferentes para la derecha y el resto
-                    backgroundPosition: (-j * pieceSize + offsetX) + 'px ' + (-i * pieceSize + offsetY) + 'px',
-                });
+        // $target.children('img').remove(); //se oculta la imagen
+        $target.children('img').hide(); 
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                for (let k = 0; k < 4; k++) {  // Dividir cada pelota en 4 pedazos
+                    var newPiece = document.createElement('div');
+                    var offsetX = pieceSize / 2 * (k % 2);  // Ajustar la posición x de los pedazos
+                    var offsetY = pieceSize / 2 * Math.floor(k / 2);  // Ajustar la posición y de los pedazos
+                    $(newPiece).attr('id', i + '-' + j + '-' + k);
+                    $(newPiece).css({                
+                        width: pieceSize / 2,
+                        height: pieceSize / 2,
+                        position: 'absolute',
+                        top: i * pieceSize + offsetY,
+                        left: j * pieceSize + offsetX,
+                        borderRadius: '50%', // Hacer que el elemento sea redondo
+                        background: j >= n / 2 ? 'linear-gradient(45deg, #f14b1e, #f1393e)' : 'linear-gradient(45deg, #f5912d, #f4b735)', // Colores diferentes para la derecha y el resto
+                        backgroundPosition: (-j * pieceSize + offsetX) + 'px ' + (-i * pieceSize + offsetY) + 'px',
+                    });
 
-                $target.append(newPiece);
+                    $target.append(newPiece);
 
-            }
-
-        }
-    }
-    $target.css({
-        hidden: false
-    });
-    
-    $target.css({
-        background: ''
-    });
-    $('body').css({
-        overflow: 'hidden'
-    });
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            for (let k = 0; k < 4; k++) {
-                sx = (j * pieceSize + pieceSize / 2 * (k % 2)) < x ? -1 * Math.random() * duration : Math.random() * duration;
-                sy = Math.abs(sx * ((i * pieceSize + pieceSize / 2 * Math.floor(k / 2)) - y) / ((j * pieceSize + pieceSize / 2 * (k % 2)) - x));
-                sy = (i * pieceSize + pieceSize / 2 * Math.floor(k / 2)) < y ? -sy : sy;
-                if (!gravity) {
-                    $('#' + i + '-' + j + '-' + k).animate({
-                        top: '+=' + sy,
-                        left: '+=' + sx,
-                        opacity: 0
-                    }, Math.random() * duration + duration);
                 }
+
             }
         }
-    }
-}
+        $target.css({
+            hidden: false
+        });
+        
+        $target.css({
+            background: ''
+        });
+        $('body').css({
+            overflow: 'hidden'
+        });
 
-setTimeout(function () {
-        // Restaurar la visibilidad de la imagen completa
-        $target.children('img').show();
-
-        // Restaurar la visibilidad de cada fragmento individual
         for (let i = 0; i < m; i++) {
             for (let j = 0; j < n; j++) {
                 for (let k = 0; k < 4; k++) {
-                    $('#' + i + '-' + j + '-' + k).show();
+                    sx = (j * pieceSize + pieceSize / 2 * (k % 2)) < x ? -1 * Math.random() * duration : Math.random() * duration;
+                    sy = Math.abs(sx * ((i * pieceSize + pieceSize / 2 * Math.floor(k / 2)) - y) / ((j * pieceSize + pieceSize / 2 * (k % 2)) - x));
+                    sy = (i * pieceSize + pieceSize / 2 * Math.floor(k / 2)) < y ? -sy : sy;
+                    if (!gravity) {
+                        
+                        $('#' + i + '-' + j + '-' + k).animate({
+                                top: '+='+sy,
+                                left: '+='+sx,
+                                opacity: 0
+                            }, Math.random()*duration+duration,'swing', function(){
+                                $(this).animate({
+                                    top: i * pieceSize,
+                                    left: j * pieceSize,
+                                    opacity: 1
+                                }, duration*1.5, 'swing',function(){
+                                    $('#' + i + '-' + j + '-' + k).remove();
+                                    count++;
+                                    if (count == 400) {
+                                        $target.children('img').show();
+                                        count = 0;
+                                    }
+                                });
+                            })
+                    }
                 }
             }
         }
-    }, 1000); // Esperar 1 segundo después de la explosión para restaurar la visibilidad
+       
+    }
     
     makeSprite(100, 100);
     return $target;
