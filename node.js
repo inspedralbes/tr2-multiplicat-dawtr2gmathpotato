@@ -68,6 +68,59 @@ io.on('connection', (socket) => {
         io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
         console.log('Salas: ', io.sockets.adapter.rooms);
     });
+    socket.on('register', (userData) => {
+        console.log(userData);
+        fetch('http://localhost:8000/api/register', {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                if (usersConectados.length === 0) {
+                    usersConectados.push({ username: userData.username, id: socket.id, bomba: true, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
+                } else {
+                    usersConectados.push({ username: userData.username, id: socket.id, bomba: false, image: './src/assets/Icon_' + userData.foto_perfil + '.png' });
+                }
+                io.emit('usersConnected', usersConectados);
+                return response.json(); 
+            } else {
+                console.log(response);
+                throw new Error('Network response was not ok.');
+                
+            }
+        }).then(userData => {
+            console.log("aaaaaaaaaaaaaaaaaaaaa");
+            console.log(userData);
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    });
+    socket.on('login', async (data) => {
+        // console.log(data);
+        await getUser(data);
+    });
+    async function getUser(data) {
+        try {
+            console.log("data to send...",data)
+            const response = await fetch('http://localhost:8000/api/login', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            // console.log("response..??", response);
+            if (response) {
+                
+                const responseData = await response.json();
+                console.log("response.ok....",responseData);
+            }
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+        }
+    }
 
 
     socket.on('startGame', (data) => {
@@ -171,13 +224,9 @@ io.on('connection', (socket) => {
 
 
     });
-    socket.on('login', (data) => { 
-        console.log(data);
-    });
-
+});
     // socket.emit("username");
 
-});
 // io.emit('arrayUsers', usersConectados);
 
 server.listen(5175, () => {
