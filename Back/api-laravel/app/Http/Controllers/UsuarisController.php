@@ -12,7 +12,7 @@ class UsuarisController extends Controller
         $request->validate([
             'username' => 'required|string|max:50',
             'email' => 'required|string|email|unique:usuaris',
-        'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6|confirmed',
             'foto_perfil' => [
                 'required',
                 Rule::in(['1', '2', '3', '4', '5', '6', '7', '8', '9']), // Reemplaza 'valor1', 'valor2', 'valor3' con los valores permitidos
@@ -28,7 +28,7 @@ class UsuarisController extends Controller
             'status' => 1,
             'message' => 'Usuari creat correctament'
         ]);
-
+        
     }
     public function login(Request $request){
         $request->validate([
@@ -58,7 +58,7 @@ class UsuarisController extends Controller
         }
     }
     public function logout(){
-
+       
     }
     public function PerfilUsuari( ){
     }

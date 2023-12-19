@@ -10,25 +10,25 @@ use Illuminate\Support\Facades\Hash;
 class usuariosController extends Controller
 {
     public function register(Request $request) {
-
-
+        
+            
             $request->validate([
-                'username' => 'required|string|max:50',
+                'nombre_usuario' => 'required|string|max:50',
                 'email' => 'required|string|email|unique:usuarios',
-                'password' => 'required|string|min:6|confirmed',
+                'contraseña' => 'required|string|min:6|confirmed',
                 'foto_perfil' => [
                     'required',
-                    Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+                    Rule::in(['1', '2', '3', '4', '5', '6', '7', '8', '9']),
                 ],
             ]);
             $usuario = new Usuarios();
-            $usuario->username = $request->username;
+            $usuario->nombre_usuario = $request->nombre_usuario;
             $usuario->email = $request->email;
-            $usuario->password = Hash::make($request->password);
+            $usuario->contraseña = Hash::make($request->contraseña);
             $usuario->foto_perfil = $request->foto_perfil;
-
+           
             $usuario->save();
-
+    
             return response()->json([
                 'status' => 1,
                 'message' => 'usuario creat correctament'
@@ -38,34 +38,35 @@ class usuariosController extends Controller
     public function login(Request $request){
         $request->validate([
             'email' => 'required|string|email',
-            'password' => 'required|string|min:6',
+            'contraseña' => 'required|string|min:6',
         ]);
-
+    
         // Cambia la línea siguiente para asignar el resultado de la consulta a $usuario
         $usuario = Usuarios::where("email", "=", $request->email)->first();
-
+    
         if ($usuario) {
-            if (Hash::check($request->password, $usuario->password)) {
-
+            if (Hash::check($request->contraseña, $usuario->contraseña)) {
+                $token = $usuario->createToken('auth_token')->plainTextToken;
                 return response()->json([
-                  'username' => $usuario->username,
-                  'foto_perfil' => $usuario->foto_perfil
+                    'status' => 1,
+                    'message' => 'usuario logejat correctament',
+                    'token' => $token
                 ]);
             } else {
                 return response()->json([
                     'status' => 0,
-                    'message' => 'password incorrecta'
+                    'message' => 'Contrasenya incorrecta'
                 ]);
             }
         } else {
             return response()->json([
                 'status' => 0,
-                'message' => 'Usuario no registrado'
+                'message' => 'usuario no registrat'
             ]);
         }
     }
     public function logout(){
-
+       
     }
     public function Perfilusuario( ){
     }

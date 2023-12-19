@@ -12,14 +12,14 @@
         <label for="email1" class="block text-900 font-medium mb-2">Email</label>
         <InputText id="email1" type="text" class="w-full mb-3" v-model="email"/>
 
-        <label for="password1" class="block text-900 font-medium mb-2">contraseña</label>
+        <label for="password1" class="block text-900 font-medium mb-2">Password</label>
         <InputText id="password1" type="password" class="w-full mb-3" v-model="password"/>
 
         <div class="flex align-items-center justify-content-between mb-6">
-            <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot contraseña?</a>
+            <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
         </div>
 
-        <Button label="Sign In" icon="pi pi-user" class="w-full" @click="Login"></Button>
+        <Button label="Sign In" icon="pi pi-user" class="w-full"></Button>
     </div>
 </div>
 </template>
@@ -36,15 +36,16 @@ export default {
     },
     methods: {
         Register() {
-            this.$router.push({ path: '/register' });
+
+                this.$router.push({ path: '/register' });
             
         },
         handleUserList(users) {
             this.users = users;
             console.log(this.users);
         },
-        Login(){
-            socket.emit('login', {email:this.email, password:this.password});
+        Loggin(){
+            socket.emit('login', this.email, this.password);
             this.$router.push({ path: '/play' });
         }
     },

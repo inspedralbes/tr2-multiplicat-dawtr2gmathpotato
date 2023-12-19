@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id('id_pregunta');
             $table->string('pregunta', 100);
-            $table->string('user', 255)->foreign('username')->references('email')->on('usuarios');
+            $table->string('usuario', 255)->foreign('usuario')->references('email')->on('usuarios');
             $table->boolean('activo')->default(true);
-            }
-        );
+            }    
+        ); 
     }
 };
