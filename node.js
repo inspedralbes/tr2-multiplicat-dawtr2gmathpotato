@@ -16,8 +16,6 @@ var timerAnterior = 0;
 app.use(cors());
 const server = createServer(app);
 
-
-
 const URL = "http://127.0.0.1:8000/api/preguntes/random";
 
 const io = new Server(server, {
@@ -110,8 +108,9 @@ io.on('connection', (socket) => {
     }
 
     function newPregunta(room) {
+        console.log("pregunta actual: ", room.pregActual);
         io.to(room.roomName).emit('pregunta', { "id": room.preguntas[room.pregActual].id_pregunta, "pregunta": room.preguntas[room.pregActual].pregunta });
-
+        room.pregActual++;
     }
     function getUserWithBomb(room) {
         for (let i = 0; i < gameRooms[room].users.length; i++) {
@@ -155,7 +154,7 @@ io.on('connection', (socket) => {
             gameRooms[data.room].users[userWithBomb].bomba = true;
             io.to(data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": false });
 
-            newPregunta();
+            newPregunta(gameRooms[data.room]);
         }
         newPregunta(gameRooms[data.room]);
         timer = timerAnterior;
@@ -192,8 +191,16 @@ io.on('connection', (socket) => {
                 startTimer();
             }, 1000);
         } else {
-            timer = timerAnterior;
+            console.log("timer acabado");
+            timer = timerAnterior - 1;
             io.to("gameRoom" + lastRoom).emit('timer', timer);
+            let userWithBomb = getUserWithBomb(lastRoom);
+            if (userWithBomb == gameRooms[lastRoom].users.length - 1) {
+                gameRooms[lastRoom].users[0].bomba = true;
+            } else {
+                gameRooms[lastRoom].users[userWithBomb + 1].bomba = true;
+            }
+            newPregunta(gameRooms[lastRoom]);
             startTimer();
         }
     }
