@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password', 255);
             $table->integer('num_victorias')->default(0);
             $table->integer('num_derrotas')->default(0);
-            $table->enum ('foto_perfil', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+            $table->enum ('foto_perfil', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'pol', 'alvaro']);
         });
     }
 
