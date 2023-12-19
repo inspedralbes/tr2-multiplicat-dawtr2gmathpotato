@@ -4,7 +4,7 @@
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
-                        <div class="vidaContainer" v-for="n in user.lives-1" :key="n">
+                        <div class="vidaContainer" v-for="n in user.life" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
                         <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
@@ -17,13 +17,12 @@
                     class="bomb" id="bomb"><span class="bombCounter">{{ contador }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                :class="[gameStarted ? 'hidden' : '']">START!</Button>
+                    v-if="!gameStarted">START!</Button>
 
-                <div :class="[gameStarted ? '' : 'hidden']"  class="gameContainer">
+                <div v-if="gameStarted" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    
                 </div>
             </div>
         </div>
@@ -331,13 +330,8 @@ export default {
         message() {
             let store = useAppStore();
             return store.getPregunta();
-        },
-        gameStarted() {
-            let store = useAppStore();
-            return store.getGameStarted();
-        },
-        
-        
+        }
+
     },
     watch: {
         users: {
@@ -349,17 +343,9 @@ export default {
                 }
                 console.log(newVal);
             }
-        },
-        // gameWinner(newVal) {
-        //     // Cambiar gameStarted a false cuando gameWinner sea true
-        //     if (newVal) {
-        //         let store = useAppStore();
-        //         store.setGameStarted(false);
-        //     }
-        // },
+        }
     },
     methods: {
-        
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
@@ -488,12 +474,9 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
         },
     },
     mounted() {
+        console.log(this.users);
         return this.users.findIndex(user => user.bomba === true);
-        
         //return this.users.users.filter(user => user.bomba === true);
-        
-
     }
 }
-
 </script>

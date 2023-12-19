@@ -17,8 +17,7 @@ export const useAppStore = defineStore('app', {
             username: '',
             id: '',
             bomba: false,
-            image: './assets/Icon_2.png',
-            lives: 2
+            image: './assets/Icon_2.png'
         },
         users:[],
         pregunta: {
@@ -26,9 +25,7 @@ export const useAppStore = defineStore('app', {
             pregunta:""
         },
         respostaAnterior: true,
-        timer: 0,
-        gameStarted: false,
-        gameWinner: false,
+        gameStarted: false
 
     }), 
     actions: {
@@ -105,15 +102,6 @@ export const useAppStore = defineStore('app', {
         },
         getGameStarted(){
             return this.gameStarted;
-        },
-        getTimer(){
-            return this.timer;
-        },
-        // setGameWinner(gameWinner){
-        //     this.gameWinner = gameWinner;
-        // },
-        // getGameWinner(){
-        //     return this.gameWinner;
-        // },
+        }
     }
 });
