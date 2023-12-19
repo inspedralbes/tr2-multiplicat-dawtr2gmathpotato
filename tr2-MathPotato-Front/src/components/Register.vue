@@ -1,5 +1,6 @@
 <template>
-    <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+    <div id="Background">
+    <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 middle">
         <div class="text-center mb-5">
             <img src="../assets/LePotata.png" alt="Image" height="50" class="mb-3" />
             <div class="text-900 text-3xl font-medium mb-3">Benvingut!</div>
@@ -43,6 +44,7 @@
             <Button label="Sign In" icon="pi pi-user" class="w-full" @click="registrar"></Button>
         </div>
     </div>
+</div>
 </template>
 <style>
 #Image_gallery {
@@ -119,3 +121,20 @@ export default {
     },
 }
 </script>
+<style>
+#Background {
+    background-image: url(../assets/landing_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+   
+    opacity: 80%;
+    width: 99vw;
+    z-index: -1;
+}
+.middle {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+</style>
