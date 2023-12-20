@@ -41,7 +41,7 @@
                             class="icon"></label></div>
             </div>
 
-            <Button label="Sign In" icon="pi pi-user" class="w-full" @click="register"></Button>
+            <Button label="Sign In" icon="pi pi-user" class="w-full" @click="registrar"></Button>
         </div>
     </div>
 </div>
