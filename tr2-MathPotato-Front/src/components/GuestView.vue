@@ -36,7 +36,7 @@ export default {
                 this.errorMessage = 'Please enter your name';
             } else {
                 // Submit the form
-                socket.emit('join', {username:this.username, image:'./src/assets/Icon_1.png'});
+                socket.emit('join', {username:this.username, image:'./assets/Icon_1.png'});
 
 
                 this.$router.push({ path: '/play' });             

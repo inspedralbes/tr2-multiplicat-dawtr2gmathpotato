@@ -20,7 +20,7 @@ const server = createServer(app);
 const usersConectados = [];
 
 const objPreguntes = {};
-const URL = "http://127.0.0.1:8000/api/preguntes/random";
+const URL = "http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/preguntes/random";
 
 const io = new Server(server, {
     cors: {
@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
 
     socket.on('register', (userData) => {
         console.log(userData);
-        fetch('http://localhost:8000/api/register', {
+        fetch('http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/register', {
             method: 'POST',
             body: JSON.stringify(userData),
             headers: {
@@ -93,10 +93,10 @@ io.on('connection', (socket) => {
                 }
                 if (gameRooms[gameRooms.length - 1].users.length == 0) {
                     // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-                    gameRooms[gameRooms.length - 1].users.push({ username:userData.username, id: socket.id, bomba: true, image: "./src/assets/Icon_"+userData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
+                    gameRooms[gameRooms.length - 1].users.push({ username:userData.username, id: socket.id, bomba: true, image: "./assets/Icon_"+userData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
                 } else {
                     // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-                    gameRooms[gameRooms.length - 1].users.push({ username: userData.username, id: socket.id, bomba: false, image: "./src/assets/Icon_"+userData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
+                    gameRooms[gameRooms.length - 1].users.push({ username: userData.username, id: socket.id, bomba: false, image: "./assets/Icon_"+userData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
                 }
                 socket.join("gameRoom" + lastRoom);
                 console.log(gameRooms[gameRooms.length - 1].users);
@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
     async function getUser(data) {
         try {
             console.log("data to send...",data)
-            const response = await fetch('http://localhost:8000/api/login', {
+            const response = await fetch('http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/login', {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
@@ -135,7 +135,7 @@ io.on('connection', (socket) => {
                 
                 const responseData = await response.json();
                 console.log("response.ok....",responseData);
-
+                console.log(responseData)
                 if (gameRooms.length == 0) {
                     gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, preguntas: [], pregActual: 0, timer: 0, timerAnterior: 0 });
                 } else {
@@ -146,10 +146,10 @@ io.on('connection', (socket) => {
                 }
                 if (gameRooms[gameRooms.length - 1].users.length == 0) {
                     // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-                    gameRooms[gameRooms.length - 1].users.push({ username:responseData.username, id: socket.id, bomba: true, image: "./src/assets/Icon_"+responseData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
+                    gameRooms[gameRooms.length - 1].users.push({ username:responseData.username, id: socket.id, bomba: true, image: "./assets/Icon_"+responseData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
                 } else {
                     // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-                    gameRooms[gameRooms.length - 1].users.push({ username: responseData.username, id: socket.id, bomba: false, image: "./src/assets/Icon_"+responseData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
+                    gameRooms[gameRooms.length - 1].users.push({ username: responseData.username, id: socket.id, bomba: false, image: "./assets/Icon_"+responseData.foto_perfil+".png", roomPosition: lastRoom, lives: 3 });
                 }
                 socket.join("gameRoom" + lastRoom);
                 console.log(gameRooms[gameRooms.length - 1].users);
@@ -407,7 +407,7 @@ io.on('connection', (socket) => {
 });
 // io.emit('arrayUsers', usersConectados);
 
-server.listen(5175, () => {
-    console.log('Listening on http://localhost:5175');
+server.listen(3169, () => {
+    console.log('Listening on http://localhost:3169');
 
 });

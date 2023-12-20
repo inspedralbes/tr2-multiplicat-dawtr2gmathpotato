@@ -45,7 +45,8 @@ class usuariosController extends Controller
         if ($usuario) {
             if (Hash::check($request->password, $usuario->password)) {
                 return response()->json([
-                    
+                    'username' => $usuario->username,
+                    'foto_perfil' => $usuario->foto_perfil,
                 ]);
             } else {
                 return response()->json([
