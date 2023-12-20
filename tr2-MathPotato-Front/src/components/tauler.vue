@@ -4,7 +4,7 @@
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
-                        <div class="vidaContainer" v-for="n in user.life" :key="n">
+                        <div class="vidaContainer" v-for="n in user.lives-1" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
                         <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
@@ -14,21 +14,21 @@
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
-                    class="bomb" id="bomb"><span class="bombCounter">{{ contador }}</span></div>
+                    class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                    v-if="!gameStarted">START!</Button>
+                :class="[gameStarted ? 'hidden' : '']">START!</Button>
 
-                <div v-if="gameStarted" class="gameContainer">
+                <div :class="[gameStarted ? '' : 'hidden']"  class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
+                    
                 </div>
             </div>
         </div>
     </div>
 </template>
-
 <style scoped>
 :root {
     --xPositionAnt: 0;
@@ -49,7 +49,7 @@
     background-image: url("../assets/backround2.png");
     background-repeat: no-repeat;
     height: 100vh;
-    width: 99vw;
+    width: 100vw;
     background-size: cover;
     background-position: center;
 }
@@ -87,7 +87,7 @@
 
 .moveBomb {
     animation-name: bombMovement;
-    animation-duration: 2s;
+    animation-duration: 0.8s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-direction: alternate;
@@ -269,8 +269,8 @@
 
 .bombCounter {
     position: absolute;
-    top: 56%;
-    left: 45%;
+    top: 6vw;
+    left: 9.3vh;
     animation-name: hunch;
     animation-duration: 1s;
     animation-iteration-count: infinite;
@@ -294,9 +294,8 @@
 .userWithBomb{
     border: 4px solid #3772FF;
 }
-
 .userWithout{
-    filter: grayscale(60%) ;
+    filter: grayscale(30%) ;
     /* opacity: 0.7; */
     
 }
@@ -311,6 +310,7 @@ export default {
         return {
             pregunta: {},
             respuesta: "",
+            timer: 0,
 
         };
     },
@@ -323,15 +323,20 @@ export default {
             let store = useAppStore();
             return store.getUsers();
         },
-        gameStarted() {
+        timer() {
             let store = useAppStore();
-            return store.getGameStarted();
+            return store.getTimer();
         },
         message() {
             let store = useAppStore();
             return store.getPregunta();
-        }
-
+        },
+        gameStarted() {
+            let store = useAppStore();
+            return store.getGameStarted();
+        },
+        
+        
     },
     watch: {
         users: {
@@ -343,9 +348,17 @@ export default {
                 }
                 console.log(newVal);
             }
-        }
+        },
+        // gameWinner(newVal) {
+        //     // Cambiar gameStarted a false cuando gameWinner sea true
+        //     if (newVal) {
+        //         let store = useAppStore();
+        //         store.setGameStarted(false);
+        //     }
+        // },
     },
     methods: {
+        
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
@@ -463,7 +476,7 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
 
                 setTimeout(() => {
                     document.getElementById("bombContainer").classList.remove("moveBomb");
-                }, 2000);
+                }, 800);
             }
 
         },
@@ -474,9 +487,12 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
         },
     },
     mounted() {
-        console.log(this.users);
         return this.users.findIndex(user => user.bomba === true);
+        
         //return this.users.users.filter(user => user.bomba === true);
+        
+
     }
 }
+
 </script>

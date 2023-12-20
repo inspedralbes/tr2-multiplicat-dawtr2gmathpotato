@@ -1,4 +1,3 @@
-
 import { io } from "socket.io-client";
 // import { onMounted } from 'vue';
 import { useAppStore } from '@/stores/guestStore';
@@ -91,10 +90,29 @@ function getCurrentUser(users) {
         store.setRespostaAnterior(newUsersData.bombChange);
     });
 
+    socket.on("userLost", (UsersData) => {
+        const store = useAppStore();
+        socket.emit('join', {"username":UsersData.username, "image":UsersData.image});
+        store.setGameStarted(false);
+        });
+
     // socket.on("gameRooms", (gameRooms) => {
     //     const store = useAppStore();
     //     console.log('Salas de juego: ', gameRooms);
     //     store.setGameRooms(gameRooms);
     // });
-// });
 
+    socket.on('timer', (timerValue) => {
+        const store = useAppStore();
+        store.setTimer(timerValue);
+    });
+
+    socket.on("finishGame", (dataPartida) => {
+        console.log('El juego ha terminado! ', dataPartida);
+        const store = useAppStore();
+        store.setGameStarted(dataPartida.gameStarted);
+        store.setTimer(dataPartida.timer);
+        // store.setGuestInfo({ lives: 0});
+        socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
+        
+    });
