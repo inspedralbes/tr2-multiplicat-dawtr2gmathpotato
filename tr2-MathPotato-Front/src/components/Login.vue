@@ -1,6 +1,6 @@
 <template>
-    
-<div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+<div id="Background">    
+<div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 middle">
     <div class="text-center mb-5">
         <img src="../assets/LePotata.png" alt="Image" height="50" class="mb-3" />
         <div class="text-900 text-3xl font-medium mb-3">Benvingut!</div>
@@ -19,10 +19,28 @@
             <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
         </div>
 
-        <Button label="Sign In" icon="pi pi-user" class="w-full"></Button>
+        <Button @click="Loggin" label="Sign In" icon="pi pi-user" class="w-full"></Button>
     </div>
 </div>
+</div>
 </template>
+<style scoped> 
+#Background {
+    background-image: url(../assets/landing_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    opacity: 80%;
+    width: 99vw;
+    z-index: -1;
+}
+.middle {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+</style>
 <script>
 
 import { socket } from '../socket';
@@ -45,7 +63,7 @@ export default {
             console.log(this.users);
         },
         Loggin(){
-            socket.emit('login', this.email, this.password);
+            socket.emit('login', {email: this.email, password: this.password});
             this.$router.push({ path: '/play' });
         }
     },
