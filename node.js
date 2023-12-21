@@ -369,6 +369,7 @@ io.on('connection', (socket) => {
                     startTimer(roomPosition);
                 }
             }
+            startTimer(roomPosition);
             io.to(gameRooms[roomPosition].roomName).emit('changeBomb', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
             gameRooms[roomPosition].pregActual++;
             newPregunta(gameRooms[roomPosition]);
