@@ -345,10 +345,12 @@ export default {
                 if (newVal && newVal.length > 0 && this.encertada) {
                     console.log("change bomb");
                     this.changeBomb();
+                    this.respuesta = "";    
                 }
                 console.log(newVal);
             }
         },
+        
         // gameWinner(newVal) {
         //     // Cambiar gameStarted a false cuando gameWinner sea true
         //     if (newVal) {
