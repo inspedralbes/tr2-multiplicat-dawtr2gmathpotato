@@ -5,6 +5,8 @@ import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
 
+import { useAppStore } from './tr2-MathPotato-Front/src/stores/guestStore.js';
+
 // import fetch from 'node-fetch';
 const app = express();
 
@@ -130,7 +132,7 @@ io.on('connection', (socket) => {
             });
             // console.log("response..??", response);
             if (response) {
-
+                // console.log("response", response);
                 const responseData = await response.json();
                 console.log("response.ok....", responseData);
 
@@ -149,6 +151,7 @@ io.on('connection', (socket) => {
                     // Si ya hay usuarios, se agrega un nuevo usuario a la sala
                     gameRooms[gameRooms.length - 1].users.push({ username: responseData.username, id: socket.id, bomba: false, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
                 }
+                
                 socket.join("gameRoom" + lastRoom);
                 console.log(gameRooms[gameRooms.length - 1].users);
                 io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
@@ -169,6 +172,8 @@ io.on('connection', (socket) => {
     //     io.emit('preguntas', objPreguntes);
     // });
 
+
+
     socket.on('startGame', (data) => {
         console.log("aaaaaaaaaaaaa " + data);
         gameRooms[data.roomPosition].started = true;
@@ -181,8 +186,6 @@ io.on('connection', (socket) => {
             //    CambiaEsta =
         }
     });
-
-
 
     function newPregunta(room) {
         let n1 = Math.floor(Math.random() * 100);

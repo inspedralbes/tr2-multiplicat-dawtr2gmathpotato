@@ -7,10 +7,10 @@
                         <div class="vidaContainer" v-for="n in user.lives-1" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
+                        
                         <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
                     </div>
                     <p class="name">{{ user.username }}</p>
-
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
@@ -23,7 +23,6 @@
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    
                 </div>
             </div>
         </div>
@@ -76,13 +75,10 @@
     border-radius: 10px;
     border: 1px solid black;
     margin-bottom: 10px;
-
     font-size: 1.5vw;
     font-weight: bold;
     color: black;
     filter: brightness(1);
-
-
 }
 
 .moveBomb {

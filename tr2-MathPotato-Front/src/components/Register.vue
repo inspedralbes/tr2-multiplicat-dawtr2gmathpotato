@@ -98,7 +98,6 @@ export default {
     },
     methods: {
         Login() {
-
             this.$router.push({ path: '/login' });
 
         },
@@ -114,9 +113,8 @@ export default {
                 "password_confirmation": this.passwordConfirmation,
                 "foto_perfil": this.imatgeSeleccionada
             };
-
             socket.emit('register', user);
-            this.$router.push({ path: '/play' })
+            this.$router.push({ path: '/logged&RegisterHome' })
 
         }
     },

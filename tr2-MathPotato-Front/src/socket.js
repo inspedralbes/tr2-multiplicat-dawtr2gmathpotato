@@ -37,7 +37,7 @@ function getCurrentUser(users) {
         
         if (currentUser) {
             // Guarda la información del usuario actual en Pinia
-            store.setGuestInfo(currentUser.username, currentUser.id);
+            store.setGuestInfo(currentUser.username, currentUser.id, currentUser.image);
         }
 
         // Establece el array de usuarios en Pinia
@@ -114,5 +114,4 @@ function getCurrentUser(users) {
         store.setTimer(dataPartida.timer);
         // store.setGuestInfo({ lives: 0});
         socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
-        
     });

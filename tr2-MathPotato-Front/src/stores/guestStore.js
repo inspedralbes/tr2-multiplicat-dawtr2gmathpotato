@@ -76,9 +76,10 @@ export const useAppStore = defineStore('app', {
         updateUsersOnDisconnect(users) {
             this.setUsers(users);
         },    
-        setGuestInfo(username, id) {
+        setGuestInfo(username, id, image) {
             this.guestInfo.username = username;
             this.guestInfo.id = id;
+            this.guestInfo.image = image;
 
             console.log('*infoGuest*');
             console.log(this.guestInfo.username);

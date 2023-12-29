@@ -36,12 +36,16 @@ const router = createRouter({
       path: '/',
       name: 'landingPageView',
       component: () => import('../components/LandingPageView.vue')
-
     },
     {
       path: '/rooms',
       name: 'roomsView',
       component: () => import('../components/roomsView.vue')
+    },
+    {
+      path: '/logged&RegisterHome',
+      name: 'logged&RegisterHome',
+      component: () => import('../components/Logged&SignedView.vue')
     }
 
   ]
