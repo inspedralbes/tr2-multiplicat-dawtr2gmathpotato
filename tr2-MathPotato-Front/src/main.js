@@ -15,12 +15,13 @@ import 'primeicons/primeicons.css'
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import AnimateOnScroll from 'primevue/animateonscroll';
-
+import VueCryptojs from 'vue-cryptojs'
 import App from './App.vue'
 import router from './router'
+//Import de crypto
 
 const app = createApp(App)
-
+app.use(VueCryptojs)
 app.use(createPinia())
 app.use(router)
 app.use(PrimeVue);
