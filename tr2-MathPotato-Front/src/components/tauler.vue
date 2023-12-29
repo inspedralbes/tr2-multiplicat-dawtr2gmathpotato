@@ -21,8 +21,8 @@
 
                 <div :class="[gameStarted ? '' : 'hidden']"  class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
-                    <input type="text" name="resposta" id="resposta" v-model="respuesta">
-                    <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
+                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
+                    <Button @click="enviarResposta"   icon="pi pi-check" aria-label="Submit" />
                     
                 </div>
             </div>
