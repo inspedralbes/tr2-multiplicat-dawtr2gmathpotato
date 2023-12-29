@@ -413,7 +413,10 @@ io.on('connection', (socket) => {
         });
 
     });
-
+    socket.on('eliminarPartida', (roomName) => {
+        let roomIndex = gameRooms.findIndex(room => room.roomName === roomName);
+        gameRooms.splice(roomIndex, 1);
+    });
     socket.on('login', (data) => {
         console.log(data);
     });
