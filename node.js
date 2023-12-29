@@ -302,8 +302,9 @@ io.on('connection', (socket) => {
                     io.to("gameRoom" + data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
                 }
             }
+            newPregunta(gameRooms[data.room]);
         }
-        newPregunta(gameRooms[data.room]);
+        
 
     });
 
@@ -339,9 +340,7 @@ io.on('connection', (socket) => {
                 if (gameRooms[roomPosition].users.length == 1) {
                     // console.log("game finished!!!!!!!!!");
                     // gameRooms[roomPosition].timer=0;
-                    gameRooms[roomPosition].gameStarted = false;
-                    gameRooms[roomPosition].timer = 0;
-                    io.to(gameRooms[roomPosition].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[roomPosition].users[0].username, image: gameRooms[roomPosition].users[0].image }));
+                    gameRooms[roomPosition].timer=0;
                 } else {
                     startTimer(roomPosition);
                 }
