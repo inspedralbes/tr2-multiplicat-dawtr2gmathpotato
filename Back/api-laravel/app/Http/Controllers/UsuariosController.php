@@ -64,6 +64,20 @@ class usuariosController extends Controller
     public function logout(){
        
     }
-    public function Perfilusuario( ){
+    public function changeIcon(Request $request){
+       $request->validate([
+            'foto_perfil' => [
+                'required',
+                Rule::in(['1', '2', '3', '4', '5', '6', '7', '8', '9']),
+            ],
+            'email' => 'required|string|email',
+        ]);
+        $usuario = Usuarios::where("email", "=", $request->email)->first();
+        $usuario->foto_perfil = $request->foto_perfil;
+        $usuario->save();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Icono cambiado correctamente'
+        ]);
     }
 }
