@@ -42,7 +42,7 @@
  }
 </style>
 <script>
-
+import { useAppStore } from '../stores/guestStore.js';
 import { socket } from '../socket';
 import CryptoJS from 'crypto-js'
 
@@ -52,6 +52,21 @@ export default {
             email: '',
             password: '',
         };
+    },
+    computed: {
+        error() {
+            let store = useAppStore();
+            return store.getError();
+        },
+    },
+    watch: {
+        error() {
+            if (this.error == 1) {
+                this.$router.push({ path: '/play' });
+            } else {
+                alert('Invalid credentials. Please try again.');
+            }
+        },
     },
     methods: {
         Register() {
@@ -66,7 +81,6 @@ export default {
         Loggin() {
             const encryptedPassword = CryptoJS.SHA256(this.password).toString();
             socket.emit('login', { email: this.email, password: encryptedPassword });
-            this.$router.push({ path: '/play' });
         }
     },
     //     mounted() {

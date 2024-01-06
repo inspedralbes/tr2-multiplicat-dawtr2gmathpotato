@@ -116,3 +116,15 @@ function getCurrentUser(users) {
         socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
         socket.emit('eliminarPartida', dataPartida.roomName);
     });
+
+    socket.on("loginError", (error) => {
+        console.log('Error: ', error);
+        const store = useAppStore();
+        store.setError(error);
+    });
+
+    socket.on("loginSuccess", (data) => {
+        console.log('Login correcto: ', data);
+        const store = useAppStore();
+        store.setError(data.status);
+    });

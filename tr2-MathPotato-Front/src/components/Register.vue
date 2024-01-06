@@ -83,6 +83,7 @@ input[type="radio"]:checked+label>img {
 </style>
 
 <script>
+import { useAppStore } from '../stores/guestStore.js';
 import { socket } from '../socket';
 import CryptoJS from 'crypto-js'
 
@@ -98,6 +99,21 @@ export default {
             imatgeSeleccionada: '1',
 
         };
+    },
+    computed: {
+        error() {
+            let store = useAppStore();
+            return store.getError();
+        },
+    },
+    watch: {
+        error() {
+            if (this.error == 1) {
+                this.$router.push({ path: '/play' });
+            } else {
+                alert('Invalid credentials. Please try again.');
+            }
+        },
     },
     methods: {
         Login() {
@@ -119,8 +135,6 @@ export default {
             };
 
             socket.emit('register', user);
-            this.$router.push({ path: '/play' })
-
         }
     },
 }
