@@ -111,6 +111,7 @@ function getCurrentUser(users) {
         socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
         socket.emit('eliminarPartida', dataPartida.roomName);
     });
+
     socket.on("loginError", (error) => {
         console.log('Error: ', error);
         const store = useAppStore();
@@ -129,9 +130,8 @@ function getCurrentUser(users) {
         const store = useAppStore();
         store.setGuestImage(data); 
     });
-
     socket.on("updateRanking",(ranking)=>{
         console.log("HOLAAAAAAAAAAAAAAAA")
         const store = useAppStore();
         store.setRanking(ranking);
-    });
+    })
