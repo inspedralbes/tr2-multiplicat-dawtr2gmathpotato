@@ -42,38 +42,28 @@
 }
 </style>
 <script>
-
 import { socket } from '../socket';
 
 export default {
-    data() {
-        return {
-            email: '',
-            password: '',
-        };
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    Register() {
+      this.$router.push({ path: '/register' });
     },
-    methods: {
-        Register() {
-
-                this.$router.push({ path: '/register' });
-            
-        },
-        handleUserList(users) {
-            this.users = users;
-            console.log(this.users);
-        },
-        Loggin(){
-            socket.emit('login', {email: this.email, password: this.password});
-
+    handleUserList(users) {
+      this.users = users;
+      console.log(this.users);
+    },
+    Loggin() {
+            // const encryptedPassword = CryptoJS.SHA256(this.password).toString();
+            socket.emit('login', { email: this.email, password: this.password });
             this.$router.push({ path: '/logged&RegisterHome' });
-
-        }
-    },
-    //     mounted() {
-    //         // Escuchar eventos de usuarios después de que el componente está montado
-    //         socket.on('nuevosUsuario', this.handleUserList);
-    //   },
+        },
+  },
 };
-
-
 </script>

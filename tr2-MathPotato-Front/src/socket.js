@@ -37,7 +37,7 @@ function getCurrentUser(users) {
         
         if (currentUser) {
             // Guarda la información del usuario actual en Pinia
-            store.setGuestInfo(currentUser.username, currentUser.id, currentUser.image);
+            store.setGuestInfo(currentUser.username, currentUser.id, currentUser.image, currentUser.email);
         }
 
         // Establece el array de usuarios en Pinia
@@ -56,6 +56,7 @@ function getCurrentUser(users) {
         
     // });
 
+    
     socket.on("usersDesconectados", (usersConnected) => { 
         const store = useAppStore();
         console.log('Usuarios desconectados: ', usersConnected);
