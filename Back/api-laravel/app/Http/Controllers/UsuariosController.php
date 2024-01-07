@@ -65,6 +65,10 @@ class usuariosController extends Controller
     public function logout(){
        
     }
-    public function Perfilusuario( ){
+    public function ranking(){
+        $usuarios = Usuarios::orderBy('num_victorias', 'desc')->limit(20)->get();
+        return response()->json([
+            'ranking' => $usuarios
+        ]);
     }
 }

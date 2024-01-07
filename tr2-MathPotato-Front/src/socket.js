@@ -116,3 +116,8 @@ function getCurrentUser(users) {
         socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
         socket.emit('eliminarPartida', dataPartida.roomName);
     });
+    socket.on("updateRanking",(ranking)=>{
+        console.log("HOLAAAAAAAAAAAAAAAA")
+        const store = useAppStore();
+        store.setRanking(ranking);
+    })

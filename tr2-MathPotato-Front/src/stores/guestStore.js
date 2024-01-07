@@ -29,6 +29,7 @@ export const useAppStore = defineStore('app', {
         timer: 0,
         gameStarted: false,
         gameWinner: false,
+        ranking: [],
 
     }), 
     actions: {
@@ -118,5 +119,11 @@ export const useAppStore = defineStore('app', {
         // getGameWinner(){
         //     return this.gameWinner;
         // },
+        setRanking(ranking){
+            this.ranking = ranking;
+        },
+        getRanking(){
+            return this.ranking;
+        }
     }
 });

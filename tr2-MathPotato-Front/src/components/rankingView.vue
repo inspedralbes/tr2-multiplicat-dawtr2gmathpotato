@@ -3,11 +3,13 @@
         <div id="background_page" class="flex flex-row justify-content-between h-100vh">
             <!-- Logo a la izquierda -->
             <div class="flex flex-column align-items-center ">
-                <Button @click="login()" class="button_login" label="LOG IN"></Button>
+                <Button @click="tornar()" class="button_login" label="TORNAR"></Button>
             </div>
             
             <div class="ranking">
-                
+                <div v-for="(player, index) in ranking.ranking" :key="player.id">
+                   {{ index+1 }} - {{ player.username }} - {{ player.num_victorias }}
+                </div>
             </div>
         </div>
 
@@ -41,15 +43,56 @@
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
+.ranking{
+    width: 80%;
+    height: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    font-size: large;
+    color: white;
+    text-align: center;
+    font-size: large;
+    border-radius: 50%;
+    padding: 1rem 2rem;
+}
+.ranking>div:nth-child(odd){
+    background-color: #4CAF50;
+}
+.ranking>div:nth-child(even){
+    background-color: #2196F3;
+}
 </style>
 
 <script>
-
+import { socket } from '../socket';
+import { useAppStore } from '../stores/guestStore.js';
 export default {
-    methods: {
-        login() {
-            this.$router.push({ path: '/login' });
+    
+
+    computed: {
+        ranking() {
+            const store = useAppStore();
+            return store.getRanking();
         }
+    },
+    methods: {
+        getRanking() {
+            console.log('getRanking');
+            socket.emit('getRanking');
+        },
+        tornar() {
+            this.$router.push({ path: '/' });
+        }
+        
+    },
+    watch: {
+        ranking() {
+            console.log('ranking', this.ranking.ranking[0].username);
+        }
+    },
+    mounted() {
+        this.getRanking();
     }
 };
 </script>

@@ -432,6 +432,18 @@ io.on('connection', (socket) => {
     socket.on('login', (data) => {
         console.log(data);
     });
+    socket.on('getRanking', async () => {
+        let response = await fetch('http://localhost:8000/api/ranking', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        let ranking = await response.json();
+        console.log(ranking);
+        socket.emit('updateRanking', await ranking);
+
+    });
 
 });
 // io.emit('arrayUsers', usersConectados);
