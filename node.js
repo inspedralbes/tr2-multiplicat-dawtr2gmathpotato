@@ -73,48 +73,44 @@ io.on('connection', (socket) => {
     });
 
 
-    socket.on('register', (userData) => {
+    socket.on('register', async (userData) => {
         console.log(userData);
-        fetch('http://localhost:8000/api/register', {
+        const response = await fetch('http://localhost:8000/api/register', {
             method: 'POST',
             body: JSON.stringify(userData),
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(response => {
-            if (response) {
-                if (gameRooms.length == 0) {
-                    gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
-                } else {
-                    if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started === true) {
-                        lastRoom++;
-                        gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
-                    }
-                }
-                if (gameRooms[gameRooms.length - 1].users.length == 0) {
-                    // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-                    gameRooms[gameRooms.length - 1].users.push({ username: userData.username, id: socket.id, bomba: true, image: "./src/assets/Icon_" + userData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
-                } else {
-                    // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-                    gameRooms[gameRooms.length - 1].users.push({ username: userData.username, id: socket.id, bomba: false, image: "./src/assets/Icon_" + userData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
-                }
-                socket.join("gameRoom" + lastRoom);
-                console.log(gameRooms[gameRooms.length - 1].users);
-                io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
-                console.log('Salas: ', io.sockets.adapter.rooms);
-
-                return response.json();
-            } else {
-                console.log(response);
-                throw new Error('Network response was not ok.');
-
-            }
-        }).then(userData => {
-            console.log("aaaaaaaaaaaaaaaaaaaaa");
-            console.log(userData);
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
         });
+        const responseData = await response.json();
+        if (responseData.status === 1) {
+            if (gameRooms.length == 0) {
+                gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
+            } else {
+                if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started === true) {
+                    lastRoom++;
+                    gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
+                }
+            }
+            if (gameRooms[gameRooms.length - 1].users.length == 0) {
+                // Si no hay usuarios conectados, se agrega el primer usuario a la sala
+                gameRooms[gameRooms.length - 1].users.push({ username: userData.username, id: socket.id, bomba: true, image: "./src/assets/Icon_" + userData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
+            } else {
+                // Si ya hay usuarios, se agrega un nuevo usuario a la sala
+                gameRooms[gameRooms.length - 1].users.push({ username: userData.username, id: socket.id, bomba: false, image: "./src/assets/Icon_" + userData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
+            }
+            socket.join("gameRoom" + lastRoom);
+            console.log(gameRooms[gameRooms.length - 1].users);
+            io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
+            console.log('Salas: ', io.sockets.adapter.rooms);
+            userData.status=1;
+            socket.emit('loginSuccess', userData);
+            return responseData;
+        } else {
+            console.log(response);
+            socket.emit('loginError', responseData.status);
+
+        }
     });
     socket.on('login', async (data) => {
         console.log(data);
@@ -131,38 +127,37 @@ io.on('connection', (socket) => {
                 }
             });
             // console.log("response..??", response);
-            if (response) {
-                // console.log("response", response);
-                const responseData = await response.json();
+            const responseData = await response.json();
+            if (responseData.status === 1) {
+
+
                 console.log("response.ok....", responseData);
 
-
-                // if (gameRooms.length == 0) {
-                //     gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
-                // } else {
-                //     if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started === true) {
-                //         lastRoom++;
-                //         gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
-                //     }
-                // }
-                // if (users.length == 0) {
-                //     // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-                //     users.push({ username: responseData.username, id: socket.id, bomba: true, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
-                // } else {
-                //     // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-                //     users.push({ username: responseData.username, id: socket.id, bomba: false, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
-                // }
-                
-                // socket.join("gameRoom" + lastRoom);
-                // console.log(gameRooms[gameRooms.length - 1].users);
-                // io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
-                socket.emit('usersConnected', { username: responseData.username, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png"});
+                if (gameRooms.length == 0) {
+                    gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
+                } else {
+                    if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started === true) {
+                        lastRoom++;
+                        gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
+                    }
+                }
+                if (gameRooms[gameRooms.length - 1].users.length == 0) {
+                    // Si no hay usuarios conectados, se agrega el primer usuario a la sala
+                    gameRooms[gameRooms.length - 1].users.push({ username: responseData.username, id: socket.id, bomba: true, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
+                } else {
+                    // Si ya hay usuarios, se agrega un nuevo usuario a la sala
+                    gameRooms[gameRooms.length - 1].users.push({ username: responseData.username, id: socket.id, bomba: false, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
+                }
+                socket.join("gameRoom" + lastRoom);
+                console.log(gameRooms[gameRooms.length - 1].users);
+                io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
+                socket.emit('loginSuccess', responseData);
+                console.log(responseData);
                 console.log('Salas: ', io.sockets.adapter.rooms);
-
                 return responseData;
             } else {
-                console.log(response);
-                throw new Error('Network response was not ok.');
+                console.log("response.Notok....", responseData);
+                socket.emit('loginError', responseData.status);
             }
         } catch (error) {
             console.error('There has been a problem with your fetch operation:', error);
@@ -240,7 +235,7 @@ io.on('connection', (socket) => {
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(data.resposta);
         let userWithBomb = getUserWithBomb(data.room);
-        if (data.resposta != ""){
+        if (data.resposta != "") {
             if (resultatPregunta == data.resposta) {
                 if (socket.id == gameRooms[data.room].users[userWithBomb].id) {
                     console.log("respuesta correcta");
@@ -291,7 +286,9 @@ io.on('connection', (socket) => {
                         socket.emit('userLost', gameRooms[data.room].users[userWithBomb]);
                         gameRooms[data.room].users.splice(userWithBomb, 1);
                         if (gameRooms[data.room].users.length == 1) {
+                            console.log(data.room);
                             io.to("gameRoom" + data.room).emit('gameOver', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
+                            io.to(gameRooms[data.room].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[data.room].users[0].username, image: gameRooms[data.room].users[0].image }));
                         }
                     }
                     io.to("gameRoom" + data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
@@ -308,7 +305,7 @@ io.on('connection', (socket) => {
             }
             newPregunta(gameRooms[data.room]);
         }
-        
+
 
     });
 
@@ -344,7 +341,9 @@ io.on('connection', (socket) => {
                 if (gameRooms[roomPosition].users.length == 1) {
                     // console.log("game finished!!!!!!!!!");
                     // gameRooms[roomPosition].timer=0;
-                    gameRooms[roomPosition].timer=0;
+                    gameRooms[roomPosition].timer = 0;
+                    console.log(gameRooms)
+
                 } else {
                     startTimer(roomPosition);
                 }
@@ -413,7 +412,10 @@ io.on('connection', (socket) => {
         });
 
     });
-
+    socket.on('eliminarPartida', (roomName) => {
+        let roomIndex = gameRooms.findIndex(room => room.roomName === roomName);
+        gameRooms.splice(roomIndex, 1);
+    });
     socket.on('login', (data) => {
         console.log(data);
     });

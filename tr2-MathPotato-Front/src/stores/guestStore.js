@@ -29,7 +29,8 @@ export const useAppStore = defineStore('app', {
         timer: 0,
         gameStarted: false,
         gameWinner: false,
-
+        error: ""
+        
     }), 
     actions: {
         setRoomName(roomGame){
@@ -113,6 +114,12 @@ export const useAppStore = defineStore('app', {
         getTimer(){
             return this.timer;
         },
+        setError(error){
+            this.error=error;
+        },
+        getError(){
+            return this.error;
+        }
         // setGameWinner(gameWinner){
         //     this.gameWinner = gameWinner;
         // },
