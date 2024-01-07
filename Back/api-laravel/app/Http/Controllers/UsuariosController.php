@@ -89,7 +89,7 @@ class usuariosController extends Controller
         $usuario->save();
         return response()->json([
             'status' => 1,
-            'message' => 'Icono cambiado correctamente'
+            'foto_perfil' => $usuario->foto_perfil
         ]);
     }
 }

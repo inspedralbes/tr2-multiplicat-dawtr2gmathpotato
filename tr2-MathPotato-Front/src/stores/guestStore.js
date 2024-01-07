@@ -18,7 +18,8 @@ export const useAppStore = defineStore('app', {
             id: '',
             bomba: false,
             image: './assets/Icon_2.png',
-            lives: 2
+            lives: 2,
+            email: ''
         },
         users:[],
         pregunta: {
@@ -77,10 +78,11 @@ export const useAppStore = defineStore('app', {
         updateUsersOnDisconnect(users) {
             this.setUsers(users);
         },    
-        setGuestInfo(username, id, image) {
+        setGuestInfo(username, id, image, email) {
             this.guestInfo.username = username;
             this.guestInfo.id = id;
             this.guestInfo.image = image;
+            this.guestInfo.email = email;
 
             console.log('*infoGuest*');
             console.log(this.guestInfo.username);
@@ -119,7 +121,12 @@ export const useAppStore = defineStore('app', {
         },
         getError(){
             return this.error;
-        }
+        },
+        setGuestImage(image){
+            console.log('Imagen: ', image);
+            this.guestInfo.image = image;
+        },
+        
         // setGameWinner(gameWinner){
         //     this.gameWinner = gameWinner;
         // },

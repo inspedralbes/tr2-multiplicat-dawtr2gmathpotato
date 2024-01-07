@@ -47,15 +47,11 @@ import { socket } from '../socket';
 import CryptoJS from 'crypto-js'
 
 export default {
-  data() {
-    return {
-      email: '',
-      password: '',
-    };
-  },
-  methods: {
-    Register() {
-      this.$router.push({ path: '/register' });
+    data() {
+        return {
+            email: '',
+            password: '',
+        };
     },
     computed: {
         error() {
@@ -83,10 +79,10 @@ export default {
             console.log(this.users);
         },
         Loggin() {
+            console.log(this.email);
             const encryptedPassword = CryptoJS.SHA256(this.password).toString();
             socket.emit('login', { email: this.email, password: encryptedPassword });
         }
     },
-  },
 };
 </script>

@@ -14,6 +14,7 @@ import 'primeicons/primeicons.css'
 //import components
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
 import AnimateOnScroll from 'primevue/animateonscroll';
 import VueCryptojs from 'vue-cryptojs'
 import App from './App.vue'
@@ -33,5 +34,6 @@ app.use(PrimeVue);
 app.component('InputText', InputText);
 app.component('Button', Button);
 app.directive('animateonscroll', AnimateOnScroll);
+app.component('Dialog', Dialog);
 
 app.mount('#app')

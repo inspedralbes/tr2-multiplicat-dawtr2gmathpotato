@@ -32,13 +32,7 @@ function getCurrentUser(users) {
         const store = useAppStore();
         
         // Filtra los usuarios basándose en el socket.id actual
-       let currentUser=getCurrentUser(usersConnected);
-        console.log("HOOOOOOOOOOOOOOOOOOOOOOOOOOOLA"+currentUser);
-        
-        if (currentUser) {
-            // Guarda la información del usuario actual en Pinia
-            store.setGuestInfo(currentUser.username, currentUser.id, currentUser.image, currentUser.email);
-        }
+  
 
         // Establece el array de usuarios en Pinia
         store.setUsers(usersConnected);
@@ -128,4 +122,11 @@ function getCurrentUser(users) {
         console.log('Login correcto: ', data);
         const store = useAppStore();
         store.setError(data.status);
+        store.setGuestInfo(data.username, data.id, data.foto_perfil, data.email); 
+    });
+
+    socket.on("changeSkinSuccess", (data)=>{
+        console.log('Cambio de skin correcto: ', data);
+        const store = useAppStore();
+        store.setGuestImage(data); 
     });
