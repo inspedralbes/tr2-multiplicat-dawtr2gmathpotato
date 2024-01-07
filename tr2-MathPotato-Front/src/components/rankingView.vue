@@ -95,6 +95,9 @@ export default {
     mounted() {
         this.getRanking();
         setInterval(this.getRanking, 60000);
-    }
+    },
+    beforeDestroy() {
+        clearInterval(this.intervalId);
+    },
 };
 </script>
