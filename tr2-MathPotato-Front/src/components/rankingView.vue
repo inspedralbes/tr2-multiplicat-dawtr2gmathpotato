@@ -80,6 +80,7 @@ export default {
         getRanking() {
             console.log('getRanking');
             socket.emit('getRanking');
+            
         },
         tornar() {
             this.$router.push({ path: '/' });
@@ -93,6 +94,7 @@ export default {
     },
     mounted() {
         this.getRanking();
+        setInterval(this.getRanking, 60000);
     }
 };
 </script>
