@@ -91,4 +91,10 @@ class usuariosController extends Controller
             'foto_perfil' => $usuario->foto_perfil
         ]);
     }
+    public function ranking(){
+        $usuarios = Usuarios::orderBy('num_victorias', 'desc')->limit(20)->get();
+        return response()->json([
+            'ranking' => $usuarios
+        ]);
+    }
 }
