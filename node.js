@@ -61,10 +61,10 @@ io.on('connection', (socket) => {
 
         if (gameRooms[gameRooms.length - 1].users.length == 0) {
             // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image: "./src/assets/Icon_"+data.image+".png", roomPosition: lastRoom, lives: 3, email: data.email });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, email: 'none', id: socket.id, bomba: true, image: data.image, roomPosition: lastRoom, lives: 3 });
         } else {
             // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: "./src/assets/Icon_"+data.image+".png", roomPosition: lastRoom, lives: 3, email: data.email });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, email: 'none', id: socket.id, bomba: false, image: data.image, roomPosition: lastRoom, lives: 3 });
         }
         socket.join("gameRoom" + lastRoom);
         console.log(gameRooms[gameRooms.length - 1].users);
@@ -134,6 +134,28 @@ io.on('connection', (socket) => {
                 socket.emit('loginSuccess', responseData);
 
                 console.log("response.ok....", responseData);
+
+                if (gameRooms.length == 0) {
+                    gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
+                } else {
+                    if (gameRooms[gameRooms.length - 1].users.length == 6 || gameRooms[gameRooms.length - 1].started === true) {
+                        lastRoom++;
+                        gameRooms.push({ idRoom: lastRoom, roomName: "gameRoom" + lastRoom, users: [], started: false, pregunta: "", pregActual: 0, timer: 0, timerAnterior: 0 });
+                    }
+                }
+                if (gameRooms[gameRooms.length - 1].users.length == 0) {
+                    // Si no hay usuarios conectados, se agrega el primer usuario a la sala
+                    gameRooms[gameRooms.length - 1].users.push({ username: responseData.username, email: responseData.email, foto_perfil: responseData.foto_perfil, id: socket.id, bomba: true, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
+                } else {
+                    // Si ya hay usuarios, se agrega un nuevo usuario a la sala
+                    gameRooms[gameRooms.length - 1].users.push({ username: responseData.username, email: responseData.email, foto_perfil: responseData.foto_perfil, id: socket.id, bomba: false, image: "./src/assets/Icon_" + responseData.foto_perfil + ".png", roomPosition: lastRoom, lives: 3 });
+                }
+                socket.join("gameRoom" + lastRoom);
+                console.log(gameRooms[gameRooms.length - 1].users);
+                io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
+
+                console.log('Salas: ', io.sockets.adapter.rooms);
+
                 return responseData;
             } else {
                 console.log("response.Notok....", responseData);
@@ -257,26 +279,38 @@ io.on('connection', (socket) => {
 
                         if (gameRooms[data.room].users[userWithBomb].lives == 0) {
 
-                            if (userWithBomb == gameRooms[data.room].users.length - 1) {
-                                gameRooms[data.room].users[0].bomba = true;
-                            }
-                            else {
-                                gameRooms[data.room].users[userWithBomb + 1].bomba = true;
-                            }
-                            socket.leave(gameRooms[data.room].roomName);
-                            socket.emit('userLost', gameRooms[data.room].users[userWithBomb]);
-                            gameRooms[data.room].users.splice(userWithBomb, 1);
-                            if (gameRooms[data.room].users.length == 1) {
-                                console.log(data.room);
-                                io.to("gameRoom" + data.room).emit('gameOver', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
-                                io.to(gameRooms[data.room].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[data.room].users[0].username, image: gameRooms[data.room].users[0].image }));
-                            }
+                        if (userWithBomb == gameRooms[data.room].users.length - 1) {
+                            gameRooms[data.room].users[0].bomba = true;
                         }
-                        io.to("gameRoom" + data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
-                    } else {
-                        console.log("resposta incorrecta!");
-                        gameRooms[data.room].pregActual++;
-                        gameRooms[data.room].users[userWithBomb].bomba = false;
+                        else {
+                            gameRooms[data.room].users[userWithBomb + 1].bomba = true;
+                        }
+                        socket.leave(gameRooms[data.room].roomName);
+                        socket.emit('userLost', gameRooms[data.room].users[userWithBomb]);
+                        gameRooms[data.room].users.splice(userWithBomb, 1);
+                        if (gameRooms[data.room].users.length == 1) {
+                            console.log(data.room);
+                            if (gameRooms[data.room].users[0].email != 'none') {
+                                con.connect(function (err) {
+                                    if (err) throw err;
+                                    console.log("Connected!");
+                                    var sql = "UPDATE usuarios SET num_victorias = num_victorias + 1 WHERE email = '" + gameRooms[data.room].users[0].email + "'";
+                                    con.query(sql, function (err) {
+                                        if (err) throw err;
+                                        console.log("1 record inserted");
+                                    });
+                                });
+                            }
+                            gameRooms[data.room].users[0].email
+                            io.to("gameRoom" + data.room).emit('gameOver', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
+                            io.to(gameRooms[data.room].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[data.room].users[0].username, image: gameRooms[data.room].users[0].image }));
+                        }
+                    }
+                    io.to("gameRoom" + data.room).emit('changeBomb', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
+                } else {
+                    console.log("resposta incorrecta!");
+                    gameRooms[data.room].pregActual++;
+                    gameRooms[data.room].users[userWithBomb].bomba = false;
 
                         console.log(gameRooms[data.room].users[userWithBomb].bomba);
                         let userBombN = gameRooms[data.room].users.findIndex(user => user.id === socket.id);

@@ -46,8 +46,12 @@ const router = createRouter({
       path: '/logged&RegisterHome',
       name: 'logged&RegisterHome',
       component: () => import('../components/Logged&SignedView.vue')
+    },
+    {
+      path: '/ranking',
+      name: 'rankingView',
+      component: () => import('../components/RankingView.vue')
     }
-
   ]
 })
 
