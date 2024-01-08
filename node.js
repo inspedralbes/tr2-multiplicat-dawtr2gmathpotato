@@ -399,6 +399,11 @@ io.on('connection', (socket) => {
                 let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
                 socket.leave(room.roomName);
                 io.to(room.roomName).emit('usersDesconectados', room.users, room.roomName);
+                if (room.users.length == 1) {
+                    room.gameStarted = false;
+                    room.timer = 0;
+                    io.to(room.roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: room.users[0].username, image: room.users[0].image }));
+                }
                 console.log('Usuario desconectado: ', usuarioDesconectado);
 
             }
