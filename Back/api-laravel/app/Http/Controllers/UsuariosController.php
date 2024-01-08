@@ -55,7 +55,7 @@ class usuariosController extends Controller
         if ($usuario) {
             if (Hash::check($request->password, $usuario->password)) {
                 return response()->json([
-                    'status' => 1,
+                   'status' => 1,
                     'username' => $usuario->username,
                     'email' => $usuario->email,
                     'foto_perfil' => $usuario->foto_perfil
@@ -80,7 +80,7 @@ class usuariosController extends Controller
         $usuarios = Usuarios::orderBy('num_victorias', 'desc')->limit(20)->get();
         return response()->json([
             'ranking' => $usuarios
-        ]);
+        ]);}
     public function changeIcon(Request $request){
        $request->validate([
             'foto_perfil' => [
@@ -95,6 +95,12 @@ class usuariosController extends Controller
         return response()->json([
             'status' => 1,
             'foto_perfil' => $usuario->foto_perfil
+        ]);
+    }
+    public function ranking(){
+        $usuarios = Usuarios::orderBy('num_victorias', 'desc')->limit(20)->get();
+        return response()->json([
+            'ranking' => $usuarios
         ]);
     }
 }
