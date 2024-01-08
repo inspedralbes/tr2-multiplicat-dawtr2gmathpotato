@@ -1,6 +1,9 @@
 <template>
     <div>
         <div id="background_page" class="flex flex-column justify-content-center align-items-center h-100vh">
+            <div class="flex flex-column align-items-center ">
+            <Button @click="tutorial()" class="button_tutorial" label="TUTORIAL"></Button>
+        </div>
             <h1>Welcome, Guest!</h1>
             <div class="card flex justify-content-center">
 
@@ -24,6 +27,8 @@
 <script>
 
 import { socket } from '../socket';
+import tutorial from './Tutorial.vue';
+
 
 export default {
     data() {
@@ -40,15 +45,15 @@ export default {
             } else {
                 // Submit the form
                 socket.emit('join', {username:this.username, image:1, email:'none'});
-
-
                 this.$router.push({ path: '/play' });
-
             }
         },
         handleUserList(users) {
             this.users = users;
             console.log(this.users);
+        },
+        tutorial() {
+            this.$router.push({ path: '/tutorial' });
         },
     },
     //     mounted() {
@@ -74,11 +79,25 @@ export default {
     align-items: center;
     flex-direction: column;
 }
-
+.button_tutorial {
+    position: absolute;
+    top: 5%;
+    left: 7%;
+    transform: translate(-50%, -50%);
+    background-image: radial-gradient(var(--primary-300), var(--primary-600));
+    color: var(--primary-color-text);
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
 /* .input-container {
     display: flex;
     align-items: center;
     gap: 10px;
 } */
 </style>
-       
+
