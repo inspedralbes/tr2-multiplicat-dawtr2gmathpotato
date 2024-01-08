@@ -76,6 +76,11 @@ class usuariosController extends Controller
     public function logout(){
        
     }
+    public function ranking(){
+        $usuarios = Usuarios::orderBy('num_victorias', 'desc')->limit(20)->get();
+        return response()->json([
+            'ranking' => $usuarios
+        ]);
     public function changeIcon(Request $request){
        $request->validate([
             'foto_perfil' => [

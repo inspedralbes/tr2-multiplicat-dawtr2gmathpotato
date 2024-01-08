@@ -268,7 +268,19 @@ io.on('connection', (socket) => {
                             gameRooms[data.room].users.splice(userWithBomb, 1);
                             if (gameRooms[data.room].users.length == 1) {
                                 console.log(data.room);
-                                io.to("gameRoom" + data.room).emit('gameOver', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
+                                if (gameRooms[data.room].users[0].email != 'none') {
+                                con.connect(function (err) {
+                                    if (err) throw err;
+                                    console.log("Connected!");
+                                    var sql = "UPDATE usuarios SET num_victorias = num_victorias + 1 WHERE email = '" + gameRooms[data.room].users[0].email + "'";
+                                    con.query(sql, function (err) {
+                                        if (err) throw err;
+                                        console.log("1 record inserted");
+                                    });
+                                });
+                            }
+                            gameRooms[data.room].users[0].email
+                            io.to("gameRoom" + data.room).emit('gameOver', { "arrayUsers": gameRooms[data.room].users, "bombChange": true });
                                 io.to(gameRooms[data.room].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[data.room].users[0].username, image: gameRooms[data.room].users[0].image }));
                             }
                         }
@@ -440,7 +452,19 @@ io.on('connection', (socket) => {
             console.log(data.foto_perfil);
             socket.emit('changeSkinSuccess', data.foto_perfil);
         }
+    });    socket.on('getRanking', async () => {
+        let response = await fetch('http://localhost:8000/api/ranking', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        let ranking = await response.json();
+        console.log(ranking);
+        socket.emit('updateRanking', await ranking);
+
     });
+
 });
 // io.emit('arrayUsers', usersConectados);
 

@@ -130,3 +130,8 @@ function getCurrentUser(users) {
         const store = useAppStore();
         store.setGuestImage(data); 
     });
+    socket.on("updateRanking",(ranking)=>{
+        console.log("HOLAAAAAAAAAAAAAAAA")
+        const store = useAppStore();
+        store.setRanking(ranking);
+    })

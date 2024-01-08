@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [UsuariosController::class, 'register']);
 Route::post('/login', [UsuariosController::class, 'login']);
+
+Route::get('/ranking', [UsuariosController::class, 'ranking']);
+
 Route::post('/changeIcon', [UsuariosController::class, 'changeIcon']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('logout', [UsuariosController::class, 'logout']);
