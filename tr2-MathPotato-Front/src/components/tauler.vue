@@ -8,7 +8,7 @@
                             <img src="@/assets/potatHeart.png">
                         </div>
                         
-                        <img :src="'./src/assets/Icon_'+user.image+'.png'" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
+                        <img :src="'./assets/Icon_'+user.image+'.png'" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
                     </div>
                     <p class="name">{{ user.username }}</p>
                 </div>

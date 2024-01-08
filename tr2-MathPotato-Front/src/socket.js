@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { useAppStore } from '@/stores/guestStore';
 
 // "undefined" means the URL will be computed from the `window.location` object
-const URL = "localhost:5175";
+const URL = "mathpotato.daw.inspedralbes.cat:3269";
 
 export const socket = io(URL);
 
@@ -109,7 +109,6 @@ function getCurrentUser(users) {
         store.setTimer(dataPartida.timer);
         // store.setGuestInfo({ lives: 0});
         socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
-        socket.emit('eliminarPartida', dataPartida.roomName);
     });
 
     socket.on("loginError", (error) => {

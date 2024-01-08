@@ -5,8 +5,6 @@ import { Server } from 'socket.io';
 import { join } from 'path';
 import mysql from 'mysql';
 
-import { useAppStore } from './tr2-MathPotato-Front/src/stores/guestStore.js';
-
 // import fetch from 'node-fetch';
 const app = express();
 
@@ -75,7 +73,7 @@ io.on('connection', (socket) => {
 
     socket.on('register', async (userData) => {
         console.log(userData);
-        const response = await fetch('http://localhost:8000/api/register', {
+        const response = await fetch('http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/register', {
             method: 'POST',
             body: JSON.stringify(userData),
             headers: {
@@ -120,7 +118,7 @@ io.on('connection', (socket) => {
     async function getUser(data) {
         try {
             console.log("data to send...", data)
-            const response = await fetch('http://localhost:8000/api/login', {
+            const response = await fetch('http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/login', {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
@@ -413,7 +411,7 @@ io.on('connection', (socket) => {
         console.log(data);
     });
     socket.on('getRanking', async () => {
-        let response = await fetch('http://localhost:8000/api/ranking', {
+        let response = await fetch('http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/ranking', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -451,7 +449,7 @@ io.on('connection', (socket) => {
     });
     socket.on('changeSkin', async (data) => {
         console.log(data);
-        let response = await fetch('http://localhost:8000/api/changeIcon', {
+        let response = await fetch('http://mathpotato.daw.inspedralbes.cat/tr2-multiplicat-dawtr2gmathpotato/Back/api-laravel/public/api/changeIcon', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -468,7 +466,7 @@ io.on('connection', (socket) => {
 });
 // io.emit('arrayUsers', usersConectados);
 
-server.listen(5175, () => {
-    console.log('Listening on http://localhost:5175');
+server.listen(3269, () => {
+    console.log('Listening on http://mathpotato.daw.inspedralbes.cat:3269');
 
 });

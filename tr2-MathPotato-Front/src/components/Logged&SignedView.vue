@@ -5,7 +5,7 @@
             <Button @click="jugar" class="button_game">JUGAR!</Button>
             <!-- <Button class="button_rooms" disabled>Crear Partida</Button> -->
             <div v-if="users.image" @mouseover="showChangeSkinButton" @mouseleave="hideChangeSkinButton" class="user">
-                <img :src="'./src/assets/Icon_' + users.image + '.png'" class="icon">
+                <img :src="'./assets/Icon_' + users.image + '.png'" class="icon">
                 <button v-if="showSkinButton" @click="changeSkin" class="change-skin-button">Cambiar Skin</button>
                 <button  v-if="showSkinButton" label="ChangeSkin"  class="change-skin-button" @click="visible = true">Cambiar Skin</button>
                 <Dialog v-model:visible="visible" modal header="Selecciona la nova Icona" :style="{ width: '50rem' }"
