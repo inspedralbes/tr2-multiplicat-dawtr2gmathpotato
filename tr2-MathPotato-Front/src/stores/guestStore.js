@@ -30,7 +30,8 @@ export const useAppStore = defineStore('app', {
         timer: 0,
         gameStarted: false,
         gameWinner: false,
-        error: ""
+        error: "",
+        ranking: []
         
     }), 
     actions: {

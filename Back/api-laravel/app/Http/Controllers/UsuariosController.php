@@ -93,24 +93,10 @@ class usuariosController extends Controller
         ]);
     }
 
-    public function ranking() {
-        $usuarios = Usuarios::select(
-            'username',
-            'num_victorias',
-            DB::raw('(num_victorias / (num_victorias + num_derrotas)) * 100 as porcentaje_victorias')
-        )
-        ->orderByDesc('num_victorias')
-        ->orderByDesc('porcentaje_victorias', 'desc')
-        ->limit(10)
-        ->get();
-
-        // Formatear el porcentaje_victorias a dos decimales
-        $usuarios->transform(function ($usuario) {
-            $usuario->porcentaje_victorias = number_format($usuario->porcentaje_victorias, 2);
-            return $usuario;
-    });
-
-    return response()->json($usuarios);
-
+    public function ranking(){
+        $usuarios = Usuarios::orderBy('num_victorias', 'desc')->limit(20)->get();
+        return response()->json([
+            'ranking' => $usuarios
+        ]);
     }
 }
