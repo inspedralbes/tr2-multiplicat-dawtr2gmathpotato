@@ -109,7 +109,7 @@ function getCurrentUser(users) {
         store.setTimer(dataPartida.timer);
         // store.setGuestInfo({ lives: 0});
         socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
-        socket.emit('eliminarPartida', dataPartida.roomName);
+        
     });
 
     socket.on("loginError", (error) => {
