@@ -7,27 +7,30 @@
             <div v-if="users.image" @mouseover="showChangeSkinButton" @mouseleave="hideChangeSkinButton" class="user">
                 <img :src="'./src/assets/Icon_' + users.image + '.png'" class="icon">
                 <button v-if="showSkinButton" @click="changeSkin" class="change-skin-button">Cambiar Skin</button>
-                <button  v-if="showSkinButton" label="ChangeSkin"  class="change-skin-button" @click="visible = true">Cambiar Skin</button>
+                <button v-if="showSkinButton" label="ChangeSkin" class="change-skin-button" @click="visible = true">Cambiar
+                    Skin</button>
                 <Dialog v-model:visible="visible" modal header="Selecciona la nova Icona" :style="{ width: '50rem' }"
                     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
                     <div id="Image_gallery">
-                    <div><input type="radio" name="image" id="1" value="1" checked v-model="imatgeSeleccionada"><label
-                            for="1"><img src="../assets/Icon_1.png" alt="" class="iconModal"></label></div>
-                    <div><input type="radio" name="image" id="2" value="2" v-model="imatgeSeleccionada"><label for="2"><img
-                                src="../assets/Icon_2.png" alt="" class="iconModal"></label></div>
-                    <div><input type="radio" name="image" id="3" value="3" v-model="imatgeSeleccionada"><label for="3"><img
-                                src="../assets/Icon_3.png" alt="" class="iconModal"></label></div>
-                    <div><input type="radio" name="image" id="4" value="4" v-model="imatgeSeleccionada"><label for="4"><img
-                                src="../assets/Icon_4.png" alt="" class="iconModal"></label></div>
-                    <div><input type="radio" name="image" id="5" value="5" v-model="imatgeSeleccionada"><label for="5"><img
-                                src="../assets/Icon_5.png" alt="" class="iconModal"></label></div>
-                    <div><input type="radio" name="image" id="6" value="6" v-model="imatgeSeleccionada"><label for="6"><img
-                                src="../assets/Icon_6.png" alt="" class="iconModal"></label></div>
-                    <div><input type="radio" name="image" id="7" value="7" v-model="imatgeSeleccionada"><label for="7"><img
-                                src="../assets/Icon_7.png" alt="" class="iconModal"></label></div>
-                    <div><input type="radio" name="image" id="8" value="8" v-model="imatgeSeleccionada"><label for="8"><img
-                                src="../assets/Icon_8.png" alt="" class="iconModal"></label></div>
-                </div>
+                        <div><input type="radio" name="image" id="1" value="1" checked v-model="imatgeSeleccionada"><label
+                                for="1"><img src="../assets/Icon_1.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="2" value="2" v-model="imatgeSeleccionada"><label
+                                for="2"><img src="../assets/Icon_2.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="3" value="3" v-model="imatgeSeleccionada"><label
+                                for="3"><img src="../assets/Icon_3.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="4" value="4" v-model="imatgeSeleccionada"><label
+                                for="4"><img src="../assets/Icon_4.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="5" value="5" v-model="imatgeSeleccionada"><label
+                                for="5"><img src="../assets/Icon_5.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="6" value="6" v-model="imatgeSeleccionada"><label
+                                for="6"><img src="../assets/Icon_6.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="7" value="7" v-model="imatgeSeleccionada"><label
+                                for="7"><img src="../assets/Icon_7.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="8" value="8" v-model="imatgeSeleccionada"><label
+                                for="8"><img src="../assets/Icon_8.png" alt="" class="iconModal"></label></div>
+                        <div><input type="radio" name="image" id="9" value="9" v-model="imatgeSeleccionada"><label
+                                for="9"><img src="../assets/Icon_9.png" alt="" class="icon"></label></div>
+                    </div>
                     <div class="p-d-flex p-jc-end">
                         <Button label="Confirmar" @click="guardarDades" />
                     </div>
@@ -75,7 +78,7 @@ export default {
             this.$router.push({ path: '/play' });
         },
         guardarDades() {
-            socket.emit('changeSkin', { email: this.users.email, foto_perfil : this.imatgeSeleccionada });
+            socket.emit('changeSkin', { email: this.users.email, foto_perfil: this.imatgeSeleccionada });
             this.visible = false;
         },
     },
@@ -188,6 +191,7 @@ input[type="radio"] {
 input[type="radio"]:checked+label>img {
     border: 2px solid #000;
 }
+
 .name {
     display: flex;
     flex-direction: column;
