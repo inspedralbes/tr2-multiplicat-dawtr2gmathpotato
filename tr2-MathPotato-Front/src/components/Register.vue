@@ -39,6 +39,8 @@
                                 src="../assets/Icon_7.png" alt="" class="icon"></label></div>
                     <div><input type="radio" name="image" id="8" value="8" v-model="imatgeSeleccionada"><label for="8"><img
                                 src="../assets/Icon_8.png" alt="" class="icon"></label></div>
+                    <div><input type="radio" name="image" id="9" value="9" v-model="imatgeSeleccionada"><label for="9"><img
+                                src="../assets/Icon_9.png" alt="" class="icon"></label></div>
                 </div>
 
                 <Button label="Sign In" icon="pi pi-user" class="w-full" @click="register"></Button>
