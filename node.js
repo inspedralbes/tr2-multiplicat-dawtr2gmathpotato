@@ -61,10 +61,10 @@ io.on('connection', (socket) => {
 
         if (gameRooms[gameRooms.length - 1].users.length == 0) {
             // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image: "./src/assets/Icon_" + data.image + ".png", roomPosition: lastRoom, lives: 3, email: data.email });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image:  data.image , roomPosition: lastRoom, lives: 3, email: data.email });
         } else {
             // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: "./src/assets/Icon_" + data.image + ".png", roomPosition: lastRoom, lives: 3, email: data.email });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: data.image , roomPosition: lastRoom, lives: 3, email: data.email });
         }
         socket.join("gameRoom" + lastRoom);
         console.log(gameRooms[gameRooms.length - 1].users);
@@ -435,10 +435,10 @@ io.on('connection', (socket) => {
         }
         if (gameRooms[gameRooms.length - 1].users.length == 0) {
             // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image: "./src/assets/Icon_" + data.foto_perfil + ".png", roomPosition: lastRoom, lives: 3, email: data.email });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image:  data.foto_perfil , roomPosition: lastRoom, lives: 3, email: data.email });
         } else {
             // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: "./src/assets/Icon_" + data.foto_perfil + ".png", roomPosition: lastRoom, lives: 3, email: data.email });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image:  data.foto_perfil , roomPosition: lastRoom, lives: 3, email: data.email });
         }
         socket.join("gameRoom" + lastRoom);
         console.log(gameRooms[gameRooms.length - 1].users);
