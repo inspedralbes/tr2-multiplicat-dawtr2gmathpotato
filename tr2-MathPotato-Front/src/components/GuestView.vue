@@ -1,19 +1,22 @@
 <template>
     <div>
+        <div id="background_page" class="flex flex-column justify-content-center align-items-center h-100vh">
+            <h1>Welcome, Guest!</h1>
+            <div class="card flex justify-content-center">
 
-    <h1>Welcome, Guest!</h1>
-    <div class="card flex justify-content-center">
-        <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
-        
-        <span class="p-float-label">
-            <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" @keyup.enter="onSubmit()"/>
-            <label for="value">Name</label>
-        </span>
-        <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
+                <img alt="Vue logo" class="logo" src="@/assets/lePotata.png" width="125" height="125" />
 
-        <Button @click="onSubmit()"  label="Submit" />
-        <Toast />
+                <span class="p-float-label">
+                    <InputText v-model="username" type="text" :class="{ 'p-invalid': errorMessage }"
+                        aria-describedby="text-error" @keyup.enter="onSubmit()" />
+                    <label for="value">Name</label>
+                </span>
+                <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
 
+                <Button @click="onSubmit()" label="Submit" />
+                <Toast />
+
+            </div>
         </div>
     </div>
 </template>
@@ -58,6 +61,20 @@ export default {
 </script>
 
 <style scoped>
+
+#background_page {
+    background-image: url(../assets/landing_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    opacity: 0.8;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 /* .input-container {
     display: flex;
     align-items: center;

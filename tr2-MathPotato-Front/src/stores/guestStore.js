@@ -126,6 +126,12 @@ export const useAppStore = defineStore('app', {
             console.log('Imagen: ', image);
             this.guestInfo.image = image;
         },
+        setRanking(ranking){
+            this.ranking = ranking;
+        },
+        getRanking(){
+            return this.ranking;
+        }
         
         // setGameWinner(gameWinner){
         //     this.gameWinner = gameWinner;
