@@ -308,7 +308,6 @@ export default {
             pregunta: {},
             respuesta: "",
             timer: 0,
-
         };
     },
     computed: {
