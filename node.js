@@ -182,13 +182,15 @@ io.on('connection', (socket) => {
                 } while (n1 < n2);
                 pregunta = n1 + "-" + n2;
             case 2:
+                n2=Math.floor(Math.random() * 10);
                 pregunta = n1 + "*" + n2;
                 break;
             case 3:
                 do {
+                    n2 = Math.floor(Math.random() * 10);
                     if (n1 % n2 != 0) {
                         n1 = Math.floor(Math.random() * 100);
-                        n2 = Math.floor(Math.random() * 100);
+                        n2 = Math.floor(Math.random() * 10);
                     }
                 } while (n1 % n2 != 0);
                 pregunta = n1 + "/" + n2;
