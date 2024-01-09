@@ -385,7 +385,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         // let CambiaEsta=
-        gameRooms.forEach(room => {
+        gameRooms.forEach(async room => {
             let usuarioDesconectadoIndex = room.users.findIndex(user => user.id === socket.id);
             console.log(usuarioDesconectadoIndex);
             if (usuarioDesconectadoIndex !== -1) {
@@ -395,6 +395,28 @@ io.on('connection', (socket) => {
                     } else {
                         room.users[usuarioDesconectadoIndex + 1].bomba = true;
                     }
+                }
+                console.log("VAAAAAAAAAA", room.users[usuarioDesconectadoIndex]);
+                if (room.users[usuarioDesconectadoIndex].email != 'none') {
+                    console.log("entrooo????? --> ", room.users[usuarioDesconectadoIndex].email);
+          
+                    con.connect( async (err) => {
+                        if (err) throw err;
+                        let response = await console.log("Connected!!!!!!!!!!");
+                        fetch('http://localhost:8000/api/updateDerrotas', {
+                            method: 'POST',
+                            body: JSON.stringify(room.users[usuarioDesconectadoIndex]),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        //var sql = "UPDATE usuarios SET num_derrotas = num_derrotas + 1 WHERE email = '" + room.users[usuarioDesconectadoIndex].email + "'";
+                        //console.log("sql --> ", sql);
+                        // con.query(sql, function (err) {
+                        //     if (err) throw err;
+                        //     console.log("1 record updated");
+                        // });
+                    });
                 }
                 let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
                 socket.leave(room.roomName);
