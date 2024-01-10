@@ -93,10 +93,19 @@ class usuariosController extends Controller
         ]);
     }
 
-    public function ranking(){
+    public function ranking() {
         $usuarios = Usuarios::orderBy('num_victorias', 'desc')->limit(20)->get();
+    
+        foreach ($usuarios as $usuario) {
+            $totalGames = $usuario->num_victorias + $usuario->num_derrotas;
+            $usuario->victory_percentage = $totalGames > 0 ? ($usuario->num_victorias / $totalGames) * 100 : 0;
+        }
+    
+        // Sort by victory percentage
+        $usuarios = $usuarios->sortByDesc('victory_percentage');
+    
         return response()->json([
-            'ranking' => $usuarios
+            'ranking' => $usuarios->values() // Reset keys after sorting
         ]);
     }
 

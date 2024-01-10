@@ -13,7 +13,7 @@
                     <span class="username">{{ player.username }}</span>
                     <span class="victories">Victorias: <span class="victories-number">{{ player.num_victorias
                     }}</span></span>
-                    <span class="victories">% Victorias <span class="victories-number">{{ (player.num_victorias / (player.num_victorias + player.num_derrotas)) * 100 }}</span></span>
+                    <span class="victories-porcentaje">% Victorias: <span class="victories-number-porcentaje">{{ calculateVictoryPercentage(player) }}</span></span>
                 </div>
             </div>
         </div>
@@ -86,15 +86,14 @@
     align-items: center;
 }
 
-.player-card.even-row {
-    background-color: #f0f0f0;
-}
+    .player-card.even-row {
+        background-color: #f0f0f0;
+    }
 
 .rank {
     font-weight: bold;
-    margin-right: 20px;
-    margin-left: 5vw;
-    width: 30px;
+    margin-right: 10px;
+    margin-left: 2vw;
     text-align: center;
 }
 
@@ -105,12 +104,30 @@
 .victories {
     margin-right: 5vw;
     color: #555;
+    display: flex;
+    justify-content: space-between;
+}
+
+.victories-porcentaje {
+    margin-right: 1vw;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
 }
 
 .victories-number {
     font-weight: bold;
     color: #007bff;
+    text-align: right;
 }
+
+.victories-number-porcentaje {
+    font-weight: bold;
+    color: #007bff;
+    display: flex;
+    text-align: right;
+}
+
 </style>
   
 <script>
@@ -127,6 +144,10 @@ export default {
         getRanking() {
             console.log('getRanking');
             socket.emit('getRanking');
+        },
+        calculateVictoryPercentage(player) {
+            const percentage = player.num_victorias / (player.num_victorias + player.num_derrotas) * 100;
+            return isNaN(percentage) ? 0 : Math.round(percentage);
         },
         tornar() {
             this.$router.push({ path: '/' });
