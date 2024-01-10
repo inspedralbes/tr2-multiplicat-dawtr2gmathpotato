@@ -183,7 +183,7 @@ io.on('connection', (socket) => {
                 pregunta = n1 + "-" + n2;
             case 2:
                 n2=Math.floor(Math.random() * 10);
-                pregunta = n1 + "*" + n2;
+                pregunta = n1 + "x" + n2;
                 break;
             case 3:
                 do {
@@ -214,7 +214,8 @@ io.on('connection', (socket) => {
         // CambiaEsta =
         console.log("Pregunta: ", gameRooms[data.room].pregunta);
 
-        const resultatPregunta = eval(gameRooms[data.room].pregunta);
+        const preguntaParaEvaluar = gameRooms[data.room].pregunta.replace('x', '*');
+        const resultatPregunta = eval(preguntaParaEvaluar);
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(data.resposta);
         let userWithBomb = getUserWithBomb(data.room);
