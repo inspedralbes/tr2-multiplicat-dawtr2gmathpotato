@@ -159,7 +159,8 @@ io.on('connection', (socket) => {
                 newPregunta(gameRooms[data.roomPosition]);
                 iniciarTimer(data.roomPosition);
                 startTimer(data.roomPosition);
-                io.to("gameRoom" + data.roomPosition).emit('gameStarted', data.gameStarted);
+                io.to("gameRoom" + data.roomPosition).emit('gameStarted', { allPlayersStarted: true });
+                
                 //    CambiaEsta =
             }
         });

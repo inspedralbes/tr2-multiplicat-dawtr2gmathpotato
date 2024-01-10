@@ -17,7 +17,7 @@
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
-            <div id="myModal" class="modal" v-show="showModal">
+            <div id="myModal" class="modal" v-show="!gameStarted">
                 <div class="modal-content">
                     <div id="middle">
                         <div class="explanationSection">
@@ -44,12 +44,14 @@
                     </div>
                 </div>
             </div>
-
-            <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
-                <h3>{{ message.pregunta }}</h3>
-                <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
-                <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit">Enviar</Button>
+            <div id="middle">
+                <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
+                    <h3>{{ message.pregunta }}</h3>
+                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
+                    <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit">Enviar</Button>
+                </div>
             </div>
+
         </div>
     </div>
 </template>
@@ -502,6 +504,8 @@ export default {
             this.respuesta = "";
         },
         async startGame() {
+            let store = useAppStore();
+
             socket.emit('startGame', { gameStarted: true, roomPosition: this.users[0].roomPosition });
 
             // Espera a que el servidor confirme que todos los jugadores han empezado
@@ -513,7 +517,9 @@ export default {
                 });
             });
 
+
             this.showModal = false;
+
             await this.$nextTick();
 
             let objectAntElement = document.getElementById("user0");
@@ -524,6 +530,8 @@ export default {
                 document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
                 document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
             }
+            socket.off('gameStarted');
+            return store.setGameStarted(true);
         },
         getId(index) {
             let size = this.users.length;
