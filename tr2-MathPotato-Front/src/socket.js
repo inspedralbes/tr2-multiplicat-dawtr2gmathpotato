@@ -106,7 +106,6 @@ function getCurrentUser(users) {
         console.log('El juego ha terminado! ', dataPartida);
         const store = useAppStore();
         store.setGameStarted(dataPartida.gameStarted);
-        store.setTimer(dataPartida.timer);
         // store.setGuestInfo({ lives: 0});
         socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
     });
