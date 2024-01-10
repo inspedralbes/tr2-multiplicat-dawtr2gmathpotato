@@ -4,27 +4,51 @@
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
-                        <div class="vidaContainer" v-for="n in user.lives-1" :key="n">
+                        <div class="vidaContainer" v-for="n in user.lives - 1" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
-                        
-                        <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
+
+                        <img :src="user.image" alt="image" class="icon"
+                            :class="[user.bomba ? 'userWithBomb' : 'userWithout']"
+                            :style="{ 'background-color': user.background }">
                     </div>
                     <p class="name">{{ user.username }}</p>
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
-            <div id="middle">
-                <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                :class="[gameStarted ? 'hidden' : '']">START!</Button>
+            <div id="myModal" class="modal" v-show="showModal">
+                <div class="modal-content">
+                    <div id="middle">
+                        <div class="explanationSection">
+                            <div class="explanationColumn">
+                                <h2>Si tens la bomba</h2>
+                                <img src="../assets/Icon_1.png" class="jugador">
+                                <img src="../assets/LePotata.png" alt="" class="bombIniciar">
+                                <p class="name">Usuari</p>
+                                <p>Has de contestar bé a la pregunta o abans que es termini el temps de la bomba; sinó,
+                                    perdràs una vida. Tens un total de 2 vides més una extra. Ves amb compte, la gent et pot
+                                    restar temps i canviar la pregunta.</p>
+                            </div>
 
-                <div :class="[gameStarted ? '' : 'hidden']"  class="gameContainer">
-                    <h3>{{ message.pregunta }}</h3>
-                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
-                    <Button @click="enviarResposta"   icon="pi pi-check" aria-label="Submit" />
-                    
+                            <div class="explanationColumn2">
+                                <h2>Si no tens la bomba</h2>
+                                <img src="../assets/Icon_1.png">
+                                <p class="name">Usuari2</p>
+                                <p>Pots contestar les preguntes per restar temps a l'usuari que té la bomba. Ves amb compte,
+                                    si contestes malament, rebràs la bomba.</p>
+                            </div>
+                        </div>
+                        <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
+                            :class="[gameStarted ? 'hidden' : '']">START!</button>
+                    </div>
                 </div>
+            </div>
+
+            <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
+                <h3>{{ message.pregunta }}</h3>
+                <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
+                <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit">Enviar</Button>
             </div>
         </div>
     </div>
@@ -43,6 +67,8 @@
 
 .name {
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    color: white;
+    font-size: 2rem;
 }
 
 #background {
@@ -53,11 +79,13 @@
     background-size: cover;
     background-position: center;
 }
-.gameContainer>h3{
+
+.gameContainer>h3 {
     color: white;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
-    
+
 }
+
 .gameContainer {
     display: flex;
     flex-direction: column;
@@ -70,7 +98,8 @@
     border-radius: 20px;
     width: 90%;
 }
-.gameContainer>input{
+
+.gameContainer>input {
     width: 80%;
     height: 5vh;
     border-radius: 10px;
@@ -278,6 +307,110 @@
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
 
+.explanationSection {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.explanationColumn,
+.explanationColumn2 {
+    width: 45%;
+}
+
+.explanationColumn h2,
+.explanationColumn2 h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5vh;
+}
+
+.explanationColumn .jugador,
+.explanationColumn2 img {
+    border-radius: 50%;
+    width: 8vw;
+    border: 2px solid #fff;
+    background-color: blanchedalmond;
+    margin: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.explanationColumn .bombIniciar {
+    width: 8vw;
+    animation: hunch 1s infinite alternate;
+    position: absolute;
+}
+
+.explanationColumn p,
+.explanationColumn2 p {
+    font-size: 1.5rem;
+    font-weight: normal;
+
+}
+
+
+.explanationColumn2 {
+    margin-left: 5vw;
+}
+
+
+#startGameButton {
+    margin-top: 2vh;
+    background-color: #3772FF;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#startGameButton:disabled {
+    background-color: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
+}
+
+
+
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+}
+
+
+.close {
+    color: #333;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #555;
+    text-decoration: none;
+}
+
+
+
 @keyframes hunch {
     from {
         transform: scale(1);
@@ -288,13 +421,14 @@
     }
 }
 
-.userWithBomb{
+.userWithBomb {
     border: 4px solid #3772FF;
 }
-.userWithout{
-    filter: grayscale(30%) ;
+
+.userWithout {
+    filter: grayscale(30%);
     /* opacity: 0.7; */
-    
+
 }
 </style>
 <script>
@@ -308,6 +442,7 @@ export default {
             pregunta: {},
             respuesta: "",
             timer: 0,
+            showModal: true,
 
         };
     },
@@ -332,8 +467,8 @@ export default {
             let store = useAppStore();
             return store.getGameStarted();
         },
-        
-        
+
+
     },
     watch: {
         users: {
@@ -342,12 +477,12 @@ export default {
                 if (newVal && newVal.length > 0 && this.encertada) {
                     console.log("change bomb");
                     this.changeBomb();
-                    this.respuesta = "";    
+                    this.respuesta = "";
                 }
                 console.log(newVal);
             }
         },
-        
+
         // gameWinner(newVal) {
         //     // Cambiar gameStarted a false cuando gameWinner sea true
         //     if (newVal) {
@@ -357,16 +492,30 @@ export default {
         // },
     },
     methods: {
-        
+        closeModal() {
+            this.showModal = false;
+        },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
+            socket.emit('resposta', { "resposta": resposta, "room": this.users[0].roomPosition });
             this.respuesta = "";
         },
         async startGame() {
-            socket.emit('startGame', {gameStarted:true, roomPosition: this.users[0].roomPosition});
+            socket.emit('startGame', { gameStarted: true, roomPosition: this.users[0].roomPosition });
+
+            // Espera a que el servidor confirme que todos los jugadores han empezado
+            await new Promise(resolve => {
+                socket.once('gameStarted', (data) => {
+                    if (data.allPlayersStarted) {
+                        resolve();
+                    }
+                });
+            });
+
+            this.showModal = false;
             await this.$nextTick();
+
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
                 let userBombpos = objectAntElement.getBoundingClientRect();
@@ -450,7 +599,7 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
             await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
 
             let usersWithBomb = this.findUsersWithBomb();
-            let userWithBomb=document.getElementById("user"+usersWithBomb);
+            let userWithBomb = document.getElementById("user" + usersWithBomb);
             console.log(userWithBomb);
             if (usersWithBomb !== -1) {
                 let userBombpos = userWithBomb.getBoundingClientRect();
@@ -487,9 +636,9 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
     },
     mounted() {
         return this.users.findIndex(user => user.bomba === true);
-        
+
         //return this.users.users.filter(user => user.bomba === true);
-        
+
 
     }
 }
