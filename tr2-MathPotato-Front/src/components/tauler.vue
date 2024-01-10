@@ -361,11 +361,11 @@ export default {
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
+socket.emit('resposta',  {"resposta":resposta,"roomName":this.users[0].roomName} );
             this.respuesta = "";
         },
         async startGame() {
-            socket.emit('startGame', {gameStarted:true, roomPosition: this.users[0].roomPosition});
+            socket.emit('startGame', {gameStarted:true, roomName: this.users[0].roomName});
             await this.$nextTick();
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
@@ -491,7 +491,9 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
         //return this.users.users.filter(user => user.bomba === true);
         
 
-    }
+    },
+    
+    
 }
 
 </script>
