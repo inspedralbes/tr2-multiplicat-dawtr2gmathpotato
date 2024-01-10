@@ -99,4 +99,17 @@ class usuariosController extends Controller
             'ranking' => $usuarios
         ]);
     }
+
+    public function updateDerrotas(Request $request){
+        $request->validate([
+            'email' => 'required|string|email',
+        ]);
+        $usuario = Usuarios::where("email", "=", $request->email)->first();
+        $usuario->num_derrotas = $usuario->num_derrotas + 1;
+        $usuario->save();
+        return response()->json([
+            'status' => 1,
+            'num_derrotas' => $usuario->num_derrotas
+        ]);
+    }
 }

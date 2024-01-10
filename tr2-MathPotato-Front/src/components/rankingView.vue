@@ -13,6 +13,7 @@
                     <span class="username">{{ player.username }}</span>
                     <span class="victories">Victorias: <span class="victories-number">{{ player.num_victorias
                     }}</span></span>
+                    <span class="victories">% Victorias <span class="victories-number">{{ (player.num_victorias / (player.num_victorias + player.num_derrotas)) * 100 }}</span></span>
                 </div>
             </div>
         </div>

@@ -258,7 +258,21 @@ io.on('connection', (socket) => {
                     console.log("lives restantes -> " + gameRooms[data.room].users[userWithBomb].lives);
 
                     if (gameRooms[data.room].users[userWithBomb].lives == 0) {
-
+                        if (gameRooms[data.room].users[userWithBomb].email != 'none') {
+                            var email = gameRooms[data.room].users[userWithBomb].email;
+                            con.connect( async (err) => {
+                                if (err) throw err;
+                                // let response = await console.log("Connected!!!!!!!!!!");
+                                fetch('http://localhost:8000/api/updateDerrotas', {
+                                    method: 'POST',
+                                    body: JSON.stringify({ email }),
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                                console.log("entrooo????? --> ", email);
+                            });
+                        }
                         if (userWithBomb == gameRooms[data.room].users.length - 1) {
                             gameRooms[data.room].users[0].bomba = true;
                         }
@@ -351,6 +365,21 @@ io.on('connection', (socket) => {
             let userWithBomb = getUserWithBomb(roomPosition);
             gameRooms[roomPosition].users[userWithBomb].lives--;
             if (gameRooms[roomPosition].users[userWithBomb].lives == 0) {
+                if (gameRooms[roomPosition].users[userWithBomb].email != 'none') {
+                    var email = gameRooms[roomPosition].users[userWithBomb].email;
+                    con.connect( async (err) => {
+                        if (err) throw err;
+                        // let response = await console.log("Connected!!!!!!!!!!");
+                        fetch('http://localhost:8000/api/updateDerrotas', {
+                            method: 'POST',
+                            body: JSON.stringify({ email }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        console.log("entrooo????? --> ", email);
+                    });
+                }
                 if (userWithBomb == gameRooms[roomPosition].users.length - 1) {
                     gameRooms[roomPosition].users[0].bomba = true;
                 }
@@ -387,7 +416,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         // let CambiaEsta=
-        gameRooms.forEach(room => {
+        gameRooms.forEach(async room => {
             let usuarioDesconectadoIndex = room.users.findIndex(user => user.id === socket.id);
             console.log(usuarioDesconectadoIndex);
             if (usuarioDesconectadoIndex !== -1) {
@@ -397,6 +426,22 @@ io.on('connection', (socket) => {
                     } else {
                         room.users[usuarioDesconectadoIndex + 1].bomba = true;
                     }
+                }
+                console.log("VAAAAAAAAAA", room.users[usuarioDesconectadoIndex]);
+                if (room.users[usuarioDesconectadoIndex].email != 'none') {
+                    var email = room.users[usuarioDesconectadoIndex].email;
+                    con.connect( async (err) => {
+                        if (err) throw err;
+                        // let response = await console.log("Connected!!!!!!!!!!");
+                        fetch('http://localhost:8000/api/updateDerrotas', {
+                            method: 'POST',
+                            body: JSON.stringify({ email }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        console.log("entrooo????? --> ", email);
+                    });
                 }
                 let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
                 socket.leave(room.roomName);
