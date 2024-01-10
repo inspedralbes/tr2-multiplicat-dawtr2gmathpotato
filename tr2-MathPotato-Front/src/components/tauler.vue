@@ -48,7 +48,7 @@
                 <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
-                    <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit">Enviar</Button>
+                    <button @click="enviarResposta" id="enviarButton" icon="pi pi-check" aria-label="Submit"></button>
                 </div>
             </div>
 
@@ -358,7 +358,7 @@
 #startGameButton {
     margin-top: 2vh;
     background-color: #3772FF;
-    padding: 10px 20px;
+    padding: 15px 25px;
     font-size: 1.2em;
     border: none;
     border-radius: 5px;
@@ -431,6 +431,16 @@
     filter: grayscale(30%);
     /* opacity: 0.7; */
 
+}
+#enviarButton {
+    background-color: #4CAF50; /* Color verde */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s;
 }
 </style>
 <script>
