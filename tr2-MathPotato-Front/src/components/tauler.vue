@@ -18,11 +18,16 @@
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
-                <div v-if="victory" class="modal-victoria">
+                <div class="modal-victoria">
                     <div class="modal-content">
-                        <span class="close" @click="closeModal">&times;</span>
-                        <h2>Congratulations! You Won!</h2>
-                        <!-- Agrega cualquier contenido adicional aquí -->
+                        <h2 class="letra">Enhorabona has guanyat la partida</h2>
+                        <Button @click="replay">Volver a Jugar</Button>
+                    </div>
+                </div>
+                <div class="modal-derrota">
+                    <div class="modal-content">
+                        <h2 class="letra">Uf... Has perdut la partida</h2>
+                        <Button @click="replay">Volver a Jugar</Button>
                     </div>
                 </div>
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
@@ -295,32 +300,71 @@ html:lang(ar) {
     color: red;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
-.modal-victoria {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
 
-.modal-content {
-  background-color: #fefefe;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+
 
 .close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+/* Estilos generales */
+.modal-victoria {
+    display: none;
+    margin-bottom: 25vh;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    height: 40%;
+    
+    
+}
+.modal-derrota
+{
+    display: none;
+    margin-bottom: 25vh;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    height: 40%;
+}
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    
+}
+
+/* Estilos del botón */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Estilos del cierre (X) */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+.letra
+{
+    font-size: 2rem;
+    font-weight: bold;
+}
+.close:hover {
+    color: #000;
 }
 @keyframes hunch {
     from {
