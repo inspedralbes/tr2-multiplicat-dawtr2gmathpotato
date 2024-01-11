@@ -263,8 +263,8 @@ io.on('connection', (socket) => {
                     console.log("lives restantes -> " + gameRooms[roomIndex].users[userWithBomb].lives);
 
                     if (gameRooms[roomIndex].users[userWithBomb].lives == 0) {
-                        if (gameRooms[data.room].users[userWithBomb].email != 'none') {
-                            var email = gameRooms[data.room].users[userWithBomb].email;
+                        if (gameRooms[roomIndex].users[userWithBomb].email != 'none') {
+                            var email = gameRooms[roomIndex].users[userWithBomb].email;
                             con.connect(async (err) => {
                                 if (err) throw err;
                                 // let response = await console.log("Connected!!!!!!!!!!");
@@ -364,7 +364,7 @@ io.on('connection', (socket) => {
                 }
             }, 1000);
         } else {
-            if (gameRooms[roomPosition].started == true && gameRooms[roomPosition].timer >= 0) {
+            if (gameRooms[roomPosition].started == true && gameRooms[roomPosition].timer <= 0) {
                 console.log("timer acabado");
                 gameRooms[roomPosition].timer = gameRooms[roomPosition].timerAnterior - 1;
                 io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
@@ -409,8 +409,8 @@ io.on('connection', (socket) => {
 
                         // console.log("game over");
                         // io.to(gameRooms[roomPosition].roomName).emit('gameOver', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
-                    } else {
-
+                    } else{
+                        newPregunta(gameRooms[roomPosition]);
                     }
                 }
                 if (gameRooms[roomPosition].users.length > 1) {

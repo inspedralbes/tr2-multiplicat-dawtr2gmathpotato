@@ -39,6 +39,7 @@ export default {
                 this.errorMessage = 'Please enter your name';
             } else {
                 // Submit the form
+                this.username = this.username.slice(0, 20);
                 socket.emit('join', {username:this.username, image:1, email:'none'});
 
 

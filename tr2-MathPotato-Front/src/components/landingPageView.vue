@@ -118,7 +118,7 @@
     position: absolute;
     top: 20%;
     left: 4%;
-    width: 700px;
+    width: 38vw;
     transform: translate(-50%, -50%);
     animation: movePotato 10s infinite;
     animation-timing-function: linear;
@@ -184,7 +184,7 @@
     background-position: center;
     height: 100vh;
     opacity: 80%;
-    width: 99vw;
+    width: 100vw;
     z-index: -1;
 }
 

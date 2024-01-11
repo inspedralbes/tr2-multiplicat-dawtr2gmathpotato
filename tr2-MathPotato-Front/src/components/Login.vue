@@ -31,7 +31,7 @@
      background-position: center;
      height: 100vh;
      opacity: 80%;
-     width: 99vw;
+     width: 100vw;
      z-index: -1;
  }
 

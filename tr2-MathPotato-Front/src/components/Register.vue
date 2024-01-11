@@ -128,7 +128,7 @@ export default {
         },
         register() {
             let user = {
-                "username": this.username,
+                "username": this.username.slice(0, 20),
                 "email": this.email,
                 "password": CryptoJS.SHA256(this.password).toString(),
                 "password_confirmation": CryptoJS.SHA256(this.passwordConfirmation).toString(),
