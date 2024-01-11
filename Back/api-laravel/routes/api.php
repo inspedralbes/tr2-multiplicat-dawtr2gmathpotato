@@ -9,6 +9,7 @@ Route::post('/login', [UsuariosController::class, 'login']);
 Route::post('/changeIcon', [UsuariosController::class, 'changeIcon']);
 Route::get('/ranking', [UsuariosController::class, 'ranking']);
 Route::post('/updateDerrotas', [UsuariosController::class, 'updateDerrotas']);
+Route::post('/updateVictorias', [UsuariosController::class, 'updateVictorias']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('logout', [UsuariosController::class, 'logout']);
     Route::get('PerfilUsuari', [UsuarisController::class, 'PerfilUsuari']);

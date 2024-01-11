@@ -121,4 +121,17 @@ class usuariosController extends Controller
             'num_derrotas' => $usuario->num_derrotas
         ]);
     }
+
+    public function updateVictorias(Request $request){
+        $request->validate([
+            'email' => 'required|string|email',
+        ]);
+        $usuario = Usuarios::where("email", "=", $request->email)->first();
+        $usuario->num_victorias = $usuario->num_victorias + 1;
+        $usuario->save();
+        return response()->json([
+            'status' => 1,
+            'num_victorias' => $usuario->num_victorias
+        ]);
+    }
 }

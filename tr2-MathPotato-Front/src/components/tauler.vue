@@ -45,10 +45,8 @@
 
 .name {
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
-        width: 10vw;
-        white-space: nowrap;
-        overflow:-moz-hidden-unscrollable;
-        text-overflow:clip;    
+
+        
     font-family:Verdana, Geneva, Tahoma, sans-serif
 
 }

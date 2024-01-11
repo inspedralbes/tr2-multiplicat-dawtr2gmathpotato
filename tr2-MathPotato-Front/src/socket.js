@@ -87,7 +87,7 @@ function getCurrentUser(users) {
 
     socket.on("userLost", (UsersData) => {
         const store = useAppStore();
-        socket.emit('join', {"username":UsersData.username, "image":UsersData.image});
+        socket.emit('join', {"username":UsersData.username, "image":UsersData.image, "email":UsersData.email});
         store.setGameStarted(false);
         });
 
@@ -107,7 +107,7 @@ function getCurrentUser(users) {
         const store = useAppStore();
         store.setGameStarted(dataPartida.gameStarted);
         // store.setGuestInfo({ lives: 0});
-        socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
+        socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image, "email":dataPartida.email});
     });
 
     socket.on("loginError", (error) => {
