@@ -29,7 +29,7 @@
                         <div><input type="radio" name="image" id="8" value="8" v-model="imatgeSeleccionada"><label
                                 for="8"><img src="../assets/Icon_8.png" alt="" class="iconModal"></label></div>
                         <div><input type="radio" name="image" id="9" value="9" v-model="imatgeSeleccionada"><label
-                                for="9"><img src="../assets/Icon_9.png" alt="" class="icon"></label></div>
+                                for="9"><img src="../assets/Icon_9.png" alt="" class="iconModal"></label></div>
                     </div>
                     <div class="p-d-flex p-jc-end">
                         <Button label="Confirmar" @click="guardarDades" />

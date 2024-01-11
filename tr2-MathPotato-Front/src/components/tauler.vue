@@ -4,11 +4,13 @@
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
-                        <div class="vidaContainer" v-for="n in user.lives-1" :key="n">
+                        <div class="vidaContainer" v-for="n in user.lives - 1" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
-                        
-                        <img :src="'./src/assets/Icon_'+user.image+'.png'" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
+
+                        <img :src="'./src/assets/Icon_' + user.image + '.png'" alt="image" class="icon"
+                            :class="[user.bomba ? 'userWithBomb' : 'userWithout']"
+                            :style="{ 'background-color': user.background }">
                     </div>
                     <p class="name">{{ user.username }}</p>
                 </div>
@@ -17,13 +19,13 @@
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                :class="[gameStarted ? 'hidden' : '']">START!</Button>
+                    :class="[gameStarted ? 'hidden' : '']">START!</Button>
 
-                <div :class="[gameStarted ? '' : 'hidden']"  class="gameContainer">
+                <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
-                    <Button @click="enviarResposta"   icon="pi pi-check" aria-label="Submit" />
-                    
+                    <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
+
                 </div>
             </div>
         </div>
@@ -53,11 +55,13 @@
     background-size: cover;
     background-position: center;
 }
-.gameContainer>h3{
+
+.gameContainer>h3 {
     color: white;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
-    
+
 }
+
 .gameContainer {
     display: flex;
     flex-direction: column;
@@ -70,7 +74,8 @@
     border-radius: 20px;
     width: 90%;
 }
-.gameContainer>input{
+
+.gameContainer>input {
     width: 80%;
     height: 5vh;
     border-radius: 10px;
@@ -288,13 +293,14 @@
     }
 }
 
-.userWithBomb{
+.userWithBomb {
     border: 4px solid #3772FF;
 }
-.userWithout{
-    filter: grayscale(30%) ;
+
+.userWithout {
+    filter: grayscale(30%);
     /* opacity: 0.7; */
-    
+
 }
 </style>
 <script>
@@ -307,8 +313,6 @@ export default {
         return {
             pregunta: {},
             respuesta: "",
-            timer: 0,
-
         };
     },
     computed: {
@@ -332,8 +336,6 @@ export default {
             let store = useAppStore();
             return store.getGameStarted();
         },
-        
-        
     },
     watch: {
         users: {
@@ -342,30 +344,21 @@ export default {
                 if (newVal && newVal.length > 0 && this.encertada) {
                     console.log("change bomb");
                     this.changeBomb();
-                    this.respuesta = "";    
+                    this.respuesta = "";
                 }
                 console.log(newVal);
             }
         },
-        
-        // gameWinner(newVal) {
-        //     // Cambiar gameStarted a false cuando gameWinner sea true
-        //     if (newVal) {
-        //         let store = useAppStore();
-        //         store.setGameStarted(false);
-        //     }
-        // },
     },
     methods: {
-        
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
+            socket.emit('resposta', { "resposta": resposta, "roomName": this.users[0].roomName });
             this.respuesta = "";
         },
         async startGame() {
-            socket.emit('startGame', {gameStarted:true, roomPosition: this.users[0].roomPosition});
+            socket.emit('startGame', { gameStarted: true, roomName: this.users[0].roomName });
             await this.$nextTick();
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
@@ -403,7 +396,6 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                 case 4:
                     switch (index) {
                         case 0:
-
                             return "topmid";
                         case 1:
                             return "rightmid";
@@ -425,7 +417,6 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                             return "bottomleft";
                         case 4:
                             return "leftmid";
-
                     }
                     break;
                 case 6:
@@ -443,19 +434,17 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                         case 5:
                             return "leftmid";
                     }
-
             };
         },
         async changeBomb() {
             await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
 
             let usersWithBomb = this.findUsersWithBomb();
-            let userWithBomb=document.getElementById("user"+usersWithBomb);
+            let userWithBomb = document.getElementById("user" + usersWithBomb);
             console.log(userWithBomb);
             if (usersWithBomb !== -1) {
                 let userBombpos = userWithBomb.getBoundingClientRect();
                 let objectAntElement = document.getElementById("bombContainer");
-
 
                 let objectAntpos = objectAntElement.getBoundingClientRect();
                 let userBombXAnt = objectAntpos.x;
@@ -463,7 +452,6 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
 
                 document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
                 document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
-
 
                 let userBombX = userBombpos.x + 100;
                 let userBombY = userBombpos.y;
@@ -477,21 +465,18 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                     document.getElementById("bombContainer").classList.remove("moveBomb");
                 }, 800);
             }
-
         },
-
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
-            //return this.users.users.filter(user => user.bomba === true);
         },
     },
     mounted() {
         return this.users.findIndex(user => user.bomba === true);
-        
-        //return this.users.users.filter(user => user.bomba === true);
-        
-
-    }
+    },
+    created() {
+        window.addEventListener('popstate', () => {
+            socket.emit('leaveRoom', {});
+        });
+    },
 }
-
 </script>
