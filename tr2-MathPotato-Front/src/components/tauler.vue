@@ -18,7 +18,7 @@
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
-                <div class="modal-victoria">
+                <div v-if="victoriaVisible == true" class="modal-victoria">
                     <div class="modal-content">
                         <h2 class="letra">Enhorabona has guanyat la partida</h2>
                         <div class="content-bottom">
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-derrota">
+                <div v-if="derrotaVisible == true" class="modal-derrota">
                     <div class="modal-content">
                         <h2 class="letra">Uf... has perdut la partida</h2>
                         <div class="content-bottom">
@@ -355,11 +355,6 @@ button {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease; /* Efecto de transición en el color de fondo */
-}
-
-
-.modal-derrota {
-    display: none;
 }
 .derrota{
     width: 7vw;
