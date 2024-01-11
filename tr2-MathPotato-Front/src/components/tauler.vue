@@ -318,9 +318,6 @@ html:lang(ar) {
 }
 
 /* Estilos generales */
-.modal-victoria {
-    display: none;
-}
 .modal-content {
     width: 30vw;
     background-color: #fff;
@@ -420,6 +417,8 @@ export default {
         return {
             pregunta: {},
             respuesta: "",
+            victoriaVisible: false,
+            derrotaVisible: false,
         };
     },
     computed: {
