@@ -18,6 +18,13 @@
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
+                <div v-if="victory" class="modal-victoria">
+                    <div class="modal-content">
+                        <span class="close" @click="closeModal">&times;</span>
+                        <h2>Congratulations! You Won!</h2>
+                        <!-- Agrega cualquier contenido adicional aquí -->
+                    </div>
+                </div>
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
                     :class="[gameStarted ? 'hidden' : '']">START!</Button>
 
@@ -25,7 +32,6 @@
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-
                 </div>
             </div>
         </div>
@@ -46,12 +52,12 @@
 .name {
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 
-        
-    font-family:Verdana, Geneva, Tahoma, sans-serif
 
+    font-family: Verdana, Geneva, Tahoma, sans-serif
 }
+
 html:lang(ar) {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 #background {
@@ -289,7 +295,33 @@ html:lang(ar) {
     color: red;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
+.modal-victoria {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
 
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
 @keyframes hunch {
     from {
         transform: scale(1);
