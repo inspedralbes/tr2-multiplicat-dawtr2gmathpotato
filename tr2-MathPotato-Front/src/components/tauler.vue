@@ -432,8 +432,10 @@
     /* opacity: 0.7; */
 
 }
+
 #enviarButton {
-    background-color: #4CAF50; /* Color verde */
+    background-color: #4CAF50;
+    /* Color verde */
     color: white;
     padding: 10px 15px;
     border: none;
@@ -513,12 +515,14 @@ export default {
             socket.emit('resposta', { "resposta": resposta, "room": this.users[0].roomPosition });
             this.respuesta = "";
         },
+        // Modifica la función que maneja el clic en el botón "start"
         async startGame() {
             let store = useAppStore();
 
-            socket.emit('startGame', { gameStarted: true, roomPosition: this.users[0].roomPosition });
+            // Emitir el evento startGame solo cuando el usuario da clic
+            socket.emit('startGame', { roomPosition: this.users[0].roomPosition });
 
-            // Espera a que el servidor confirme que todos los jugadores han empezado
+            // Espera a que el servidor confirme que el jugador ha empezado
             await new Promise(resolve => {
                 socket.once('gameStarted', (data) => {
                     if (data.allPlayersStarted) {
@@ -527,9 +531,8 @@ export default {
                 });
             });
 
-
+            // Realizar otras acciones necesarias para el usuario (puede que no sea necesario en este punto)
             this.showModal = false;
-
             await this.$nextTick();
 
             let objectAntElement = document.getElementById("user0");
@@ -540,8 +543,15 @@ export default {
                 document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
                 document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
             }
+
+            // Apagar el escucha del evento 'gameStarted'
             socket.off('gameStarted');
+
+            // Realizar otras acciones necesarias para el usuario (puede que no sea necesario en este punto)
             return store.setGameStarted(true);
+        },
+        todosUsuariosHanClickeadoInicio(room) {
+            return room.users.every(user => user.clickedStart);
         },
         getId(index) {
             let size = this.users.length;
