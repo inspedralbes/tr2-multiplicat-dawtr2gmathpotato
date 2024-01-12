@@ -61,10 +61,10 @@ io.on('connection', (socket) => {
 
         if (gameRooms[gameRooms.length - 1].users.length == 0) {
             // Si no hay usuarios conectados, se agrega el primer usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName,hasClickedStart:false });
         } else {
             // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName,hasClickedStart:falsec });
         }
         socket.join("gameRoom" + lastRoom);
         console.log(gameRooms[gameRooms.length - 1].users[gameRooms[gameRooms.length - 1].users.length - 1]);
@@ -159,18 +159,57 @@ io.on('connection', (socket) => {
 
 
     socket.on('startGame', (data) => {
-        console.log("aaaaaaaaaaaaa " + data);
-        let roomPosition = gameRooms.findIndex(room => room.roomName === data.roomName);
-        gameRooms[roomPosition].started = true;
-        if (gameRooms[roomPosition].users.length >= 3 && gameRooms[roomPosition].users.length <= 6) {
-            console.log("startGame");
-            newPregunta(gameRooms[roomPosition]);
-            iniciarTimer(roomPosition);
-            startTimer(gameRooms[roomPosition].idRoom);
-            io.to(data.roomName).emit('gameStarted', true);
-            //    CambiaEsta =
+        console.log(`Usuario ${socket.id} hizo clic en el botón "start".`);
+    
+        let roomPosition;
+    
+        if (data.roomPosition) {
+            // Primer bloque de código
+            roomPosition = data.roomPosition;
+            let room = gameRooms[roomPosition];
+            let userIndex = room.users.findIndex(user => user.id === socket.id);
+            room.users[userIndex].hasClickedStart = true;
+    
+            if (todosUsuariosHanClickeadoInicio(room)) {
+                // Marcar la sala como iniciada y realizar otras acciones necesarias
+                if (room.users.length >= 3 && room.users.length <= 6) {
+                    room.started = true;
+                    console.log("startGame");
+                    newPregunta(room);
+                    iniciarTimer(roomPosition);
+                    startTimer(roomPosition);
+    
+                    // Emitir evento de inicio de juego a todos los usuarios en la sala
+                    io.to("gameRoom" + roomPosition).emit('gameStarted', { allPlayersStarted: true });
+                }
+            }
+        } else if (data.roomName) {
+            // Segundo bloque de código
+            roomPosition = gameRooms.findIndex(room => room.roomName === data.roomName);
+            gameRooms[roomPosition].started = true;
+            if (gameRooms[roomPosition].users.length >= 3 && gameRooms[roomPosition].users.length <= 6) {
+                console.log("startGame");
+                newPregunta(gameRooms[roomPosition]);
+                iniciarTimer(roomPosition);
+                startTimer(gameRooms[roomPosition].idRoom);
+                io.to(data.roomName).emit('gameStarted', true);
+            }
         }
     });
+    function todosUsuariosHanClickeadoInicio(room) {
+        // Asegúrate de que todos los usuarios en la sala han hecho clic en "start"
+        let everyOneHasClickedStart = true;
+            for(let i=0; i<room.users.length; i++){
+                if(!room.users[i].hasClickedStart){
+                    everyOneHasClickedStart = false;
+
+                }
+            }
+            console.log("everyOneHasClickedStart", everyOneHasClickedStart);
+        return everyOneHasClickedStart;
+
+
+    }
 
     function newPregunta(room) {
         let n1 = Math.floor(Math.random() * 100);
@@ -305,6 +344,7 @@ io.on('connection', (socket) => {
                                 });
                                 console.log("entrooo????? --> ", email);
                             }
+                            gameRooms[roomIndex].gameStarted = false;
                             io.to(gameRooms[roomIndex].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[roomIndex].users[0].username, image: gameRooms[roomIndex].users[0].image, email: gameRooms[roomIndex].users[0].email }));
                             io.sockets.sockets.get(gameRooms[roomIndex].users[0].id).leave(gameRooms[roomIndex].roomName);
                             gameRooms.splice(data.room, 1);
@@ -354,13 +394,13 @@ io.on('connection', (socket) => {
                 console.log("timer --> ", gameRooms[roomPosition]);
                 if (gameRooms[roomPosition].timer > 0 && gameRooms[roomPosition].started == true) {
                     setTimeout(() => {
-                        console.log("Aqui",roomPosition)
-                        if (roomPosition !== -1) {
-
-                            gameRooms[roomPosition].timer--;
-                            io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
-                            console.log("tiempo --> ", gameRooms[roomPosition].timer);
-
+                        console.log("Aqui", gameRooms[roomPosition]);
+                        if (roomPosition !== -1 && gameRooms[roomPosition] !== undefined) {
+                            if (gameRooms[roomPosition].idRoom == idRoom) {
+                                gameRooms[roomPosition].timer--;
+                                io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
+                                console.log("tiempo --> ", gameRooms[roomPosition].timer);
+                            }
 
 
                             if (gameRooms[roomPosition].users.length == 1 && gameRooms[roomPosition].started == true) {
@@ -426,7 +466,7 @@ io.on('connection', (socket) => {
                                     });
                                     console.log("entrooo????? --> ", email);
                                 }
-
+                                gameRooms[roomPosition].gameStarted = false;
                                 io.to(gameRooms[roomPosition].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[roomPosition].users[0].username, image: gameRooms[roomPosition].users[0].image, email: gameRooms[roomPosition].users[0].email }));
                                 io.sockets.sockets.get(gameRooms[roomPosition].users[0].id).leave(gameRooms[roomPosition].roomName);
                                 gameRooms.splice(roomPosition, 1);
@@ -505,6 +545,7 @@ io.on('connection', (socket) => {
                             });
                             console.log("entrooo????? --> ", email);
                         }
+                        gameRooms[room.idRoom].gameStarted = false;
                         io.to(room.roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: room.users[0].username, image: room.users[0].image, email: room.users[0].email }));
                         gameRooms.splice(room.idRoom, 1);
                         io.sockets.sockets.get(room.users[0].id).leave(room.roomName);
@@ -565,6 +606,7 @@ io.on('connection', (socket) => {
                             });
                             console.log("entrooo????? --> ", email);
                         }
+                        gameRooms[room.idRoom].gameStarted = false;
                         io.to(room.roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: room.users[0].username, image: room.users[0].image, email: room.users[0].email }));
                         gameRooms.splice(room.idRoom, 1);
                         io.sockets.sockets.get(room.users[0].id).leave(room.roomName);
