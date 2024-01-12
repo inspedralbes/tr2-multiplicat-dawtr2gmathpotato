@@ -338,6 +338,7 @@ io.on('connection', (socket) => {
                                 });
                                 console.log("entrooo????? --> ", email);
                             }
+                            gameRooms[roomIndex].gameStarted = false;
                             io.to(gameRooms[roomIndex].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[roomIndex].users[0].username, image: gameRooms[roomIndex].users[0].image, email: gameRooms[roomIndex].users[0].email }));
                             io.sockets.sockets.get(gameRooms[roomIndex].users[0].id).leave(gameRooms[roomIndex].roomName);
                             gameRooms.splice(data.room, 1);
@@ -387,13 +388,13 @@ io.on('connection', (socket) => {
                 console.log("timer --> ", gameRooms[roomPosition]);
                 if (gameRooms[roomPosition].timer > 0 && gameRooms[roomPosition].started == true) {
                     setTimeout(() => {
-                        console.log("Aqui",roomPosition)
-                        if (roomPosition !== -1) {
-
-                            gameRooms[roomPosition].timer--;
-                            io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
-                            console.log("tiempo --> ", gameRooms[roomPosition].timer);
-
+                        console.log("Aqui", gameRooms[roomPosition]);
+                        if (roomPosition !== -1 && gameRooms[roomPosition] !== undefined) {
+                            if (gameRooms[roomPosition].idRoom == idRoom) {
+                                gameRooms[roomPosition].timer--;
+                                io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
+                                console.log("tiempo --> ", gameRooms[roomPosition].timer);
+                            }
 
 
                             if (gameRooms[roomPosition].users.length == 1 && gameRooms[roomPosition].started == true) {
@@ -459,7 +460,7 @@ io.on('connection', (socket) => {
                                     });
                                     console.log("entrooo????? --> ", email);
                                 }
-
+                                gameRooms[roomPosition].gameStarted = false;
                                 io.to(gameRooms[roomPosition].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[roomPosition].users[0].username, image: gameRooms[roomPosition].users[0].image, email: gameRooms[roomPosition].users[0].email }));
                                 io.sockets.sockets.get(gameRooms[roomPosition].users[0].id).leave(gameRooms[roomPosition].roomName);
                                 gameRooms.splice(roomPosition, 1);
@@ -538,6 +539,7 @@ io.on('connection', (socket) => {
                             });
                             console.log("entrooo????? --> ", email);
                         }
+                        gameRooms[room.idRoom].gameStarted = false;
                         io.to(room.roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: room.users[0].username, image: room.users[0].image, email: room.users[0].email }));
                         gameRooms.splice(room.idRoom, 1);
                         io.sockets.sockets.get(room.users[0].id).leave(room.roomName);
@@ -598,6 +600,7 @@ io.on('connection', (socket) => {
                             });
                             console.log("entrooo????? --> ", email);
                         }
+                        gameRooms[room.idRoom].gameStarted = false;
                         io.to(room.roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: room.users[0].username, image: room.users[0].image, email: room.users[0].email }));
                         gameRooms.splice(room.idRoom, 1);
                         io.sockets.sockets.get(room.users[0].id).leave(room.roomName);
