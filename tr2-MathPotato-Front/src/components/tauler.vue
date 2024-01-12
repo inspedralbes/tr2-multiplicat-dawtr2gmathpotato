@@ -24,8 +24,7 @@
 
                 <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
-                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta"
-                        @input="limitarANumeros">
+                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
                 </div>
             </div>
@@ -488,9 +487,6 @@ export default {
         goBack(){
             this.$router.push({ name: '/' });
         },
-        limitarANumeros() {
-        this.respuesta = this.respuesta.replace(/\D/g, '');
-    },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);

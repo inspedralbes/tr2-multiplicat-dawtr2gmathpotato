@@ -365,7 +365,6 @@ io.on('connection', (socket) => {
         } else {
             if (gameRooms[roomPosition].started == true && gameRooms[roomPosition].timer <= 0) {
                 console.log("timer acabado");
-                newPregunta(gameRooms[roomPosition]);
                 gameRooms[roomPosition].timer = gameRooms[roomPosition].timerAnterior - 1;
                 io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
                 let userWithBomb = getUserWithBomb(roomPosition);
