@@ -17,66 +17,42 @@
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
-            <div id="myModal" class="modal" v-show="showModal">
-                <div class="modal-content">
-                    <div id="middle">
-                        <div class="explanationSection">
-                            <div class="explanationColumn">
-                                <h2>Si tens la bomba</h2>
-                                <img src="../assets/Icon_1.png" class="jugador">
-                                <img src="../assets/LePotata.png" alt="" class="bombIniciar">
-                                <p class="name">Usuari</p>
-                                <p>Has de contestar bé a la pregunta o abans que es termini el temps de la bomba; sinó,
-                                    perdràs una vida. Tens un total de 2 vides més una extra. Ves amb compte, la gent et pot
-                                    restar temps i canviar la pregunta.</p>
-                            </div>
+            <div id="middle">
+                <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
+                    :class="[gameStarted ? 'hidden' : '']">START!</Button>
 
-                            <div class="explanationColumn2">
-                                <h2>Si no tens la bomba</h2>
-                                <img src="../assets/Icon_1.png">
-                                <p class="name">Usuari2</p>
-                                <p>Pots contestar les preguntes per restar temps a l'usuari que té la bomba. Ves amb compte,
-                                    si contestes malament, rebràs la bomba.</p>
-                            </div>
-                        </div>
-                        <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                            :class="[gameStarted ? 'hidden' : '']">START!</button>
-                    </div>
-                    <div id="middle">
-                        <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                            :class="[gameStarted ? 'hidden' : '']">START!</Button>
-
-                        <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
-                            <h3>{{ message.pregunta }}</h3>
-                            <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta"
-                                v-model="respuesta" @input="limitarANumeros">
-                            <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                        </div>
-                    </div>
+                <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
+                    <h3>{{ message.pregunta }}</h3>
+                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta"
+                        @input="limitarANumeros">
+                    <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
                 </div>
-                <Dialog v-model:visible="userPantalla.win" modal header="Victoria" :style="{ width: '50rem' }"
+            </div>
+        </div>
+        <Dialog v-model:visible="userPantalla.win" modal header="Victoria" :style="{ width: '50rem' }"
                     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-                    <div>
-                        <h2 class="letra">Enhorabona has guanyat la partida</h2>
+                   <div>
+                    <h2 class="letra">Enhorabona has guanyat la partida</h2>
                         <div class="content-bottom">
                             <img src="../assets/Icon_Win.png" alt="" class="victoria">
                             <button @click="replay">Tornar a jugar</button>
                         </div>
-                    </div>
+                   </div>
                 </Dialog>
 
                 <Dialog v-model:visible="userPantalla.lost" modal header="Derrota" :style="{ width: '50rem' }"
                     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-                    <div>
-                        <h2 class="letra">Uf... has perdut la partida</h2>
+                   <div>
+                    <h2 class="letra">Uf... has perdut la partida</h2>
                         <div class="content-bottom">
                             <img src="../assets/Icon_Lost.png" alt="" class="derrota">
                             <button @click="replay">Tornar a jugar</button>
                         </div>
-                    </div>
+                   </div>
                 </Dialog>
-            </div>
-        </div>
+
+                
+    
     </div>
 </template>
 <style scoped>
@@ -364,11 +340,9 @@ html:lang(ar) {
     flex-direction: column;
     align-items: center;
 }
-
-.modal {
+.modal{
     z-index: 100;
 }
-
 .letra {
     font-size: 2rem;
 }
@@ -507,15 +481,15 @@ export default {
         },
     },
     methods: {
-        replay() {
-            socket.emit('join', { "username": this.userPantalla.username, "image": this.userPantalla.image, "email": this.userPantalla.email });
+        replay(){
+            socket.emit('join', {"username":this.userPantalla.username, "image":this.userPantalla.image, "email":this.userPantalla.email});
         },
-        goBack() {
+        goBack(){
             this.$router.push({ name: '/' });
         },
         limitarANumeros() {
-            this.respuesta = this.respuesta.replace(/\D/g, '');
-        },
+        this.respuesta = this.respuesta.replace(/\D/g, '');
+    },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
@@ -605,7 +579,7 @@ export default {
             await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
             console.log(this.lastUserWithBomb);
             if (this.lastUserWithBomb !== this.findUsersWithBomb()) {
-                console.log(this.lastUserWithBomb, "!=", this.findUsersWithBomb());
+                console.log(this.lastUserWithBomb,"!=" ,this.findUsersWithBomb());
                 this.lastUserWithBomb = this.findUsersWithBomb();
                 let usersWithBomb = this.findUsersWithBomb();
                 let userWithBomb = document.getElementById("user" + usersWithBomb);
