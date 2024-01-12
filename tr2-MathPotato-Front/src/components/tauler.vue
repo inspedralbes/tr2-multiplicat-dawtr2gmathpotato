@@ -76,7 +76,7 @@
 }
 
 .nameUser {
-    color: orange;
+    color: #ffa500;
 }
 
 html:lang(ar) {
