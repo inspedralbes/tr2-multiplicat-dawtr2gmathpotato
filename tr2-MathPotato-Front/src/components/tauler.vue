@@ -18,10 +18,31 @@
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
-                
-                <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                    :class="[gameStarted ? 'hidden' : '']">START!</Button>
+                <div id="myModal" class="modal-tutorial" v-show="!gameStarted">
+                    <div class="modal-tutorial-content">
+                        <div class="explanationSection">
+                            <div class="explanationColumn">
+                                <h2>Si tens la bomba</h2>
+                                <img src="../assets/Icon_1.png" class="jugador">
+                                <img src="../assets/LePotata.png" alt="" class="bombIniciar">
+                                <p class="name">Usuari</p>
+                                <p>Has de contestar bé a la pregunta o abans que es termini el temps de la bomba, sinó,
+                                    perdràs una vida. Tens un total de 2 vides més una extra. Ves amb compte, la gent et pot
+                                    restar temps i canviar la pregunta.</p>
+                            </div>
 
+                            <div class="explanationColumn2">
+                                <h2>Si no tens la bomba</h2>
+                                <img src="../assets/Icon_1.png">
+                                <p class="name">Usuari2</p>
+                                <p>Pots contestar les preguntes per restar temps a l'usuari que té la bomba. Ves amb compte,
+                                    si contestes malament, rebràs la bomba.</p>
+                            </div>
+                        </div>
+                        <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
+                            :class="[gameStarted ? 'hidden' : '']">START!</Button>
+                    </div>
+                </div>
                 <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
                     <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
@@ -30,29 +51,26 @@
             </div>
         </div>
         <Dialog v-model:visible="userPantalla.win" modal header="Victoria" :style="{ width: '50rem' }"
-                    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-                   <div>
-                    <h2 class="letra">Enhorabona has guanyat la partida</h2>
-                        <div class="content-bottom">
-                            <img src="../assets/Icon_Win.png" alt="" class="victoria">
-                            <button @click="replay">Tornar a jugar</button>
-                        </div>
-                   </div>
-                </Dialog>
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <div>
+                <h2 class="letra">Enhorabona has guanyat la partida</h2>
+                <div class="content-bottom">
+                    <img src="../assets/Icon_Win.png" alt="" class="victoria">
+                    <button @click="replay">Tornar a jugar</button>
+                </div>
+            </div>
+        </Dialog>
 
-                <Dialog v-model:visible="userPantalla.lost" modal header="Derrota" :style="{ width: '50rem' }"
-                    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-                   <div>
-                    <h2 class="letra">Uf... has perdut la partida</h2>
-                        <div class="content-bottom">
-                            <img src="../assets/Icon_Lost.png" alt="" class="derrota">
-                            <button @click="replay">Tornar a jugar</button>
-                        </div>
-                   </div>
-                </Dialog>
-
-                
-    
+        <Dialog v-model:visible="userPantalla.lost" modal header="Derrota" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <div>
+                <h2 class="letra">Uf... has perdut la partida</h2>
+                <div class="content-bottom">
+                    <img src="../assets/Icon_Lost.png" alt="" class="derrota">
+                    <button @click="replay">Tornar a jugar</button>
+                </div>
+            </div>
+        </Dialog>
     </div>
 </template>
 <style scoped>
@@ -69,13 +87,12 @@
 
 .name {
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
-
-
+    color: white;
     font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
 .nameUser {
-    color: orange;
+    color: #ffa500;
 }
 
 html:lang(ar) {
@@ -340,9 +357,11 @@ html:lang(ar) {
     flex-direction: column;
     align-items: center;
 }
-.modal{
+
+.modal {
     z-index: 100;
 }
+
 .letra {
     font-size: 2rem;
 }
@@ -399,6 +418,99 @@ button {
     color: #000;
 }
 
+
+#myModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.explanationSection {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.explanationColumn,
+.explanationColumn2 {
+    width: 45%;
+}
+
+.explanationColumn h2,
+.explanationColumn2 h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5vh;
+}
+
+.explanationColumn .jugador,
+.explanationColumn2 img {
+    border-radius: 50%;
+    width: 8vw;
+    border: 2px solid #fff;
+    background-color: blanchedalmond;
+    margin: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.explanationColumn .bombIniciar {
+    width: 8vw;
+    animation: hunch 1s infinite alternate;
+    position: absolute;
+}
+
+.explanationColumn p,
+.explanationColumn2 p {
+    font-size: 1.5rem;
+    font-weight: normal;
+
+}
+
+
+.explanationColumn2 {
+    margin-left: 5vw;
+}
+
+
+#startGameButton {
+    margin-top: 2vh;
+    background-color: #3772FF;
+    padding: 15px 25px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#startGameButton:disabled {
+    background-color: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
+}
+
+
+
+.modal-tutorial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-tutorial-content {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+}
+
 @keyframes hunch {
     from {
         transform: scale(1);
@@ -429,6 +541,7 @@ export default {
         return {
             pregunta: {},
             respuesta: "",
+            showModal: true,
             victoriaVisible: false,
             derrotaVisible: false,
             lastUserWithBomb: -1,
@@ -481,11 +594,17 @@ export default {
         },
     },
     methods: {
-        replay(){
-            socket.emit('join', {"username":this.userPantalla.username, "image":this.userPantalla.image, "email":this.userPantalla.email});
+        closeModal() {
+            this.showModal = false;
         },
-        goBack(){
+        replay() {
+            socket.emit('join', { "username": this.userPantalla.username, "image": this.userPantalla.image, "email": this.userPantalla.email });
+        },
+        goBack() {
             this.$router.push({ name: '/' });
+        },
+        limitarANumeros() {
+            this.respuesta = this.respuesta.replace(/\D/g, '');
         },
         enviarResposta() {
             const resposta = this.respuesta;
@@ -494,8 +613,24 @@ export default {
             this.respuesta = "";
         },
         async startGame() {
-            socket.emit('startGame', { gameStarted: true, roomName: this.users[0].roomName });
+            let store = useAppStore();
+
+            // Emitir el evento startGame solo cuando el usuario da clic
+            socket.emit('startGame', { roomPosition: this.users[0].roomPosition });
+
+            // Espera a que el servidor confirme que el jugador ha empezado
+            await new Promise(resolve => {
+                socket.once('gameStarted', (data) => {
+                    if (data.allPlayersStarted) {
+                        resolve();
+                    }
+                });
+            });
+
+            // Realizar otras acciones necesarias para el usuario (puede que no sea necesario en este punto)
+            this.showModal = false;
             await this.$nextTick();
+
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
                 let userBombpos = objectAntElement.getBoundingClientRect();
@@ -504,6 +639,15 @@ export default {
                 document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
                 document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
             }
+
+            // Apagar el escucha del evento 'gameStarted'
+            socket.off('gameStarted');
+
+            // Realizar otras acciones necesarias para el usuario (puede que no sea necesario en este punto)
+            return store.setGameStarted(true);
+        },
+        todosUsuariosHanClickeadoInicio(room) {
+            return room.users.every(user => user.clickedStart);
         },
         getId(index) {
             let size = this.users.length;
@@ -576,7 +720,7 @@ export default {
             await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
             console.log(this.lastUserWithBomb);
             if (this.lastUserWithBomb !== this.findUsersWithBomb()) {
-                console.log(this.lastUserWithBomb,"!=" ,this.findUsersWithBomb());
+                console.log(this.lastUserWithBomb, "!=", this.findUsersWithBomb());
                 this.lastUserWithBomb = this.findUsersWithBomb();
                 let usersWithBomb = this.findUsersWithBomb();
                 let userWithBomb = document.getElementById("user" + usersWithBomb);
