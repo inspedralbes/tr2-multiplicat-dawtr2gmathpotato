@@ -87,8 +87,8 @@ function getCurrentUser(users) {
 
     socket.on("userLost", (UsersData) => {
         const store = useAppStore();
-        socket.emit('join', {"username":UsersData.username, "image":UsersData.image, "email":UsersData.email});
-        store.setGameStarted(false);
+        store.setLost();
+        store.setGameStarted(UsersData.gameStarted);
         });
 
     // socket.on("gameRooms", (gameRooms) => {
@@ -106,8 +106,8 @@ function getCurrentUser(users) {
         console.log('El juego ha terminado! ', dataPartida);
         const store = useAppStore();
         store.setGameStarted(dataPartida.gameStarted);
+        store.setWin();
         // store.setGuestInfo({ lives: 0});
-        socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image, "email":dataPartida.email});
     });
 
     socket.on("loginError", (error) => {
@@ -120,7 +120,6 @@ function getCurrentUser(users) {
         console.log('Login correcto: ', data);
         const store = useAppStore();
         store.setError(data.status);
-        store.setGuestInfo(data.username, data.id, data.foto_perfil, data.email); 
     });
 
     socket.on("changeSkinSuccess", (data)=>{
@@ -133,4 +132,10 @@ function getCurrentUser(users) {
         console.log("HOLAAAAAAAAAAAAAAAA")
         const store = useAppStore();
         store.setRanking(ranking);
-    })
+    });
+
+    socket.on("userDataUpdate",(data)=>{
+        const store = useAppStore();
+        console.log(data)
+        store.setGuestInfo(data); 
+    });

@@ -12,30 +12,13 @@
                             :class="[user.bomba ? 'userWithBomb' : 'userWithout']"
                             :style="{ 'background-color': user.background }">
                     </div>
-                    <p class="name">{{ user.username }}</p>
+                    <p class="name" :class="[user.id == this.userPantalla.id ? 'nameUser' : '']">{{ user.username }}</p>
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
-                <div v-if="victoriaVisible == true" class="modal-victoria">
-                    <div class="modal-content">
-                        <h2 class="letra">Enhorabona has guanyat la partida</h2>
-                        <div class="content-bottom">
-                            <img src="../assets/Icon_Win.png" alt="" class="victoria">
-                            <button @click="replay">Volver a Jugar</button>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="derrotaVisible == true" class="modal-derrota">
-                    <div class="modal-content">
-                        <h2 class="letra">Uf... has perdut la partida</h2>
-                        <div class="content-bottom">
-                            <img src="../assets/Icon_Lost.png" alt="" class="derrota">
-                            <button @click="replay">Volver a Jugar</button>
-                        </div>
-                    </div>
-                </div>
+                
                 <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
                     :class="[gameStarted ? 'hidden' : '']">START!</Button>
 
@@ -46,6 +29,30 @@
                 </div>
             </div>
         </div>
+        <Dialog v-model:visible="userPantalla.win" modal header="Victoria" :style="{ width: '50rem' }"
+                    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+                   <div>
+                    <h2 class="letra">Enhorabona has guanyat la partida</h2>
+                        <div class="content-bottom">
+                            <img src="../assets/Icon_Win.png" alt="" class="victoria">
+                            <button @click="replay">Tornar a jugar</button>
+                        </div>
+                   </div>
+                </Dialog>
+
+                <Dialog v-model:visible="userPantalla.lost" modal header="Derrota" :style="{ width: '50rem' }"
+                    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+                   <div>
+                    <h2 class="letra">Uf... has perdut la partida</h2>
+                        <div class="content-bottom">
+                            <img src="../assets/Icon_Lost.png" alt="" class="derrota">
+                            <button @click="replay">Tornar a jugar</button>
+                        </div>
+                   </div>
+                </Dialog>
+
+                
+    
     </div>
 </template>
 <style scoped>
@@ -65,6 +72,10 @@
 
 
     font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+.nameUser {
+    color: orange;
 }
 
 html:lang(ar) {
@@ -329,13 +340,16 @@ html:lang(ar) {
     flex-direction: column;
     align-items: center;
 }
-
+.modal{
+    z-index: 100;
+}
 .letra {
     font-size: 2rem;
 }
 
 .content-bottom {
-    margin-top: 20px; /* Ajusta el margen según sea necesario */
+    margin-top: 20px;
+    /* Ajusta el margen según sea necesario */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -347,16 +361,19 @@ html:lang(ar) {
 }
 
 button {
-    background-color: #3F51B5;;
+    background-color: #3F51B5;
+    ;
     color: white;
     padding: 10px 20px;
     font-size: 1.5rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Efecto de transición en el color de fondo */
+    transition: background-color 0.3s ease;
+    /* Efecto de transición en el color de fondo */
 }
-.derrota{
+
+.derrota {
     width: 7vw;
     margin-right: 2vw;
 
@@ -414,9 +431,14 @@ export default {
             respuesta: "",
             victoriaVisible: false,
             derrotaVisible: false,
+            lastUserWithBomb: -1,
         };
     },
     computed: {
+        userPantalla() {
+            let store = useAppStore();
+            return store.getGuestInfo();
+        },
         encertada() {
             let store = useAppStore();
             return store.getRespostaAnterior();
@@ -450,8 +472,21 @@ export default {
                 console.log(newVal);
             }
         },
+        gameStarted: {
+            handler(newVal) {
+                if (newVal) {
+                    this.lastUserWithBomb = this.findUsersWithBomb();
+                }
+            }
+        },
     },
     methods: {
+        replay(){
+            socket.emit('join', {"username":this.userPantalla.username, "image":this.userPantalla.image, "email":this.userPantalla.email});
+        },
+        goBack(){
+            this.$router.push({ name: '/' });
+        },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
@@ -539,32 +574,36 @@ export default {
         },
         async changeBomb() {
             await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
+            console.log(this.lastUserWithBomb);
+            if (this.lastUserWithBomb !== this.findUsersWithBomb()) {
+                console.log(this.lastUserWithBomb,"!=" ,this.findUsersWithBomb());
+                this.lastUserWithBomb = this.findUsersWithBomb();
+                let usersWithBomb = this.findUsersWithBomb();
+                let userWithBomb = document.getElementById("user" + usersWithBomb);
+                console.log(userWithBomb);
+                if (usersWithBomb !== -1) {
+                    let userBombpos = userWithBomb.getBoundingClientRect();
+                    let objectAntElement = document.getElementById("bombContainer");
 
-            let usersWithBomb = this.findUsersWithBomb();
-            let userWithBomb = document.getElementById("user" + usersWithBomb);
-            console.log(userWithBomb);
-            if (usersWithBomb !== -1) {
-                let userBombpos = userWithBomb.getBoundingClientRect();
-                let objectAntElement = document.getElementById("bombContainer");
+                    let objectAntpos = objectAntElement.getBoundingClientRect();
+                    let userBombXAnt = objectAntpos.x;
+                    let userBombYAnt = objectAntpos.y;
 
-                let objectAntpos = objectAntElement.getBoundingClientRect();
-                let userBombXAnt = objectAntpos.x;
-                let userBombYAnt = objectAntpos.y;
+                    document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
+                    document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
 
-                document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
-                document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
+                    let userBombX = userBombpos.x + 100;
+                    let userBombY = userBombpos.y;
 
-                let userBombX = userBombpos.x + 100;
-                let userBombY = userBombpos.y;
+                    document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
+                    document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
 
-                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
-                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
+                    document.getElementById("bombContainer").classList.add("moveBomb");
 
-                document.getElementById("bombContainer").classList.add("moveBomb");
-
-                setTimeout(() => {
-                    document.getElementById("bombContainer").classList.remove("moveBomb");
-                }, 800);
+                    setTimeout(() => {
+                        document.getElementById("bombContainer").classList.remove("moveBomb");
+                    }, 800);
+                }
             }
         },
         findUsersWithBomb() {

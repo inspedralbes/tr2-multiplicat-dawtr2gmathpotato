@@ -67,7 +67,8 @@ io.on('connection', (socket) => {
             gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName });
         }
         socket.join("gameRoom" + lastRoom);
-        console.log(gameRooms[gameRooms.length - 1].users);
+        console.log(gameRooms[gameRooms.length - 1].users[gameRooms[gameRooms.length - 1].users.length - 1]);
+        socket.emit('userDataUpdate', gameRooms[gameRooms.length - 1].users[gameRooms[gameRooms.length - 1].users.length - 1]);
         io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
         console.log('Salas: ', io.sockets.adapter.rooms);
     });

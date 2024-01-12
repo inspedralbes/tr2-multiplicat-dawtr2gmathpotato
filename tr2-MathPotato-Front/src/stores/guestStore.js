@@ -19,7 +19,9 @@ export const useAppStore = defineStore('app', {
             bomba: false,
             image: './assets/Icon_2.png',
             lives: 2,
-            email: ''
+            email: '',
+            lost: false,
+            win: false,
         },
         users:[],
         pregunta: {
@@ -79,11 +81,13 @@ export const useAppStore = defineStore('app', {
         updateUsersOnDisconnect(users) {
             this.setUsers(users);
         },    
-        setGuestInfo(username, id, image, email) {
-            this.guestInfo.username = username;
-            this.guestInfo.id = id;
-            this.guestInfo.image = image;
-            this.guestInfo.email = email;
+        setGuestInfo(data) {
+            this.guestInfo.username = data.username;
+            this.guestInfo.id = data.id;
+            this.guestInfo.image = data.image;
+            this.guestInfo.email = data.email;
+            this.guestInfo.win = false;
+            this.guestInfo.lost = false;
 
             console.log('*infoGuest*');
             console.log(this.guestInfo.username);
@@ -132,6 +136,28 @@ export const useAppStore = defineStore('app', {
         },
         getRanking(){
             return this.ranking;
+        },
+        setWin(){
+            this.guestInfo.win = true;
+        },
+        getWin(){
+            return this.guestInfo.win;
+        },
+        setLost(){
+            this.guestInfo.lost = true;
+        },
+        getLost(){
+            return this.guestInfo.lost;
+        },
+        clearGuestInfo(){
+            this.guestInfo.username = '';
+            this.guestInfo.id = '';
+            this.guestInfo.bomba = false;
+            this.guestInfo.image = './assets/Icon_2.png';
+            this.guestInfo.lives = 2;
+            this.guestInfo.email = '';
+            this.guestInfo.lost = false;
+            this.guestInfo.win = false;
         }
         
         // setGameWinner(gameWinner){
