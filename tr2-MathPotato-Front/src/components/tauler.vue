@@ -23,9 +23,9 @@
 
                 <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
-                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta">
+                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta"
+                        @input="limitarANumeros">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-
                 </div>
             </div>
         </div>
@@ -46,12 +46,12 @@
 .name {
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 
-        
-    font-family:Verdana, Geneva, Tahoma, sans-serif
 
+    font-family: Verdana, Geneva, Tahoma, sans-serif
 }
+
 html:lang(ar) {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 #background {
@@ -358,6 +358,9 @@ export default {
         },
     },
     methods: {
+        limitarANumeros() {
+        this.respuesta = this.respuesta.replace(/\D/g, '');
+    },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
