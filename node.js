@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
             console.log("startGame");
             newPregunta(gameRooms[roomPosition]);
             iniciarTimer(roomPosition);
-            startTimer(roomPosition);
+            startTimer(gameRooms[roomPosition].idRoom);
             io.to(data.roomName).emit('gameStarted', true);
             //    CambiaEsta =
         }
@@ -192,11 +192,11 @@ io.on('connection', (socket) => {
                 do {
                     n1 = Math.floor(Math.random() * 10);
                     n2 = Math.floor(Math.random() * 10) + 1;
-                    if (n1 % n2 != 0) {
+                    if (n1 % n2 !== 0) {
                         n1 = Math.floor(Math.random() * 10);
                         n2 = Math.floor(Math.random() * 10) + 1;
                     }
-                } while (n1 % n2 != 0);
+                } while (n1 % n2 !== 0);
                 pregunta = n1 + "/" + n2;
                 break;
 
@@ -224,7 +224,7 @@ io.on('connection', (socket) => {
         console.log("Result correct --> ", resultatPregunta); //FUNCIONA
         console.log(data.resposta);
         let userWithBomb = getUserWithBomb(roomIndex);
-        if (data.resposta != "") {
+        if (data.resposta !== "") {
             if (resultatPregunta == data.resposta) {
                 if (socket.id == gameRooms[roomIndex].users[userWithBomb].id) {
                     console.log("respuesta correcta");
@@ -264,19 +264,19 @@ io.on('connection', (socket) => {
                     console.log("lives restantes -> " + gameRooms[roomIndex].users[userWithBomb].lives);
 
                     if (gameRooms[roomIndex].users[userWithBomb].lives == 0) {
-                        if (gameRooms[roomIndex].users[userWithBomb].email != 'none') {
+                        if (gameRooms[roomIndex].users[userWithBomb].email !== 'none') {
                             var email = gameRooms[roomIndex].users[userWithBomb].email;
-                          
-                                // let response = await console.log("Connected!!!!!!!!!!");
-                                let response= await fetch('http://localhost:8000/api/updateDerrotas', {
-                                    method: 'POST',
-                                    body: JSON.stringify({ email }),
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }
-                                });
-                                console.log("entrooo????? --> ", email);
-                            
+
+                            // let response = await console.log("Connected!!!!!!!!!!");
+                            let response = await fetch('http://localhost:8000/api/updateDerrotas', {
+                                method: 'POST',
+                                body: JSON.stringify({ email }),
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            console.log("entrooo????? --> ", email);
+
                         }
                         if (userWithBomb == gameRooms[roomIndex].users.length - 1) {
                             gameRooms[roomIndex].users[0].bomba = true;
@@ -289,8 +289,8 @@ io.on('connection', (socket) => {
                         gameRooms[roomIndex].users.splice(userWithBomb, 1);
                         if (gameRooms[roomIndex].users.length == 1 && gameRooms[roomIndex].started == true) {
                             console.log(roomIndex);
-                            if (email != 'none') {
-                                let response=await fetch('http://localhost:8000/api/updateVictorias', {
+                            if (email !== 'none') {
+                                let response = await fetch('http://localhost:8000/api/updateVictorias', {
                                     method: 'POST',
                                     body: JSON.stringify({ email }),
                                     headers: {
@@ -340,106 +340,115 @@ io.on('connection', (socket) => {
         gameRooms[roomPosition].timerAnterior = gameRooms[roomPosition].timer;
     }
 
-    async function startTimer(roomPosition) {
-        console.log("Quiero acceder a " + roomPosition);
-        console.log("Hay estas rooms", gameRooms);
-        let control = gameRooms[roomPosition].roomName;
-        if (gameRooms[roomPosition].timer > 0 && gameRooms[roomPosition].started == true) {
-            setTimeout(() => {
-                gameRooms[roomPosition].timer--;
-                io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
-                console.log("tiempo --> ", gameRooms[roomPosition].timer);
+    async function startTimer(idRoom) {
+        if (gameRooms.length > 0) {
+            console.log("Hay estas rooms", gameRooms);
+            let roomPosition = gameRooms.findIndex(room => room.idRoom === idRoom);
+            if (roomPosition !== -1) {
+                console.log("timer --> ", gameRooms[roomPosition]);
+                if (gameRooms[roomPosition].timer > 0 && gameRooms[roomPosition].started == true) {
+                    setTimeout(() => {
+                        console.log("Aqui",roomPosition)
+                        if (roomPosition !== -1) {
+
+                            gameRooms[roomPosition].timer--;
+                            io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
+                            console.log("tiempo --> ", gameRooms[roomPosition].timer);
 
 
-                if (gameRooms[roomPosition].users.length == 1 && gameRooms[roomPosition].started == true) {
-                    // console.log("game finished!!!!!!!!!");
-                    // gameRooms[roomPosition].timer=0;
-                    console.log(gameRooms)
 
+                            if (gameRooms[roomPosition].users.length == 1 && gameRooms[roomPosition].started == true) {
+                                // console.log("game finished!!!!!!!!!");
+                                // gameRooms[roomPosition].timer=0;
+                                console.log(gameRooms)
+
+                            } else {
+                                if (gameRooms[roomPosition].users.length > 1) {
+                                    startTimer(idRoom);
+                                }
+                            }
+                        }
+                    }, 1000);
                 } else {
-                    if (gameRooms[roomPosition].users.length > 1) {
-                        startTimer(roomPosition);
-                    }
-                }
-            }, 1000);
-        } else {
-            if (gameRooms[roomPosition].started == true && gameRooms[roomPosition].timer <= 0) {
-                console.log("timer acabado");
-                newPregunta(gameRooms[roomPosition]);
-                gameRooms[roomPosition].timer = gameRooms[roomPosition].timerAnterior - 1;
-                io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
-                let userWithBomb = getUserWithBomb(roomPosition);
-                gameRooms[roomPosition].users[userWithBomb].lives--;
-                if (gameRooms[roomPosition].users[userWithBomb].lives == 0) {
-                    if (gameRooms[roomPosition].users[userWithBomb].email != 'none') {
-                        var email = gameRooms[roomPosition].users[userWithBomb].email;
-                   
-                            // let response = await console.log("Connected!!!!!!!!!!");
-                            let response= await fetch('http://localhost:8000/api/updateDerrotas', {
-                                method: 'POST',
-                                body: JSON.stringify({ email }),
-                                headers: {
-                                    'Content-Type': 'application/json'
+                    if (gameRooms[roomPosition].started == true && gameRooms[roomPosition].timer <= 0) {
+                        console.log("timer acabado");
+                        newPregunta(gameRooms[roomPosition]);
+                        gameRooms[roomPosition].timer = gameRooms[roomPosition].timerAnterior - 1;
+                        io.to(gameRooms[roomPosition].roomName).emit('timer', gameRooms[roomPosition].timer);
+                        let userWithBomb = getUserWithBomb(roomPosition);
+                        gameRooms[roomPosition].users[userWithBomb].lives--;
+                        if (gameRooms[roomPosition].users[userWithBomb].lives == 0) {
+                            if (gameRooms[roomPosition].users[userWithBomb].email !== 'none') {
+                                var email = gameRooms[roomPosition].users[userWithBomb].email;
+
+                                // let response = await console.log("Connected!!!!!!!!!!");
+                                let response = await fetch('http://localhost:8000/api/updateDerrotas', {
+                                    method: 'POST',
+                                    body: JSON.stringify({ email }),
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                                console.log("entrooo????? --> ", email);
+
+                            }
+                            if (userWithBomb == gameRooms[roomPosition].users.length - 1) {
+                                gameRooms[roomPosition].users[0].bomba = true;
+                            }
+                            else {
+                                gameRooms[roomPosition].users[userWithBomb + 1].bomba = true;
+                            }
+                            let my_socket = io.sockets.sockets.get(gameRooms[roomPosition].users[userWithBomb].id);
+                            my_socket.leave(gameRooms[roomPosition].roomName);
+                            my_socket.emit('userLost', gameRooms[roomPosition].users[userWithBomb]);
+                            gameRooms[roomPosition].users.splice(userWithBomb, 1);
+
+                            if (gameRooms[roomPosition].users.length == 1 && gameRooms[roomPosition].started == true) {
+                                gameRooms[roomPosition].gameStarted = false;
+                                gameRooms[roomPosition].timer = 0;
+                                var email = gameRooms[roomPosition].users[0].email;
+
+
+                                // let response = await console.log("Connected!!!!!!!!!!");
+                                if (email !== 'none') {
+                                    let response = await fetch('http://localhost:8000/api/updateVictorias', {
+                                        method: 'POST',
+                                        body: JSON.stringify({ email }),
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    });
+                                    console.log("entrooo????? --> ", email);
                                 }
-                            });
-                            console.log("entrooo????? --> ", email);
-                        
-                    }
-                    if (userWithBomb == gameRooms[roomPosition].users.length - 1) {
-                        gameRooms[roomPosition].users[0].bomba = true;
-                    }
-                    else {
-                        gameRooms[roomPosition].users[userWithBomb + 1].bomba = true;
-                    }
-                    let my_socket = io.sockets.sockets.get(gameRooms[roomPosition].users[userWithBomb].id);
-                    my_socket.leave(gameRooms[roomPosition].roomName);
-                    my_socket.emit('userLost', gameRooms[roomPosition].users[userWithBomb]);
-                    gameRooms[roomPosition].users.splice(userWithBomb, 1);
 
-                    if (gameRooms[roomPosition].users.length == 1 && gameRooms[roomPosition].started == true) {
-                        gameRooms[roomPosition].gameStarted = false;
-                        gameRooms[roomPosition].timer = 0;
-                        var email = gameRooms[roomPosition].users[0].email;
+                                io.to(gameRooms[roomPosition].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[roomPosition].users[0].username, image: gameRooms[roomPosition].users[0].image, email: gameRooms[roomPosition].users[0].email }));
+                                io.sockets.sockets.get(gameRooms[roomPosition].users[0].id).leave(gameRooms[roomPosition].roomName);
+                                gameRooms.splice(roomPosition, 1);
+                                // gameRooms[roomPosition].lives=0;
 
+                                // gameRooms[roomPosition].users[0].bomba = false;
 
-                        // let response = await console.log("Connected!!!!!!!!!!");
-                        if (email != 'none') {
-                            let response= await fetch('http://localhost:8000/api/updateVictorias', {
-                                method: 'POST',
-                                body: JSON.stringify({ email }),
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            });
-                            console.log("entrooo????? --> ", email);
+                                // console.log("game over");
+                                // io.to(gameRooms[roomPosition].roomName).emit('gameOver', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
+                            } else {
+                                newPregunta(gameRooms[roomPosition]);
+                            }
+                        }
+                        if (gameRooms[roomPosition].users.length > 1) {
+                            console.log(gameRooms[roomPosition].users);
+                            startTimer(idRoom);
+                            console.log(gameRooms[roomPosition]);
+                            io.to(gameRooms[roomPosition].roomName).emit('changeBomb', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
+                            gameRooms[roomPosition].pregActual++;
                         }
 
-                        io.to(gameRooms[roomPosition].roomName).emit('finishGame', ({ gameStarted: false, timer: 0, username: gameRooms[roomPosition].users[0].username, image: gameRooms[roomPosition].users[0].image, email: gameRooms[roomPosition].users[0].email }));
-                        io.sockets.sockets.get(gameRooms[roomPosition].users[0].id).leave(gameRooms[roomPosition].roomName);
-                        gameRooms.splice(roomPosition, 1);
-                        // gameRooms[roomPosition].lives=0;
 
-                        // gameRooms[roomPosition].users[0].bomba = false;
+                        // newPregunta(gameRooms[roomPosition]);
 
-                        // console.log("game over");
-                        // io.to(gameRooms[roomPosition].roomName).emit('gameOver', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
-                    } else {
-                        newPregunta(gameRooms[roomPosition]);
+
+
                     }
                 }
-                if (gameRooms[roomPosition].users.length > 1) {
-                    console.log(gameRooms[roomPosition].users);
-                    startTimer(roomPosition);
-                    console.log(gameRooms[roomPosition]);
-                    io.to(gameRooms[roomPosition].roomName).emit('changeBomb', { "arrayUsers": gameRooms[roomPosition].users, "bombChange": true });
-                    gameRooms[roomPosition].pregActual++;
-                }
-
-
-                // newPregunta(gameRooms[roomPosition]);
-
-
-
             }
         }
     }
@@ -460,18 +469,18 @@ io.on('connection', (socket) => {
                     console.log("VAAAAAAAAAA", room.users[usuarioDesconectadoIndex]);
                     if (room.users[usuarioDesconectadoIndex].email != 'none') {
                         var email = room.users[usuarioDesconectadoIndex].email;
-                        
-                            
-                            // let response = await console.log("Connected!!!!!!!!!!");
-                            let response=await fetch('http://localhost:8000/api/updateDerrotas', {
-                                method: 'POST',
-                                body: JSON.stringify({ email }),
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            });
-                            console.log("entrooo????? --> ", email);
-                        
+
+
+                        // let response = await console.log("Connected!!!!!!!!!!");
+                        let response = await fetch('http://localhost:8000/api/updateDerrotas', {
+                            method: 'POST',
+                            body: JSON.stringify({ email }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        console.log("entrooo????? --> ", email);
+
                     }
                     let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
                     socket.leave(room.roomName);
@@ -481,7 +490,7 @@ io.on('connection', (socket) => {
                         room.timer = 0;
                         let email = room.users[0].email;
                         if (email != 'none') {
-                            let response=await fetch('http://localhost:8000/api/updateVictorias', {
+                            let response = await fetch('http://localhost:8000/api/updateVictorias', {
                                 method: 'POST',
                                 body: JSON.stringify({ email }),
                                 headers: {
@@ -520,18 +529,18 @@ io.on('connection', (socket) => {
                     console.log("VAAAAAAAAAA", room.users[usuarioDesconectadoIndex]);
                     if (room.users[usuarioDesconectadoIndex].email != 'none') {
                         var email = room.users[usuarioDesconectadoIndex].email;
-                        
-                            
-                            // let response = await console.log("Connected!!!!!!!!!!");
-                            let response=await fetch('http://localhost:8000/api/updateDerrotas', {
-                                method: 'POST',
-                                body: JSON.stringify({ email }),
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            });
-                            console.log("entrooo????? --> ", email);
-                        
+
+
+                        // let response = await console.log("Connected!!!!!!!!!!");
+                        let response = await fetch('http://localhost:8000/api/updateDerrotas', {
+                            method: 'POST',
+                            body: JSON.stringify({ email }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        console.log("entrooo????? --> ", email);
+
                     }
                     let usuarioDesconectado = room.users.splice(usuarioDesconectadoIndex, 1);
                     socket.leave(room.roomName);
@@ -541,7 +550,7 @@ io.on('connection', (socket) => {
                         room.timer = 0;
                         let email = room.users[0].email;
                         if (email != 'none') {
-                            let response=await fetch('http://localhost:8000/api/updateVictorias', {
+                            let response = await fetch('http://localhost:8000/api/updateVictorias', {
                                 method: 'POST',
                                 body: JSON.stringify({ email }),
                                 headers: {
