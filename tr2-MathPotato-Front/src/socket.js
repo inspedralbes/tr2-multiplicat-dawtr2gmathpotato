@@ -120,6 +120,9 @@ function getCurrentUser(users) {
         console.log('Login correcto: ', data);
         const store = useAppStore();
         store.setError(data.status);
+        console.log(data);
+        let user = {username: data.username, id: data.id, image: data.image, email: data.email};
+        store.setGuestInfo(user);
     });
 
     socket.on("changeSkinSuccess", (data)=>{

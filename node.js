@@ -105,6 +105,9 @@ io.on('connection', (socket) => {
             // io.to("gameRoom" + lastRoom).emit('usersConnected', gameRooms[gameRooms.length - 1].users, gameRooms[gameRooms.length - 1].roomName);
             // console.log('Salas: ', io.sockets.adapter.rooms);
             userData.status = 1;
+            userData.id = socket.id;
+            userData.image = userData.foto_perfil;
+            console.log("userData", userData);
             socket.emit('loginSuccess', userData);
             return responseData;
         } else {
@@ -132,9 +135,12 @@ io.on('connection', (socket) => {
             // console.log("response..??", response);
             const responseData = await response.json();
             if (responseData.status === 1) {
+                responseData.id = socket.id;
+                responseData.image = responseData.foto_perfil;
                 socket.emit('loginSuccess', responseData);
 
                 console.log("response.ok....", responseData);
+                
                 return responseData;
             } else {
                 console.log("response.Notok....", responseData);
