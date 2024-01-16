@@ -18,7 +18,10 @@ export const useAppStore = defineStore('app', {
             id: '',
             bomba: false,
             image: './assets/Icon_2.png',
-            lives: 2
+            lives: 2,
+            email: '',
+            lost: false,
+            win: false,
         },
         users:[],
         pregunta: {
@@ -29,7 +32,9 @@ export const useAppStore = defineStore('app', {
         timer: 0,
         gameStarted: false,
         gameWinner: false,
-
+        error: "",
+        ranking: []
+        
     }), 
     actions: {
         setRoomName(roomGame){
@@ -76,9 +81,13 @@ export const useAppStore = defineStore('app', {
         updateUsersOnDisconnect(users) {
             this.setUsers(users);
         },    
-        setGuestInfo(username, id) {
-            this.guestInfo.username = username;
-            this.guestInfo.id = id;
+        setGuestInfo(data) {
+            this.guestInfo.username = data.username;
+            this.guestInfo.id = data.id;
+            this.guestInfo.image = data.image;
+            this.guestInfo.email = data.email;
+            this.guestInfo.win = false;
+            this.guestInfo.lost = false;
 
             console.log('*infoGuest*');
             console.log(this.guestInfo.username);
@@ -112,6 +121,45 @@ export const useAppStore = defineStore('app', {
         getTimer(){
             return this.timer;
         },
+        setError(error){
+            this.error=error;
+        },
+        getError(){
+            return this.error;
+        },
+        setGuestImage(image){
+            console.log('Imagen: ', image);
+            this.guestInfo.image = image;
+        },
+        setRanking(ranking){
+            this.ranking = ranking;
+        },
+        getRanking(){
+            return this.ranking;
+        },
+        setWin(){
+            this.guestInfo.win = true;
+        },
+        getWin(){
+            return this.guestInfo.win;
+        },
+        setLost(){
+            this.guestInfo.lost = true;
+        },
+        getLost(){
+            return this.guestInfo.lost;
+        },
+        clearGuestInfo(){
+            this.guestInfo.username = '';
+            this.guestInfo.id = '';
+            this.guestInfo.bomba = false;
+            this.guestInfo.image = './assets/Icon_2.png';
+            this.guestInfo.lives = 2;
+            this.guestInfo.email = '';
+            this.guestInfo.lost = false;
+            this.guestInfo.win = false;
+        }
+        
         // setGameWinner(gameWinner){
         //     this.gameWinner = gameWinner;
         // },

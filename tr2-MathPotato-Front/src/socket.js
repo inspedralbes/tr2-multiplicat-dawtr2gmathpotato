@@ -32,13 +32,7 @@ function getCurrentUser(users) {
         const store = useAppStore();
         
         // Filtra los usuarios basándose en el socket.id actual
-       let currentUser=getCurrentUser(usersConnected);
-        console.log("HOOOOOOOOOOOOOOOOOOOOOOOOOOOLA"+currentUser);
-        
-        if (currentUser) {
-            // Guarda la información del usuario actual en Pinia
-            store.setGuestInfo(currentUser.username, currentUser.id);
-        }
+  
 
         // Establece el array de usuarios en Pinia
         store.setUsers(usersConnected);
@@ -56,6 +50,7 @@ function getCurrentUser(users) {
         
     // });
 
+    
     socket.on("usersDesconectados", (usersConnected) => { 
         const store = useAppStore();
         console.log('Usuarios desconectados: ', usersConnected);
@@ -92,8 +87,8 @@ function getCurrentUser(users) {
 
     socket.on("userLost", (UsersData) => {
         const store = useAppStore();
-        socket.emit('join', {"username":UsersData.username, "image":UsersData.image});
-        store.setGameStarted(false);
+        store.setLost();
+        store.setGameStarted(UsersData.gameStarted);
         });
 
     // socket.on("gameRooms", (gameRooms) => {
@@ -111,8 +106,39 @@ function getCurrentUser(users) {
         console.log('El juego ha terminado! ', dataPartida);
         const store = useAppStore();
         store.setGameStarted(dataPartida.gameStarted);
-        store.setTimer(dataPartida.timer);
+        store.setWin();
         // store.setGuestInfo({ lives: 0});
-        socket.emit('join', {"username":dataPartida.username, "image":dataPartida.image});
-        
+    });
+
+    socket.on("loginError", (error) => {
+        console.log('Error: ', error);
+        const store = useAppStore();
+        store.setError(error);
+    });
+
+    socket.on("loginSuccess", (data) => {
+        console.log('Login correcto: ', data);
+        const store = useAppStore();
+        store.setError(data.status);
+        console.log(data);
+        let user = {username: data.username, id: data.id, image: data.image, email: data.email};
+        store.setGuestInfo(user);
+    });
+
+    socket.on("changeSkinSuccess", (data)=>{
+        console.log('Cambio de skin correcto: ', data);
+        const store = useAppStore();
+        store.setGuestImage(data); 
+    });
+
+    socket.on("updateRanking",(ranking)=>{
+        console.log("HOLAAAAAAAAAAAAAAAA")
+        const store = useAppStore();
+        store.setRanking(ranking);
+    });
+
+    socket.on("userDataUpdate",(data)=>{
+        const store = useAppStore();
+        console.log(data)
+        store.setGuestInfo(data); 
     });

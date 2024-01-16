@@ -4,29 +4,74 @@
             <div v-for="(user, index) in users" :id="getId(index)">
                 <div class="user" :id="'user' + index">
                     <div class="imageContainer">
-                        <div class="vidaContainer" v-for="n in user.lives-1" :key="n">
+                        <div class="vidaContainer" v-for="n in user.lives - 1" :key="n">
                             <img src="@/assets/potatHeart.png">
                         </div>
-                        <img :src="user.image" alt="image" class="icon" :class="[user.bomba ? 'userWithBomb' : 'userWithout']" :style="{ 'background-color': user.background }">
-                    </div>
-                    <p class="name">{{ user.username }}</p>
 
+                        <img :src="'./src/assets/Icon_' + user.image + '.png'" alt="image" class="icon"
+                            :class="[user.bomba ? 'userWithBomb' : 'userWithout']"
+                            :style="{ 'background-color': user.background }">
+                    </div>
+                    <p class="name" :class="[user.id == this.userPantalla.id ? 'nameUser' : '']">{{ user.username }}</p>
                 </div>
             </div>
             <div id="bombContainer" :class="[gameStarted ? '' : 'hidden']"><img src="../assets/LePotata.png" alt=""
                     class="bomb" id="bomb"><span class="bombCounter">{{ timer }}</span></div>
             <div id="middle">
-                <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
-                :class="[gameStarted ? 'hidden' : '']">START!</Button>
+                <div id="myModal" class="modal-tutorial" v-show="!gameStarted">
+                    <div class="modal-tutorial-content">
+                        <div class="explanationSection">
+                            <div class="explanationColumn">
+                                <h2>Si tens la bomba</h2>
+                                <img src="../assets/Icon_1.png" class="jugador">
+                                <img src="../assets/LePotata.png" alt="" class="bombIniciar">
+                                <p class="name">Usuari</p>
+                                <p>Has de contestar bé a la pregunta o abans que es termini el temps de la bomba, sinó,
+                                    perdràs una vida. Tens un total de 2 vides més una extra. Ves amb compte, la gent et pot
+                                    restar temps i canviar la pregunta.</p>
+                            </div>
 
-                <div :class="[gameStarted ? '' : 'hidden']"  class="gameContainer">
+                            <div class="explanationColumn2">
+                                <h2>Si no tens la bomba</h2>
+                                <img src="../assets/Icon_1.png">
+                                <p class="name">Usuari2</p>
+                                <p>Pots contestar les preguntes per restar temps a l'usuari que té la bomba. Ves amb compte,
+                                    si contestes malament, rebràs la bomba.</p>
+                            </div>
+                        </div>
+                        <Button @click="startGame" id="startGameButton" :disabled="users.length <= 2"
+                            :class="[gameStarted ? 'hidden' : '']">START!</Button>
+                    </div>
+                </div>
+                <div :class="[gameStarted ? '' : 'hidden']" class="gameContainer">
                     <h3>{{ message.pregunta }}</h3>
-                    <input type="text" name="resposta" id="resposta" v-model="respuesta">
+                    <input type="text" name="resposta" id="resposta" @keyup.enter="enviarResposta" v-model="respuesta"
+                        @input="limitarANumeros">
                     <Button @click="enviarResposta" icon="pi pi-check" aria-label="Submit" />
-                    
                 </div>
             </div>
         </div>
+        <Dialog v-model:visible="userPantalla.win" modal header="Victoria" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <div>
+                <h2 class="letra">Enhorabona has guanyat la partida</h2>
+                <div class="content-bottom">
+                    <img src="../assets/Icon_Win.png" alt="" class="victoria">
+                    <button @click="replay">Tornar a jugar</button>
+                </div>
+            </div>
+        </Dialog>
+
+        <Dialog v-model:visible="userPantalla.lost" modal header="Derrota" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <div>
+                <h2 class="letra">Uf... has perdut la partida</h2>
+                <div class="content-bottom">
+                    <img src="../assets/Icon_Lost.png" alt="" class="derrota">
+                    <button @click="replay">Tornar a jugar</button>
+                </div>
+            </div>
+        </Dialog>
     </div>
 </template>
 <style scoped>
@@ -43,6 +88,16 @@
 
 .name {
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+.nameUser {
+    color: #ffa500;
+}
+
+html:lang(ar) {
+    font-size: 20px;
 }
 
 #background {
@@ -53,11 +108,13 @@
     background-size: cover;
     background-position: center;
 }
-.gameContainer>h3{
+
+.gameContainer>h3 {
     color: white;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
-    
+
 }
+
 .gameContainer {
     display: flex;
     flex-direction: column;
@@ -70,19 +127,17 @@
     border-radius: 20px;
     width: 90%;
 }
-.gameContainer>input{
+
+.gameContainer>input {
     width: 80%;
     height: 5vh;
     border-radius: 10px;
     border: 1px solid black;
     margin-bottom: 10px;
-
     font-size: 1.5vw;
     font-weight: bold;
     color: black;
     filter: brightness(1);
-
-
 }
 
 .moveBomb {
@@ -281,6 +336,182 @@
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
 
+
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Estilos generales */
+.modal-content {
+    width: 30vw;
+    background-color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal {
+    z-index: 100;
+}
+
+.letra {
+    font-size: 2rem;
+}
+
+.content-bottom {
+    margin-top: 20px;
+    /* Ajusta el margen según sea necesario */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.victoria {
+    width: 7vw;
+    margin-right: 2vw;
+}
+
+button {
+    background-color: #3F51B5;
+    ;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* Efecto de transición en el color de fondo */
+}
+
+.derrota {
+    width: 7vw;
+    margin-right: 2vw;
+
+}
+
+
+/* Estilos del cierre (X) */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+
+.letra {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.close:hover {
+    color: #000;
+}
+
+
+#myModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.explanationSection {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.explanationColumn,
+.explanationColumn2 {
+    width: 45%;
+}
+
+.explanationColumn h2,
+.explanationColumn2 h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5vh;
+}
+
+.explanationColumn .jugador,
+.explanationColumn2 img {
+    border-radius: 50%;
+    width: 8vw;
+    border: 2px solid #fff;
+    background-color: blanchedalmond;
+    margin: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.explanationColumn .bombIniciar {
+    width: 8vw;
+    animation: hunch 1s infinite alternate;
+    position: absolute;
+}
+
+.explanationColumn p,
+.explanationColumn2 p {
+    font-size: 1.5rem;
+    font-weight: normal;
+
+}
+
+
+.explanationColumn2 {
+    margin-left: 5vw;
+}
+
+
+#startGameButton {
+    margin-top: 2vh;
+    background-color: #3772FF;
+    padding: 15px 25px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#startGameButton:disabled {
+    background-color: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
+}
+
+
+
+.modal-tutorial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-tutorial-content {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+}
+
 @keyframes hunch {
     from {
         transform: scale(1);
@@ -291,13 +522,14 @@
     }
 }
 
-.userWithBomb{
+.userWithBomb {
     border: 4px solid #3772FF;
 }
-.userWithout{
-    filter: grayscale(30%) ;
+
+.userWithout {
+    filter: grayscale(30%);
     /* opacity: 0.7; */
-    
+
 }
 </style>
 <script>
@@ -310,11 +542,17 @@ export default {
         return {
             pregunta: {},
             respuesta: "",
-            timer: 0,
-
+            showModal: true,
+            victoriaVisible: false,
+            derrotaVisible: false,
+            lastUserWithBomb: -1,
         };
     },
     computed: {
+        userPantalla() {
+            let store = useAppStore();
+            return store.getGuestInfo();
+        },
         encertada() {
             let store = useAppStore();
             return store.getRespostaAnterior();
@@ -335,8 +573,6 @@ export default {
             let store = useAppStore();
             return store.getGameStarted();
         },
-        
-        
     },
     watch: {
         users: {
@@ -345,29 +581,57 @@ export default {
                 if (newVal && newVal.length > 0 && this.encertada) {
                     console.log("change bomb");
                     this.changeBomb();
+                    this.respuesta = "";
                 }
                 console.log(newVal);
             }
         },
-        // gameWinner(newVal) {
-        //     // Cambiar gameStarted a false cuando gameWinner sea true
-        //     if (newVal) {
-        //         let store = useAppStore();
-        //         store.setGameStarted(false);
-        //     }
-        // },
+        gameStarted: {
+            handler(newVal) {
+                if (newVal) {
+                    this.lastUserWithBomb = this.findUsersWithBomb();
+                }
+            }
+        },
     },
     methods: {
-        
+        closeModal() {
+            this.showModal = false;
+        },
+        replay() {
+            socket.emit('join', { "username": this.userPantalla.username, "image": this.userPantalla.image, "email": this.userPantalla.email });
+        },
+        goBack() {
+            this.$router.push({ name: '/' });
+        },
+        limitarANumeros() {
+            this.respuesta = this.respuesta.replace(/\D/g, '');
+        },
         enviarResposta() {
             const resposta = this.respuesta;
             console.log("emit respost -> ", resposta);
-socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition} );
+            socket.emit('resposta', { "resposta": resposta, "roomName": this.users[0].roomName });
             this.respuesta = "";
         },
         async startGame() {
-            socket.emit('startGame', {gameStarted:true, roomPosition: this.users[0].roomPosition});
+            let store = useAppStore();
+
+            // Emitir el evento startGame solo cuando el usuario da clic
+            socket.emit('startGame', { roomPosition: this.users[0].roomPosition });
+
+            // Espera a que el servidor confirme que el jugador ha empezado
+            await new Promise(resolve => {
+                socket.once('gameStarted', (data) => {
+                    if (data.allPlayersStarted) {
+                        resolve();
+                    }
+                });
+            });
+
+            // Realizar otras acciones necesarias para el usuario (puede que no sea necesario en este punto)
+            this.showModal = false;
             await this.$nextTick();
+
             let objectAntElement = document.getElementById("user0");
             if (objectAntElement) {
                 let userBombpos = objectAntElement.getBoundingClientRect();
@@ -376,6 +640,15 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                 document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
                 document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
             }
+
+            // Apagar el escucha del evento 'gameStarted'
+            socket.off('gameStarted');
+
+            // Realizar otras acciones necesarias para el usuario (puede que no sea necesario en este punto)
+            return store.setGameStarted(true);
+        },
+        todosUsuariosHanClickeadoInicio(room) {
+            return room.users.every(user => user.clickedStart);
         },
         getId(index) {
             let size = this.users.length;
@@ -404,7 +677,6 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                 case 4:
                     switch (index) {
                         case 0:
-
                             return "topmid";
                         case 1:
                             return "rightmid";
@@ -426,7 +698,6 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                             return "bottomleft";
                         case 4:
                             return "leftmid";
-
                     }
                     break;
                 case 6:
@@ -444,55 +715,53 @@ socket.emit('resposta',  {"resposta":resposta,"room":this.users[0].roomPosition}
                         case 5:
                             return "leftmid";
                     }
-
             };
         },
         async changeBomb() {
             await this.$nextTick(); // Espera hasta que el componente se haya renderizado completamente
+            console.log(this.lastUserWithBomb);
+            if (this.lastUserWithBomb !== this.findUsersWithBomb()) {
+                console.log(this.lastUserWithBomb, "!=", this.findUsersWithBomb());
+                this.lastUserWithBomb = this.findUsersWithBomb();
+                let usersWithBomb = this.findUsersWithBomb();
+                let userWithBomb = document.getElementById("user" + usersWithBomb);
+                console.log(userWithBomb);
+                if (usersWithBomb !== -1) {
+                    let userBombpos = userWithBomb.getBoundingClientRect();
+                    let objectAntElement = document.getElementById("bombContainer");
 
-            let usersWithBomb = this.findUsersWithBomb();
-            let userWithBomb=document.getElementById("user"+usersWithBomb);
-            console.log(userWithBomb);
-            if (usersWithBomb !== -1) {
-                let userBombpos = userWithBomb.getBoundingClientRect();
-                let objectAntElement = document.getElementById("bombContainer");
+                    let objectAntpos = objectAntElement.getBoundingClientRect();
+                    let userBombXAnt = objectAntpos.x;
+                    let userBombYAnt = objectAntpos.y;
 
+                    document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
+                    document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
 
-                let objectAntpos = objectAntElement.getBoundingClientRect();
-                let userBombXAnt = objectAntpos.x;
-                let userBombYAnt = objectAntpos.y;
+                    let userBombX = userBombpos.x + 100;
+                    let userBombY = userBombpos.y;
 
-                document.getElementById("bombContainer").style.setProperty("--xPositionAnt", userBombXAnt + "px");
-                document.getElementById("bombContainer").style.setProperty("--yPositionAnt", userBombYAnt + "px");
+                    document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
+                    document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
 
+                    document.getElementById("bombContainer").classList.add("moveBomb");
 
-                let userBombX = userBombpos.x + 100;
-                let userBombY = userBombpos.y;
-
-                document.getElementById("bombContainer").style.setProperty("--xPosition", userBombX + "px");
-                document.getElementById("bombContainer").style.setProperty("--yPosition", userBombY + "px");
-
-                document.getElementById("bombContainer").classList.add("moveBomb");
-
-                setTimeout(() => {
-                    document.getElementById("bombContainer").classList.remove("moveBomb");
-                }, 800);
+                    setTimeout(() => {
+                        document.getElementById("bombContainer").classList.remove("moveBomb");
+                    }, 800);
+                }
             }
-
         },
-
         findUsersWithBomb() {
             return this.users.findIndex(user => user.bomba === true);
-            //return this.users.users.filter(user => user.bomba === true);
         },
     },
     mounted() {
         return this.users.findIndex(user => user.bomba === true);
-        
-        //return this.users.users.filter(user => user.bomba === true);
-        
-
-    }
+    },
+    created() {
+        window.addEventListener('popstate', () => {
+            socket.emit('leaveRoom', {});
+        });
+    },
 }
-
 </script>

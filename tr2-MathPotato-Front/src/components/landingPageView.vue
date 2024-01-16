@@ -4,6 +4,7 @@
         <!-- Logo a la izquierda -->
         <div class="flex flex-column align-items-center ">
             <Button @click="login()" class="button_login" label="LOG IN"></Button>
+            <Button @click="RankingView()" class="button_ranking" label="RANKING"></Button>
         </div>
         <div class="flex flex-column align-items-center justify-content-center">
           <img v-show="currentLogo === 'logo1'" src="../assets/LePotata.png" alt="logo" class="logo_pos move-forward" />
@@ -117,7 +118,7 @@
     position: absolute;
     top: 20%;
     left: 4%;
-    width: 700px;
+    width: 38vw;
     transform: translate(-50%, -50%);
     animation: movePotato 10s infinite;
     animation-timing-function: linear;
@@ -160,6 +161,22 @@
     transition: all 0.3s ease-in-out;
 }
 
+.button_ranking {
+    position: absolute;
+    top: 5%;
+    left: 7%;
+    transform: translate(-50%, -50%);
+    background-image: radial-gradient(var(--primary-300), var(--primary-600));
+    color: var(--primary-color-text);
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
 #background_page {
     background-image: url(../assets/landing_background.png);
     background-repeat: no-repeat;
@@ -167,7 +184,7 @@
     background-position: center;
     height: 100vh;
     opacity: 80%;
-    width: 99vw;
+    width: 100vw;
     z-index: -1;
 }
 
@@ -202,6 +219,9 @@ export default {
         },
         login() {
             this.$router.push({ path: '/login' });
+        },
+        RankingView() {
+            this.$router.push({ path: '/ranking' });
         }
 
     }
