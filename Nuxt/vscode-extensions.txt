@@ -1,0 +1,46 @@
+
+Version:          Code 1.86.0 (05047486b6df5eb8d44b2ecd70ea3bdf775fd937, 2024-01-31T10:28:19.990Z)
+OS Version:       Windows_NT x64 10.0.19045
+CPUs:             Intel(R) Core(TM) i5-9400F CPU @ 2.90GHz (6 x 2904)
+Memory (System):  15.92GB (8.75GB free)
+VM:               0%
+Screen Reader:    no
+Process Argv:     --crash-reporter-id fb15bb6a-cd17-479b-9bbc-ca6c673b7f09
+GPU Status:       2d_canvas:                              enabled
+                  canvas_oop_rasterization:               enabled_on
+                  direct_rendering_display_compositor:    disabled_off_ok
+                  gpu_compositing:                        enabled
+                  multiple_raster_threads:                enabled_on
+                  opengl:                                 enabled_on
+                  rasterization:                          enabled
+                  raw_draw:                               disabled_off_ok
+                  skia_graphite:                          disabled_off
+                  video_decode:                           enabled
+                  video_encode:                           enabled
+                  vulkan:                                 disabled_off
+                  webgl:                                  enabled
+                  webgl2:                                 enabled
+                  webgpu:                                 enabled
+
+CPU %	Mem MB	   PID	Process
+    0	   126	 12548	code main
+    1	   233	  2608	window [2] (Extension: Vue VSCode Snippets - tr2-multiplicat-dawtr2gmathpotato - Visual Studio Code)
+    0	    41	  7136	   utility-network-service
+    0	   111	  7160	   gpu-process
+    0	    94	 12512	fileWatcher [2]
+    0	   102	 13072	   window
+    0	   100	 16372	shared-process
+    0	    91	 16376	ptyHost
+    0	     7	  5400	     conpty-agent
+    0	     5	 16284	     "C:\Program Files\Git\bin\bash.exe" --login -i
+    0	    11	 16596	       "C:\Program Files\Git\bin\..\usr\bin\bash.exe" --login -i
+    0	    26	 17064	   crashpad-handler
+    0	   218	 17860	extensionHost [2]
+    0	    94	  3148	     electron-nodejs (serverMain.js )
+
+Workspace Stats: 
+|  Window (Extension: Vue VSCode Snippets - tr2-multiplicat-dawtr2gmathpotato - Visual Studio Code)
+|    Folder (tr2-multiplicat-dawtr2gmathpotato): 311 files
+|      File types: php(58) png(41) vue(29) json(21) gitignore(16) js(16)
+|                  ts(16) md(7) ico(4) css(3)
+|      Conf files: package.json(5) tsconfig.json(3)
