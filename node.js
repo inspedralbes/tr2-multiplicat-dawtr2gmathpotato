@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
             gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: true, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName,hasClickedStart:false });
         } else {
             // Si ya hay usuarios, se agrega un nuevo usuario a la sala
-            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName,hasClickedStart:falsec });
+            gameRooms[gameRooms.length - 1].users.push({ username: data.username, id: socket.id, bomba: false, image: data.image, roomPosition: lastRoom, lives: 3, email: data.email, roomName: gameRooms[gameRooms.length - 1].roomName,hasClickedStart:false });
         }
         socket.join("gameRoom" + lastRoom);
         console.log(gameRooms[gameRooms.length - 1].users[gameRooms[gameRooms.length - 1].users.length - 1]);
@@ -156,60 +156,58 @@ io.on('connection', (socket) => {
     //     io.emit('preguntas', objPreguntes);
     // });
 
-
+    function getRoomBySocketId(socketId) {
+        let room;
+        gameRooms.forEach(gameRoom => {
+            gameRoom.users.forEach(user => {
+                if (user.id === socketId) {
+                    room = gameRoom;
+                }
+            });
+        });
+        return room;
+    }
 
     socket.on('startGame', (data) => {
-        console.log(`Usuario ${socket.id} hizo clic en el botón "start".`);
+        
+        let room=getRoomBySocketId(socket.id);
     
-        let roomPosition;
-    
-        if (data.roomPosition) {
+        if (room) {
             // Primer bloque de código
-            roomPosition = data.roomPosition;
-            let room = gameRooms[roomPosition];
             let userIndex = room.users.findIndex(user => user.id === socket.id);
             room.users[userIndex].hasClickedStart = true;
     
-            if (todosUsuariosHanClickeadoInicio(room)) {
+            
                 // Marcar la sala como iniciada y realizar otras acciones necesarias
                 if (room.users.length >= 3 && room.users.length <= 6) {
                     room.started = true;
+                    console.log(room);
                     console.log("startGame");
+                    let roomPosition=room.roomPosition;
                     newPregunta(room);
-                    iniciarTimer(roomPosition);
-                    startTimer(roomPosition);
+                    iniciarTimer(room);
+                    startTimer(room.idRoom);
     
                     // Emitir evento de inicio de juego a todos los usuarios en la sala
-                    io.to("gameRoom" + roomPosition).emit('gameStarted', { allPlayersStarted: true });
+                    io.to(room.roomName).emit('gameStarted', { allPlayersStarted: true });
                 }
-            }
-        } else if (data.roomName) {
-            // Segundo bloque de código
-            roomPosition = gameRooms.findIndex(room => room.roomName === data.roomName);
-            gameRooms[roomPosition].started = true;
-            if (gameRooms[roomPosition].users.length >= 3 && gameRooms[roomPosition].users.length <= 6) {
-                console.log("startGame");
-                newPregunta(gameRooms[roomPosition]);
-                iniciarTimer(roomPosition);
-                startTimer(gameRooms[roomPosition].idRoom);
-                io.to(data.roomName).emit('gameStarted', true);
-            }
-        }
+            
+        } 
     });
-    function todosUsuariosHanClickeadoInicio(room) {
-        // Asegúrate de que todos los usuarios en la sala han hecho clic en "start"
-        let everyOneHasClickedStart = true;
-            for(let i=0; i<room.users.length; i++){
-                if(!room.users[i].hasClickedStart){
-                    everyOneHasClickedStart = false;
+    // function todosUsuariosHanClickeadoInicio(room) {
+    //     // Asegúrate de que todos los usuarios en la sala han hecho clic en "start"
+    //     let everyOneHasClickedStart = true;
+    //         for(let i=0; i<room.users.length; i++){
+    //             if(!room.users[i].hasClickedStart){
+    //                 everyOneHasClickedStart = false;
 
-                }
-            }
-            console.log("everyOneHasClickedStart", everyOneHasClickedStart);
-        return everyOneHasClickedStart;
+    //             }
+    //         }
+    //         console.log("everyOneHasClickedStart", everyOneHasClickedStart);
+    //     return everyOneHasClickedStart;
 
 
-    }
+    // }
 
     function newPregunta(room) {
         let n1 = Math.floor(Math.random() * 100);
@@ -333,7 +331,8 @@ io.on('connection', (socket) => {
                         socket.emit('userLost', gameRooms[roomIndex].users[userWithBomb]);
                         gameRooms[roomIndex].users.splice(userWithBomb, 1);
                         if (gameRooms[roomIndex].users.length == 1 && gameRooms[roomIndex].started == true) {
-                            console.log(roomIndex);
+                            let email = gameRooms[roomIndex].users[0].email;
+                            console.log(email);
                             if (email !== 'none') {
                                 let response = await fetch('http://localhost:8000/api/updateVictorias', {
                                     method: 'POST',
@@ -368,22 +367,22 @@ io.on('connection', (socket) => {
 
     });
 
-    function iniciarTimer(roomPosition) {
-        const size = gameRooms[roomPosition].users.length;
+    function iniciarTimer(room) {
+        const size = room.users.length;
 
         switch (size) {
             case 3:
-                gameRooms[roomPosition].timer = 31;
+                room.timer = 31;
                 break;
             case 4:
-                gameRooms[roomPosition].timer = 36;
+               room.timer = 36;
                 break;
             case 5:
             case 6:
-                gameRooms[roomPosition].timer = 41;
+                room.timer = 41;
                 break;
         }
-        gameRooms[roomPosition].timerAnterior = gameRooms[roomPosition].timer;
+        room.timerAnterior = room.timer;
     }
 
     async function startTimer(idRoom) {
@@ -480,7 +479,7 @@ io.on('connection', (socket) => {
                                 newPregunta(gameRooms[roomPosition]);
                             }
                         }
-                        if (gameRooms[roomPosition].users.length > 1) {
+                        if (gameRooms[roomPosition]&&gameRooms[roomPosition].users.length > 1) {
                             console.log(gameRooms[roomPosition].users);
                             startTimer(idRoom);
                             console.log(gameRooms[roomPosition]);
